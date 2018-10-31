@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
 import datetime
 import time
 import os
@@ -46,7 +47,7 @@ class MyWindow:
                                   command=self.abort_message_callback, width="20")
 
         # Variables Used Across Functions in Class
-        self.temperature = 26.6
+        self.temperature = 26.6555555
         self.pressure = 101.325
         self.humidity = 67.2
         self.altitude = 150000
@@ -93,6 +94,7 @@ class MyWindow:
         # Setup Window
         name.configure(background=DarkGray)
         name.title("Ground Station Graphical User Interface V0.1")
+        name.iconbitmap('MyOrbital.ico')
 
         window_geometry = str(self.width) + 'x' + str(self.height)
         self.name.geometry(window_geometry)
@@ -103,7 +105,7 @@ class MyWindow:
     def get_angle(self):
         input_angle_result = self.angleEntry.get()
         if len(self.angleEntry.get()) > 0 and 30.0 <= float(input_angle_result) <= 75.0:
-            self.angle_result = float(input_angle_result)
+            self.angle_result = round(float(input_angle_result), 4)
             if 30.0 <= self.angle_result <= 75.0:
                 self.angleDataLabel.config(text=self.angle_result)
 
@@ -160,13 +162,16 @@ class MyWindow:
         self.log("MANUAL")
 
     def update_size(self):
-        self.width = self.name.winfo_width()
-        self.height = self.name.winfo_height()
+        # Resets the variables width and height to the actual size of the window
+        # self.width = self.name.winfo_width()
+        # self.height = self.name.winfo_height()
 
+        # Destroys the current frames and redraws them with the correct width and height dimensions
         self.destroy_frames()
         self.draw_frames()
 
     def update_variables(self):
+        # Updates the variables values
         self.tempDataLabel.config(text=self.temperature)
         self.pressureDataLabel.config(text=self.pressure)
         self.humidityDataLabel.config(text=self.humidity)
@@ -177,15 +182,12 @@ class MyWindow:
         self.angleDataLabel.config(text=self.angle_result)
 
     def draw_frames(self):
+        # Draws the frames and immediately draws the items in the frames
         self.subFrameLeft = Frame(self.name, bg=LightGray, height=self.height / 2, width=self.width / 2 - 5,
                                   relief=RAISED)
         self.subFrameRight = Frame(self.name, bg=LightGray, height=self.height / 2, width=self.width / 2 - 5,
                                    relief=RAISED)
         self.subFrameBottom = Frame(self.name, bg="#3C3F41", height=self.height / 3, width=self.width, relief=RAISED)
-
-        self.abortButton = Button(self.subFrameBottom, text="ABORT MISSION", state=self.abort_button_state, bg="red",
-                                  command=self.abort_message_callback, width=int(20/600 * self.width),
-                                  height=int(1.5/600 * self.height))
 
         self.statusLabel = Label(self.subFrameBottom, text=self.status_label_text, fg=self.status_label_text_color,
                                  bg="#808080", width= int(20/600 * self.width), height=int(2/600 * self.width))
@@ -197,11 +199,14 @@ class MyWindow:
         self.add_frame_features()
 
     def destroy_frames(self):
+        # Deletes the frames and their contents
         self.subFrameLeft.destroy()
         self.subFrameRight.destroy()
         self.subFrameBottom.destroy()
 
     def reset_variables(self):
+        # Resets all of the data on screen to zero
+
         # GPIO.output(self.gui_switch, GPIO.LOW)
         self.temperature = 0.0
         self.pressure = 0.0
@@ -215,7 +220,7 @@ class MyWindow:
         self.update_variables()
 
     def status_label_change(self, change_to):
-        # print(change_to)
+        # Updates the Mission Current Status label text color and text
         self.status_label_text = change_to
         self.statusLabel.config(text=self.status_label_text)
         if change_to == "VERIFIED":
@@ -229,6 +234,7 @@ class MyWindow:
             self.statusLabel.config(fg=self.status_label_text_color)
 
     def verify_message_callback(self):
+        # Creates a pop up window that asks if you are sure that you want to verify the launch. If yes then verify
         verify_response = messagebox.askyesno("Verify Launch", "Do you want to verify for launch?")
         if verify_response:
             self.verify_ok_to_launch = True
@@ -244,6 +250,7 @@ class MyWindow:
             self.log("NOT")
 
     def abort_message_callback(self):
+        # Creates a pop up window that asks if you are sure that you want to abort the launch. If yes then abort
         abort_response = messagebox.askyesno("Abort Mission?", "Do you really want to abort the mission?")
         if abort_response:
             self.has_aborted = True
@@ -257,12 +264,13 @@ class MyWindow:
             self.has_aborted = False
 
     def add_frame_features(self):
+        # Draws all of the features inside the frames including labels, buttons, etc.
         width = self.width
         height = self.height
         bgColor = "#333333"
         subFrameColor = "#3C3F41"
-        standardTextWidth = int(18/600 * width)
-        standardDataWidth = int(6/600 * width)
+        standardTextWidth = int(3/100 * width)
+        standardDataWidth = int(1/100 * width)
 
         x_place = 4/15 * width
         x_label_place = 1/60 * width
@@ -271,27 +279,27 @@ class MyWindow:
         subFrameRight = self.subFrameRight
         subFrameBottom = self.subFrameBottom
 
-        self.tempDataLabel = Label(self.subFrameLeft, text=self.temperature, fg="white", bg=bgColor,
+        self.tempDataLabel = Label(self.subFrameLeft, text=round(self.temperature, 4), fg="white", bg=bgColor,
                                    width=standardDataWidth)
-        self.altDataLabel = Label(self.subFrameRight, text=self.altitude, fg="white", bg=bgColor,
+        self.altDataLabel = Label(self.subFrameRight, text=round(self.altitude, 4), fg="white", bg=bgColor,
                                   width=standardDataWidth)
-        self.pressureDataLabel = Label(self.subFrameLeft, text=self.pressure, fg="white", bg=bgColor,
+        self.pressureDataLabel = Label(self.subFrameLeft, text=round(self.pressure, 4), fg="white", bg=bgColor,
                                        width=standardDataWidth)
-        self.cardinalDataLabel = Label(self.subFrameRight, text=self.direction, fg="white", bg=bgColor,
+        self.cardinalDataLabel = Label(self.subFrameRight, text=round(self.direction, 4), fg="white", bg=bgColor,
                                        width=standardDataWidth)
-        self.humidityDataLabel = Label(self.subFrameLeft, text=self.humidity, fg="white", bg=bgColor,
+        self.humidityDataLabel = Label(self.subFrameLeft, text=round(self.humidity, 4), fg="white", bg=bgColor,
                                        width=standardDataWidth)
-        self.accDataLabel = Label(self.subFrameRight, text=self.acceleration, fg="white", bg=bgColor,
+        self.accDataLabel = Label(self.subFrameRight, text=round(self.acceleration, 4), fg="white", bg=bgColor,
                                   width=standardDataWidth)
-        self.velocityDataLabel = Label(self.subFrameRight, text=self.velocity, fg="white", bg=bgColor,
+        self.velocityDataLabel = Label(self.subFrameRight, text=round(self.velocity, 4), fg="white", bg=bgColor,
                                        width=standardDataWidth)
-        self.angleDataLabel = Label(self.subFrameRight, text=self.angle_result, fg="white", bg=bgColor,
+        self.angleDataLabel = Label(self.subFrameRight, text=round(self.angle_result, 4), fg="white", bg=bgColor,
                                     width=standardDataWidth)
 
-        abortLabel = Label(subFrameBottom, text="Abort Mission:", bg=bgColor, fg="white", width=int(12/600*width))
+        abortLabel = Label(subFrameBottom, text="Abort Mission:", bg=bgColor, fg="white", width=int(1/50*width))
         abortLabel.place(x=x_label_place, y=int(55 / 600 * height))
 
-        verifyLabel = Label(subFrameBottom, text="Verify Launch:", bg=bgColor, fg="white", width=int(12/600*width))
+        verifyLabel = Label(subFrameBottom, text="Verify Launch:", bg=bgColor, fg="white", width=int(1/50*width))
         verifyLabel.place(x=x_label_place, y=int(125 / 600 * height))
 
         self.statusLabel.place(x=width * 5 / 8, y=int(2 / 15 * height))
@@ -307,54 +315,58 @@ class MyWindow:
         frameRightLabel.place(x=int(90 / 600 * width), y=5 / 600 * height)
 
         tempLabel = Label(subFrameLeft, text="Temperature (Celsius): ", fg="white", bg=bgColor, width=standardTextWidth)
-        tempLabel.place(x=x_label_place, y=int(40/600 * height))
+        tempLabel.place(x=x_label_place, y=int(1/15 * height))
 
-        self.tempDataLabel.place(x=x_place, y=int(40/600 * height))
+        self.tempDataLabel.place(x=x_place, y=int(1/15 * height))
 
         altLabel = Label(subFrameRight, text="Altitude (Meters): ", fg="white", bg=bgColor, width=standardTextWidth)
-        altLabel.place(x=x_label_place, y=int(40/600 * height))
+        altLabel.place(x=x_label_place, y=int(1/15 * height))
 
-        self.altDataLabel.place(x=x_place, y=int(40/600 * height))
+        self.altDataLabel.place(x=x_place, y=int(1/15 * height))
 
         pressureLabel = Label(subFrameLeft, text="Pressure (kPa): ", fg="white", bg=bgColor, width=standardTextWidth)
-        pressureLabel.place(x=x_label_place, y=int(80/600 * height))
+        pressureLabel.place(x=x_label_place, y=int(2/15 * height))
 
-        self.pressureDataLabel.place(x=x_place, y=int(80/600 * height))
+        self.pressureDataLabel.place(x=x_place, y=int(2/15 * height))
 
         cardinalLabel = Label(subFrameRight, text="Direction (°): ", fg="white", bg=bgColor, width=standardTextWidth)
-        cardinalLabel.place(x=x_label_place, y=int(80/600 * height))
+        cardinalLabel.place(x=x_label_place, y=int(2/15 * height))
 
-        self.cardinalDataLabel.place(x=x_place, y=int(80/600 * height))
+        self.cardinalDataLabel.place(x=x_place, y=int(2/15 * height))
 
         humidLabel = Label(subFrameLeft, text="Humidity (Percent): ", fg="white", bg=bgColor, width=standardTextWidth)
-        humidLabel.place(x=x_label_place, y=int(120/600 * height))
+        humidLabel.place(x=x_label_place, y=int(1/5 * height))
 
-        self.humidityDataLabel.place(x=x_place, y=int(120/600 * height))
+        self.humidityDataLabel.place(x=x_place, y=int(1/5 * height))
 
         accLabel = Label(subFrameRight, text="Acceleration (M/s/s): ", fg="white", bg=bgColor, width=standardTextWidth)
-        accLabel.place(x=x_label_place, y=int(120/600 * height))
+        accLabel.place(x=x_label_place, y=int(1/5 * height))
 
-        self.accDataLabel.place(x=x_place, y=int(120/600 * height))
+        self.accDataLabel.place(x=x_place, y=int(1/5 * height))
 
         velocityLabel = Label(subFrameRight, text="Velocity (M/s): ", fg="white", bg=bgColor, width=standardTextWidth)
-        velocityLabel.place(x=x_label_place, y=int(160/600 * height))
+        velocityLabel.place(x=x_label_place, y=int(4/15 * height))
 
-        self.velocityDataLabel.place(x=x_place, y=int(160/600 * height))
+        self.velocityDataLabel.place(x=x_place, y=int(4/15 * height))
 
         angleLabel = Label(subFrameRight, text="Angle (°): ", fg="white", bg=bgColor, width=standardTextWidth)
-        angleLabel.place(x=x_label_place, y=int(200/600 * height))
+        angleLabel.place(x=x_label_place, y=int(1/3 * height))
 
-        self.angleDataLabel.place(x=x_place, y=int(200/600 * height))
+        self.angleDataLabel.place(x=x_place, y=int(1/3 * height))
 
         angleEntryLabel = Label(subFrameLeft, text="Positive angle between 30° and 75°", fg="white", bg=subFrameColor,
                                 width=int(26/600 * width))
         angleEntryLabel.place(x=int(40/600 * width), y=int(230/600 * height))
 
+        self.abortButton = Button(self.subFrameBottom, text="ABORT MISSION", state=self.abort_button_state, bg="red",
+                                  command=self.abort_message_callback, width=int(20 / 600 * self.width),
+                                  height=int(1.5 / 600 * self.height))
+
         self.abortButton.place(x=int(1/6 * width), y=int(55/600 * height))
         self.abortButton.bind("<Enter>", self.on_enter_abort)
         self.abortButton.bind("<Leave>", self.on_leave)
 
-        verifyButton = Button(subFrameBottom, text="VERIFY LAUNCH", bg="green", command=self.verify_message_callback,
+        verifyButton = Button(subFrameBottom, text="VERIFY LAUNCH", background="green", command=self.verify_message_callback,
                               width=int(20/600 * width), height=int(1.5/600 * height))
 
         verifyButton.place(x=int(1/6 * width), y=int(125/600 * height))
@@ -368,10 +380,12 @@ class MyWindow:
                            textvariable=self.angle_result)
         self.angleEntry.place(x=int(40/600 * width), y=int(260/600 * height))
 
-        angleInputButton = Button(subFrameLeft, text="ENTER", width=int(15/600 * width), command=self.get_angle)
+        angleInputButton = ttk.Button(subFrameLeft, text="ENTER", width=int(15/600 * width), command=self.get_angle)
         angleInputButton.place(x=x_place, y=int(260/600 * height))
 
     def reset_variables_window(self):
+        # Creates a pop up window that asks if you are sure that you want to rest the variables.
+        # If yes then all the variables are reset
         reset_window = messagebox.askokcancel("Reset All Variables?", "Are you sure you want to reset all variables?")
         if reset_window:
             self.log("RESET")
@@ -439,6 +453,24 @@ class MyWindow:
 
 
 root = Tk()
-p = MyWindow(root)
+window = MyWindow(root)
+
+
+def config_resize(event):
+    if window.width != window.name.winfo_width() or window.height != window.name.winfo_height():
+        window.width = window.name.winfo_width()
+        window.height = window.name.winfo_height()
+        print("Var Width = " + str(window.width) + "   Act Width = " + str(window.name.winfo_width())
+              + "        Var Height = " + str(window.height) + "   Real Height = " + str(window.name.winfo_height()))
+        time.sleep(.0005)
+        window.update_size()
+        time.sleep(.0005)
+
+root.bind('<Configure>', config_resize)
+# Backup ideas!!!
+# root.bind('<B1-Motion>', mouse_resize)
+# root.bind('r', key_resize)
+
+
 root.mainloop()
 # GPIO.cleanup()
