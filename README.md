@@ -38,7 +38,7 @@ $ git clone https://github.com/purdue-orbital/Ground-Station-GUI.git
 ### Running
 
 ```
-$ cd Ground-Station-GUI
+$ cd Ground-Station-GUI/src
 $ python3 Mainwindow.py
 ```
 
