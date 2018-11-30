@@ -73,25 +73,46 @@ class MyWindow:
         self.name.geometry(window_geometry)
 
         # Environment Data
+        self.temperature_data = 15000.0
+        self.pressure_data = 6000.0
+        self.humidity_data = 100.0
+
         self.temperature = StringVar()
-        self.temperature.set(15000.0)
         self.pressure = StringVar()
-        self.pressure.set(6000.0)
         self.humidity = StringVar()
-        self.humidity.set(100.0)
 
         # System Data
-        self.altitude = StringVar()
-        self.altitude.set(15000000)
-        self.direction = StringVar()
-        self.direction.set(.1234)
-        self.acceleration = StringVar()
-        self.acceleration.set(90)
-        self.velocity = StringVar()
-        self.velocity.set(12)
-        self.user_angle = StringVar()
-        self.user_angle.set(458)
+        self.altitude_data = 15000000
+        self.direction_data = .1234
+        self.acceleration_data = 90
+        self.velocity_data = 12
+        self.user_angle_data = 458
 
+        self.altitude = StringVar()
+        self.direction = StringVar()
+        self.acceleration = StringVar()
+        self.velocity = StringVar()
+        self.user_angle = StringVar()
+
+        # Set up GPIO pins for use, see documentation for pin layout
+        # orange wire
+        self.launch_signal = 11
+        # yellow wire
+        self.on_signal = 12
+        # white wire
+        self.gui_switch = 7
+
+        # GPIO.setmode(GPIO.BOARD)
+        # GPIO.setwarnings(False)
+        # GPIO.setup(self.launch_signal, GPIO.IN)
+        # GPIO.setup(self.on_signal, GPIO.OUT)
+        # GPIO.setup(self.gui_switch, GPIO.OUT)
+
+        # GPIO.output(self.on_signal, GPIO.HIGH)
+        # GPIO.output(self.on_signal, GPIO.LOW)
+        # GPIO.output(self.gui_switch, GPIO.LOW)
+
+        self.display_variables()
         self.make_tool_bar()
 
         self.make_grid()
@@ -99,9 +120,20 @@ class MyWindow:
         self.make_environmental_section()
         self.make_system_section()
 
-        self.clock_frame = Label(name, font=('times', 50, 'bold'), bg='black', fg='green', text="00:00:00:00")
+        self.clock_frame = Label(name, font=('times', 50, 'bold'), bg='black', fg='white', text="00:00:00:00")
         self.clock_frame.grid(row=0, rowspan=self.command_row - 1, column=0, columnspan=self.labels_column - 1,
                               sticky=N+S+E+W)
+
+    def display_variables(self):
+        self.temperature.set(self.temperature_data)
+        self.pressure.set(self.pressure_data)
+        self.humidity.set(self.humidity_data)
+
+        self.altitude.set(self.altitude_data)
+        self.direction.set(self.direction_data)
+        self.acceleration.set(self.acceleration_data)
+        self.velocity.set(self.velocity_data)
+        self.user_angle.set(self.user_angle_data)
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
@@ -197,17 +229,21 @@ class MyWindow:
         angle_data.grid(row=space + 5, column=self.data_column)
 
     def make_command_section(self):
+        mission_status_label = Label(self.name, text="Current Status", font=('times', 15, 'underline'))
+        mission_status_label.grid(row=self.command_row, column=self.command_column-1,
+                                  columnspan=self.command_column + 1, sticky=N+S+E+W)
+
         self.display_mission_status = Label(self.name, textvariable=self.display_mission_status_text, font=('times',
                                                                                                             20, 'bold'))
-        self.display_mission_status.grid(row=self.command_row, column=self.command_column-1,
+        self.display_mission_status.grid(row=self.command_row + 1, column=self.command_column-1,
                                          columnspan=self.command_column+1, sticky=N+S+E+W)
 
         self.verify_button = ttk.Button(self.name, text="VERIFY", command=self.verify_message_callback)
-        self.verify_button.grid(row=self.command_row + 1, column=self.command_column-1,
+        self.verify_button.grid(row=self.command_row + 2, column=self.command_column-1,
                                 columnspan=self.command_column+1, sticky=N+S+E+W)
 
         self.abort_button = ttk.Button(self.name, text="ABORT", command=self.abort_message_callback)
-        self.abort_button.grid(row=self.command_row + 2, column=self.command_column-1,
+        self.abort_button.grid(row=self.command_row + 3, column=self.command_column-1,
                                columnspan=self.command_column+1, sticky=N+S+E+W)
 
     def log(self, status):
@@ -229,13 +265,13 @@ class MyWindow:
         fo.write("TIMESTAMP:" + current_date + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
-        fo.write("temperature = " + repr(self.temperature) + "\n")
-        fo.write("pressure = " + repr(self.pressure) + "\n")
-        fo.write("humidity = " + repr(self.humidity) + "\n")
-        fo.write("altitude = " + repr(self.altitude) + "\n")
-        fo.write("direction = " + repr(self.direction) + "\n")
-        fo.write("acceleration = " + repr(self.acceleration) + "\n")
-        fo.write("velocity = " + repr(self.velocity) + "\n")
+        fo.write("temperature = " + repr(self.temperature_data) + "\n")
+        fo.write("pressure = " + repr(self.pressure_data) + "\n")
+        fo.write("humidity = " + repr(self.humidity_data) + "\n")
+        fo.write("altitude = " + repr(self.altitude_data) + "\n")
+        fo.write("direction = " + repr(self.direction_data) + "\n")
+        fo.write("acceleration = " + repr(self.acceleration_data) + "\n")
+        fo.write("velocity = " + repr(self.velocity_data) + "\n")
         fo.write("----------LOGS END-----------\n")
         fo.write("-----------------------------\n\n")
         fo.close()
@@ -247,7 +283,7 @@ class MyWindow:
         logged_label.pack()
         button = Button(log_window, text="Close", command=lambda: log_window.destroy())
         button.pack()
-        self.log("MANUAL")
+        self.log(Status.MANUAL)
 
     def about_menu(self):
 
@@ -296,15 +332,17 @@ class MyWindow:
         # Resets all of the data on screen to zero
 
         # GPIO.output(self.gui_switch, GPIO.LOW)
-        self.temperature.set(0.0)
-        self.pressure.set(0.0)
-        self.humidity.set(0.0)
+        self.temperature_data = 0.0
+        self.pressure_data = 0.0
+        self.humidity_data = 0.0
 
-        self.altitude.set(0.0)
-        self.direction.set(0.0)
-        self.acceleration.set(0.0)
-        self.velocity.set(0.0)
-        self.user_angle.set("null")
+        self.altitude_data = 0.0
+        self.direction_data = 0.0
+        self.acceleration_data = 0.0
+        self.velocity_data = 0.0
+        self.user_angle_data = 0.0
+
+        self.display_variables()
 
     def verify_message_callback(self):
         if self.mission_status == Status.NOT_VERIFIED:
@@ -313,6 +351,7 @@ class MyWindow:
                 self.mission_status = Status.VERIFIED
                 self.change_status_display(self.mission_status)
                 self.log(self.mission_status)
+                # GPIO.output(self.gui_switch, GPIO.HIGH)
                 self.start = time.time()
                 self.clock_run = True
                 self.tick()
@@ -327,18 +366,57 @@ class MyWindow:
                 self.clock_run = False
                 self.verify_button.config(text="VERIFY")
 
+        elif self.mission_status == Status.ABORT:
+            verify_response = messagebox.askyesno("Verify Mission?", "Do you want to verify the mission")
+            if verify_response:
+                self.mission_status = Status.VERIFIED
+                self.change_status_display(self.mission_status)
+                self.log(self.mission_status)
+                self.start = time.time()
+                self.clock_run = True
+                self.tick()
+                self.verify_button.config(text="UNVERIFY")
+
     def abort_message_callback(self):
         abort_response = messagebox.askyesno("Abort Mission?", "Do you really want to abort the mission?")
         if abort_response:
-            self.mission_status = Status.ABORT
-            self.verify_button.config(text="--------")
-            self.log(self.mission_status)
-            self.change_status_display(self.mission_status)
-            abort_method = messagebox.askyesno("Which Abort Method?", "Fill in with better text later")
-            if abort_method:
-                self.abort_method = "CDM"
-            else:
-                self.abort_method = "QDM"
+            self.abort_method_window()
+
+    def abort_method_window(self):
+        method_window = Toplevel(self.name)
+        method_window.geometry("200x200")
+        method_window.resizable(width=False, height=False)
+
+        cmd_button = Button(method_window, text="CMD", command=lambda: self.select_cdm(method_window))
+        qdm_button = Button(method_window, text="QDM", command=lambda: self.select_qdm(method_window))
+        exit_button = Button(method_window, text="Close", command=lambda: method_window.destroy())
+
+        msg = Message(method_window, text="Please select a mission abort method")
+
+        msg.pack()
+        cmd_button.pack()
+        qdm_button.pack()
+        exit_button.pack()
+
+    def select_cdm(self, close_window):
+        self.abort_method = "CDM"
+        self.mission_status = Status.ABORT
+        self.log(self.mission_status)
+        self.clock_run = False
+        self.verify_button.config(text="VERIFY")
+        self.change_status_display(self.mission_status)
+        # GPIO.output(self.gui_switch, GPIO.LOW)
+        close_window.destroy()
+
+    def select_qdm(self, close_window):
+        self.abort_method = "QDM"
+        self.mission_status = Status.ABORT
+        self.clock_run = False
+        self.verify_button.config(text="VERIFY")
+        self.log(self.mission_status)
+        self.change_status_display(self.mission_status)
+        # GPIO.output(self.gui_switch, GPIO.LOW)
+        close_window.destroy()
 
     def change_status_display(self, status):
         if status == Status.ABORT:
@@ -370,3 +448,4 @@ root = Tk()
 window = MyWindow(root)
 
 root.mainloop()
+# GPIO.cleanup()
