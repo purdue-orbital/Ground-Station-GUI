@@ -105,7 +105,7 @@ def about():
     text.insert(INSERT, aboutText)
     text.config(state=DISABLED)
     text.pack()
-    top.img = img = PhotoImage(file="PurdueOrbitalLogoSmall.gif")
+    top.img = img = PhotoImage(file="../rec/PurdueOrbitalLogoSmall.gif")
     logo = Label(about_window, image=img)
     logo.place(x=220, y=200)
     button = Button(about_window, text="Close", command=lambda: close_window(about_window))
