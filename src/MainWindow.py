@@ -1,8 +1,8 @@
 import datetime
 import os
 import time
-import serial
-import RPi.GPIO as GPIO
+#import serial
+#import RPi.GPIO as GPIO
 from tkinter import *
 from tkinter import messagebox
 
