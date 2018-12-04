@@ -55,6 +55,8 @@ class MyWindow:
         self.command_row = 7
         self.command_column = 3
 
+        self.testing = False
+
         self.mission_status = Status.NOT_VERIFIED
         self.display_mission_status_text = StringVar()
         self.change_status_display(self.mission_status)
@@ -66,7 +68,7 @@ class MyWindow:
         self.abort_button = ttk.Button(self.name, text="ABORT", command=self.abort_message_callback)
 
         name.title("Ground Station Graphical User Interface V0.2")
-        name.iconbitmap('MyOrbital.ico')
+        # name.iconbitmap('MyOrbital.ico')
         # name.configure(background=self.bg)
 
         window_geometry = str(self.width) + 'x' + str(self.height)
@@ -150,6 +152,7 @@ class MyWindow:
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.name.quit)
 
+        program_menu.add_command(label="Test", command=self.toggleTestMode)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
         program_menu.add_command(label="Log", command=self.log_menu)
 
@@ -245,6 +248,15 @@ class MyWindow:
         self.abort_button = ttk.Button(self.name, text="ABORT", command=self.abort_message_callback)
         self.abort_button.grid(row=self.command_row + 3, column=self.command_column-1,
                                columnspan=self.command_column+1, sticky=N+S+E+W)
+
+
+    def toggleTestMode(self):
+        self.testing = not self.testing
+        print(self.testing)
+        if self.testing:
+            self.change_status_display("testing")
+        else:
+            self.change_status_display(self.mission_status)
 
     def log(self, status):
         fo = open("status_log.txt", "a")
@@ -419,7 +431,9 @@ class MyWindow:
         close_window.destroy()
 
     def change_status_display(self, status):
-        if status == Status.ABORT:
+        if self.testing:
+            self.display_mission_status_text.set("TESTING")
+        elif status == Status.ABORT:
             self.display_mission_status_text.set("ABORT")
         elif status == Status.NOT_VERIFIED:
             self.display_mission_status_text.set("NOT VERIFIED")
