@@ -120,6 +120,8 @@ class MyWindow:
         self.make_environmental_section()
         self.make_system_section()
 
+        self.current_time = "00:00:00:00"
+
         self.clock_frame = Label(name, font=('times', 50, 'bold'), bg='black', fg='white', text="00:00:00:00")
         self.clock_frame.grid(row=0, rowspan=self.command_row - 1, column=0, columnspan=self.labels_column - 1,
                               sticky=N+S+E+W)
@@ -262,7 +264,8 @@ class MyWindow:
         elif status == Status.NOT_VERIFIED:
             fo.write("-----STATUS NOT VERIFIED-----\n")
 
-        fo.write("TIMESTAMP:" + current_date + "\n")
+        fo.write("DATE:" + current_date + "\n")
+        fo.write("TIMESTAMP:" + repr(self.current_time) + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
         fo.write("temperature = " + repr(self.temperature_data) + "\n")
@@ -436,11 +439,14 @@ class MyWindow:
         self.hours = int(self.minutes) // 60
         self.minutes = int(self.minutes) % 60
 
+        self. current_time = str(self.hours).zfill(2) + ":" + str(self.minutes).zfill(2) + ":" + str(self.seconds).zfill(2) + ":" + str(self.milliseconds).zfill(2)
+
         self.clock_frame.config(text=str(self.hours).zfill(2) + ":" + str(self.minutes).zfill(2) + ":" +
                                 str(self.seconds).zfill(2) + ":" + str(self.milliseconds).zfill(2))
         if self.clock_run:
             self.clock_frame.after(10, self.tick)
         else:
+            self.current_time = "00:00:00:00"
             self.clock_frame.config(text="00:00:00:00")
 
 
