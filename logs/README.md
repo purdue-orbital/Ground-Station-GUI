@@ -1,7 +1,7 @@
 # Logging format
 Structure and an example of the logging function
 ## Structure
-
+```
   --------ACTION TAKEN---------
   DATE:20xx-xx-xx hh:mm:ss
   TIMESTAMP:'hh:mm:ss:ms'
@@ -16,8 +16,9 @@ Structure and an example of the logging function
   velocity = m/s
   ----------LOGS END-----------
   -----------------------------
-
+```
 ## Example
+```
   -------PROGRAM RESTART-------
   DATE:2018-12-16 16:23:33
   TIMESTAMP:'00:00:00:00'
@@ -32,3 +33,4 @@ Structure and an example of the logging function
   velocity = 12
   ----------LOGS END-----------
   -----------------------------
+```
