@@ -3,4 +3,5 @@ TestWindow.py
 status_log.txt
 ./idea/workspace.xml
 __pycache__
+*.pyc
 src/RPi
