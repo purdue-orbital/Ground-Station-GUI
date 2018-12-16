@@ -12,7 +12,7 @@ from enum import Enum
 """
 ROCKET GUI Version 0.2
 
-Author: Matt Drozt
+Author: Matt Drozt, Ken Sodetz, Jay Rixie
 Since: 10/31/2018
 
 Created for Purdue Orbital Electrical and Software Sub team
@@ -261,7 +261,7 @@ class MyWindow:
             self.change_status_display(self.mission_status)
 
     def log(self, status):
-        fo = open("status_log.txt", "a")
+        fo = open("../logs/status_log.txt", "a")
         current_date = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
         if status == Status.ABORT:
             fo.write("-------MISSION ABORTED-------\n")
