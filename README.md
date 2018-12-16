@@ -10,7 +10,7 @@ These instructions will get you started for testing purposes.
 
 __Discalimer:__ _This software was specifically developed for use on a Raspberry Pi 3B. This software is currently in development and is not yet suitable for field use._
 
-Ensure Python3 is installed on your system. Python 3.6 is recommended.
+Ensure Python3 is installed on your system. Python 3.5 is recommended.
 
 To check which version of Python 3 you have installed, run 
 
@@ -22,7 +22,7 @@ If Python 3 is not installed, then run
 
 ```
 $ sudo apt-get update
-$ sudo apt-get install python3.6
+$ sudo apt-get install python3.5
 ```
 
 This software also uses the RPi.GPIO library. It should be installed by default on all Raspberry Pi 3B's. 
@@ -38,18 +38,14 @@ $ git clone https://github.com/purdue-orbital/Ground-Station-GUI.git
 ### Running
 
 ```
-$ cd Ground-Station-GUI
+$ cd Ground-Station-GUI/src
 $ python3 Mainwindow.py
 ```
 
-This will get the GUI running. However, to get the full functionality of the system, you will need to hook up the appropriate wires to the correct GPIO pins on the Raspberry Pi. Tutorial coming soon.
+This will get the GUI running. However, to get the full functionality of the system, you will need to hook up the appropriate wires to the correct GPIO pins on the Raspberry Pi 3B.
 
 ### Hardware Connections
 
 Tutorial and schematics coming soon.
 
 
-## Features
-
-The Ground Station GUI was specifically designed for Purdue Orbital by the Electrical Team. It implements a few key features that satisfy the needs of the team. 
-Firstly, it acts as a software-enabled lock that prevents the launch of the rocket without verification from the user in the software. This is achieved by the "Verify Launch" button and the "Abort Mission" button, which toggle between 3 states: Verified, Not Verified, and Mission Aborted. By utilizing the General Purpose Input Output pins (GPIO), we are able to send out a signal to the Ground Station circuit, and receive verification back from the circuit that a launch had been initiated. 
