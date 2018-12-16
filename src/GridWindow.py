@@ -68,7 +68,7 @@ class MyWindow:
         self.abort_button = ttk.Button(self.name, text="ABORT", command=self.abort_message_callback)
 
         name.title("Ground Station Graphical User Interface V0.2")
-        # name.iconbitmap('MyOrbital.ico')
+        name.iconbitmap('@res/img/favicon.XBM')
         # name.configure(background=self.bg)
 
         window_geometry = str(self.width) + 'x' + str(self.height)
@@ -261,7 +261,7 @@ class MyWindow:
             self.change_status_display(self.mission_status)
 
     def log(self, status):
-        fo = open("../logs/status_log.txt", "a")
+        fo = open("logs/status_log.txt", "a")
         current_date = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
         if status == Status.ABORT:
             fo.write("-------MISSION ABORTED-------\n")
@@ -293,8 +293,8 @@ class MyWindow:
 
     def log_menu(self):
         log_window = Toplevel(self.name)
-        log_window.title("Manuel Log")
-        logged_label = Label(log_window, text="The current variables have been logged in 'status_log.txt'")
+        log_window.title("Manual Log")
+        logged_label = Label(log_window, text="The current variables have been logged in 'logs/status_log.txt'")
         logged_label.pack()
         button = Button(log_window, text="Close", command=lambda: log_window.destroy())
         button.pack()
@@ -302,7 +302,7 @@ class MyWindow:
 
     def about_menu(self):
 
-        about_text = "Ground Station Graphical User Interface Version 0.1\n\n" \
+        about_text = "Ground Station Graphical User Interface Version 0.2\n\n" \
                     "Author: Ken Sodetz, Matt Drozt\n" \
                     "Since: 11/27/2018\n\n" \
                     "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
@@ -312,14 +312,14 @@ class MyWindow:
 
         about_window = Toplevel(self.name)
         about_window.title("About")
-        about_window.resizable(width=False, height=False)
+        about_window.resizable(width=True, height=False)
         text = Text(about_window)
         text.insert(INSERT, about_text)
         text.config(state=DISABLED)
         text.pack()
-        self.name.img = img = PhotoImage(file="PurdueOrbitalLogoSmall.gif")
+        self.name.img = img = PhotoImage(file="res/img/orbital-logo-reduced.gif")
         logo = Label(about_window, image=img)
-        logo.place(x=220, y=200)
+        logo.place(x=0, y=200)
         button = Button(about_window, text="Close", command=lambda: about_window.destroy())
         button.pack()
 
