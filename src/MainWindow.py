@@ -1,12 +1,12 @@
-from tkinter import *
-from tkinter import messagebox
-from tkinter import ttk
 import datetime
 import time
 import os
+from tkinter import *
+from tkinter import messagebox
+from tkinter import ttk
 from enum import Enum
-# import serial
-# import RPi.GPIO as GPIO
+import serial
+import RPi.GPIO as GPIO
 
 
 """
