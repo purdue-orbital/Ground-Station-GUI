@@ -42,7 +42,7 @@ $ git clone https://github.com/purdue-orbital/Ground-Station-GUI.git
 Running the setup script will get the environment ready for use.
 The `run.sh` and `setup.sh` scripts may not have the correct permisions to run. If a _Permission Denied_ is encountered, run
 ```sh
-$ chmod 777 run.sh setup.sh
+$ chmod u+x run.sh setup.sh
 ```
 If you are running on a development machine (Windows, Mac, Linux, anything that is __not__ a Raspberry Pi)
 ```sh
