@@ -44,12 +44,13 @@ The `run.sh` and `setup.sh` scripts may not have the correct permisions to run. 
 ```sh
 $ chmod u+x run.sh setup.sh
 ```
+#### Development Env
 If you are running on a development machine (Windows, Mac, Linux, anything that is __not__ a Raspberry Pi)
 ```sh
 $ ./setup.sh -w
 ```
 This will install the the mock RPi.GPIO library that is not normally available to traditional environments.
-
+#### Field / Prod Env
 If you are running on a Raspberry Pi (Production/Field environment):
 ```sh
 $ ./setup.sh -c
