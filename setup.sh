@@ -9,8 +9,8 @@ NC='\033[0m'
 gpio_txt=$( cat res/gpio_script.txt )
 dir="src/RPi"
 
-if [ "$1" = "-w"  ]; then
-	printf "Are you sure you want to setup in Testing / Devlopment mode? (y/n): "
+if [ "$1" = "-d"  ]; then
+	printf "Are you sure you want to setup in Devlopment mode? (y/n): "
 	read ans
 	if [ "$ans" = "y" ]; then
 		printf "${BLUE}Setting up in Testing / Development Mode\n"
@@ -36,15 +36,16 @@ elif [ "$1" = "--help" ]; then
 	printf "The setup script for Purdue Orbital's Ground Station GUI\n\n"
 	printf "Usage: ./setup.sh [arguments]\n\n"
 	printf "Arguments:\n"
-	printf "%s\t\t%s\n" "-c" "Setup Full Deployment Environment"
-	printf "%s\t\t%s\n" "-w" "Setup Development/Testing Environment"
+	printf "%s\t\t%s\n" "-p" "Setup Full Deployment/Production Environment"
+	printf "%s\t\t%s\n" "-d" "Setup Development Environment"
+	printf "%s\t\t%s\n" "-t" "Setup Testing Environment"
 	printf "%s\t\t%s\n" "--help" "Print Help (this message) and exits"
 	# printf "%s\t%s\n" "--version" "Print Version and exits"
 	exit 0
-elif [ "$1" = "-c" ]; then
+elif [ "$1" = "-p" ]; then
 	printf "Cleaning up...\n"
 	if [[ ! -d $dir ]]; then
-		printf "${YELLOW}Already ready for Desployment. Cancelling...\n"
+		printf "${YELLOW}Already ready for Deployment. Cancelling...\n"
 		exit 0
 	fi
 	rm -r "src/RPi"

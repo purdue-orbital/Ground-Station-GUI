@@ -68,7 +68,7 @@ class MyWindow:
         self.abort_button = ttk.Button(self.name, text="ABORT", command=self.abort_message_callback)
 
         name.title("Ground Station Graphical User Interface V0.2")
-        name.iconbitmap('@res/img/favicon.XBM')
+        # name.iconbitmap('@res/img/favicon.XBM')
         # name.configure(background=self.bg)
 
         window_geometry = str(self.width) + 'x' + str(self.height)
