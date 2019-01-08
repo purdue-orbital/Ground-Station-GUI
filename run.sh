@@ -38,16 +38,23 @@ ascii="
 printf "${YELLOW}$ascii\n\n\n"
 printf "${NC}PURDUE ORBITAL, ${YELLOW}PURDUE UNIVERSITY\n"
 printf "${NC}Ground Station Sub Team\n"
-printf "Attempting to run src/MainWindow.py...\n"
+printf "Checking Python version...\n"
+
 
 version=$( python3 -c 'import sys; print(sys.version_info[1])' )
 if [ $version != '5' ]; then
 	printf "${RED}[ERROR] Python version must be 3.5 or higher\n"
-	printf "[Process Failed]\n"
+	printf "Your version is:${NC}\n"
+	python3 --version
+	printf "${RED}[Process Failed]\n"
 	exit 99
 fi
 
-python3 src/MainWindow.py
+printf "Python check passed\n"
+
+printf "Attempting to run src/MainWindow.py...\n"
+
+python3 src/MainWindow.py &
 if [ $? == '1' ]; then
 	printf "${RED}^^^^^^^^^^^^\n\n\n"
 	printf "[ERROR] src/MainWindow.py was unable to start.\n"
