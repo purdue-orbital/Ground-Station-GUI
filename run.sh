@@ -42,7 +42,7 @@ printf "Checking Python version...\n"
 
 
 version=$( python3 -c 'import sys; print(sys.version_info[1])' )
-if [ $version != '5' ]; then
+if [ $version -lt '5' ]; then
 	printf "${RED}[ERROR] Python version must be 3.5 or higher\n"
 	printf "Your version is:${NC}\n"
 	python3 --version
