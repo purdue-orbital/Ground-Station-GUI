@@ -104,15 +104,15 @@ class MyWindow:
         # white wire
         self.gui_switch = 7
 
-        # GPIO.setmode(GPIO.BOARD)
-        # GPIO.setwarnings(False)
-        # GPIO.setup(self.launch_signal, GPIO.IN)
-        # GPIO.setup(self.on_signal, GPIO.OUT)
-        # GPIO.setup(self.gui_switch, GPIO.OUT)
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setwarnings(False)
+        GPIO.setup(self.launch_signal, GPIO.IN)
+        GPIO.setup(self.on_signal, GPIO.OUT)
+        GPIO.setup(self.gui_switch, GPIO.OUT)
 
-        # GPIO.output(self.on_signal, GPIO.HIGH)
-        # GPIO.output(self.on_signal, GPIO.LOW)
-        # GPIO.output(self.gui_switch, GPIO.LOW)
+        GPIO.output(self.on_signal, GPIO.HIGH)
+        GPIO.output(self.on_signal, GPIO.LOW)
+        GPIO.output(self.gui_switch, GPIO.LOW)
 
         self.display_variables()
         self.make_tool_bar()
@@ -330,8 +330,8 @@ class MyWindow:
 
     def restart_program(self):
         python = sys.executable
-        # GPIO.output(self.gui_switch, GPIO.LOW)
-        # GPIO.cleanup()
+        GPIO.output(self.gui_switch, GPIO.LOW)
+        GPIO.cleanup()
         self.log(Status.RESTART)
         os.execl(python, python, *sys.argv)
 
@@ -346,7 +346,7 @@ class MyWindow:
     def reset_variables(self):
         # Resets all of the data on screen to zero
 
-        # GPIO.output(self.gui_switch, GPIO.LOW)
+        GPIO.output(self.gui_switch, GPIO.LOW)
         self.temperature_data = 0.0
         self.pressure_data = 0.0
         self.humidity_data = 0.0
@@ -366,7 +366,7 @@ class MyWindow:
                 self.mission_status = Status.VERIFIED
                 self.change_status_display(self.mission_status)
                 self.log(self.mission_status)
-                # GPIO.output(self.gui_switch, GPIO.HIGH)
+                GPIO.output(self.gui_switch, GPIO.HIGH)
                 self.start = time.time()
                 self.clock_run = True
                 self.tick()
@@ -420,7 +420,7 @@ class MyWindow:
         self.clock_run = False
         self.verify_button.config(text="VERIFY")
         self.change_status_display(self.mission_status)
-        # GPIO.output(self.gui_switch, GPIO.LOW)
+        GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
 
     def select_qdm(self, close_window):
@@ -430,7 +430,7 @@ class MyWindow:
         self.verify_button.config(text="VERIFY")
         self.log(self.mission_status)
         self.change_status_display(self.mission_status)
-        # GPIO.output(self.gui_switch, GPIO.LOW)
+        GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
 
     def change_status_display(self, status):
@@ -468,4 +468,4 @@ root = Tk()
 window = MyWindow(root)
 
 root.mainloop()
-# GPIO.cleanup()
+GPIO.cleanup()
