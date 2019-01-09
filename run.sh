@@ -58,8 +58,8 @@ python3 src/MainWindow.py
 if [ $? == '1' ]; then
 	printf "${RED}^^^^^^^^^^^^\n\n\n"
 	printf "[ERROR] src/MainWindow.py was unable to start.\n"
-	printf "If the underlines error shows ${YELLOW}ImportError${RED}, run ${YELLOW}./setup.sh ${RED}to ensure the proper environment has been set up.\n"
-	printf "[Process Failed]"
+	printf "If the underlined error shows ${YELLOW}ImportError${RED}, run ${YELLOW}./setup.sh ${RED}to ensure the proper environment has been set up.\n"
+	printf "[Process Failed]\n"
 	exit 99
 fi
 

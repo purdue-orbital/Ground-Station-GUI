@@ -38,8 +38,8 @@ class Status(Enum):
 class MyWindow:
     def __init__(self, name):
         ground_station_path = os.path.dirname(os.getcwd())
-        self.status_log_path = os.path.join(ground_station_path, "logs\status_log.txt")
-        self.image_folder_path = os.path.join(ground_station_path, "res\img")
+        self.status_log_path = os.path.join(ground_station_path, "logs/status_log.txt")
+        self.image_folder_path = os.path.join(ground_station_path, "res/img")
 
         self.name = name
         self.width = 600
@@ -61,8 +61,8 @@ class MyWindow:
         self.verify_button = ttk.Button(self.name, text="VERIFY", command=self.verify_message_callback)
         self.abort_button = ttk.Button(self.name, text="ABORT", command=self.abort_message_callback)
 
-        name.title("Ground Station Graphical User Interface V0.2")
-        name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
+        name.title("Ground Station Graphical User Interface v0.2")
+        # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
         window_geometry = str(self.width) + 'x' + str(self.height)
         self.name.geometry(window_geometry)
