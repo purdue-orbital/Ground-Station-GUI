@@ -37,7 +37,7 @@ class Status(Enum):
 
 class MyWindow:
     def __init__(self, name):
-        ground_station_path = os.path.dirname(os.getcwd())
+        ground_station_path = os.getcwd()
         self.status_log_path = os.path.join(ground_station_path, "logs/status_log.txt")
         self.image_folder_path = os.path.join(ground_station_path, "res/img")
 
