@@ -2,33 +2,41 @@ import time
 import tkinter as tk
 from tkinter import *
 
-milliseconds = 0;
-seconds = 0;
-minutes = 0;
-hours = 0;
-start = time.time()
-# your code
 
+class Timer:
+    def __init__(self, place_window, row_start, row_span, column_start, column_span):
+        self.milliseconds = 0
+        self.seconds = 0
+        self.minutes = 0
+        self.hours = 0
+        self.start = 0
+        self.clock_run = False
 
-def tick():
-    global milliseconds, seconds, minutes, hours, start
-    currTime = str(time.time() - start)
-    dot = currTime.find('.')
-    milliseconds = currTime[dot+1:dot+3]
-    seconds = int(currTime[:dot])
-    minutes = int(seconds)//60
-    seconds = int(seconds)%60
-    hours = int(minutes)//60
-    minutes = int(minutes)%60
+        self.current_time = "00:00:00:00"
 
-    #print(str(hours)+":"+str(minutes)+":"+str(seconds)+":"+str(milliseconds))
-    clock_frame.config(text=str(hours).zfill(2)+":"+str(minutes).zfill(2)+":"+str(seconds).zfill(2)+":"+str(milliseconds).zfill(2))
-    clock_frame.after(10, tick)
+        self.clock_frame = Label(place_window, font=('times', 50, 'bold'), bg='black', fg='white', text="00:00:00:00")
+        self.clock_frame.grid(row=row_start, rowspan=row_span, column=column_start, columnspan=column_span,
+                              sticky=N + S + E + W)
 
-root = tk.Tk()
-root.title('Clock')
-clock_frame = tk.Label(root, font=('times', 100, 'bold'), bg='black', fg='green')
-clock_frame.pack(fill='both', expand=1)
-root.geometry('700x500')
-tick()
-root.mainloop()
+    def tick(self):
+        current_time = str(time.time() - self.start)
+        dot = current_time.find('.')
+        self.milliseconds = current_time[dot + 1:dot + 3]
+        self.seconds = int(current_time[:dot])
+        self.minutes = int(self.seconds) // 60
+        self.seconds = int(self.seconds) % 60
+        self.hours = int(self.minutes) // 60
+        self.minutes = int(self.minutes) % 60
+
+        self.current_time = str(self.hours).zfill(2) + ":" + str(self.minutes).zfill(2) + ":" + str(self.seconds).zfill(
+            2) + ":" + str(self.milliseconds).zfill(2)
+
+        self.clock_frame.config(text=str(self.hours).zfill(2) + ":" + str(self.minutes).zfill(2)
+                                     + ":" + str(self.seconds).zfill(2) + ":" + str(self.milliseconds).zfill(2))
+
+        if self.clock_run:
+            self.clock_frame.after(10, self.tick)
+        else:
+            self.current_time = "00:00:00:00"
+            self.clock_frame.config(text="00:00:00:00")
+

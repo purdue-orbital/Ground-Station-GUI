@@ -5,8 +5,10 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 from enum import Enum
-import serial
+# import serial
 import RPi.GPIO as GPIO
+
+from Timer import *
 
 
 """
@@ -39,13 +41,6 @@ class MyWindow:
         self.width = 600
         self.height = 600
 
-        self.milliseconds = 0
-        self.seconds = 0
-        self.minutes = 0
-        self.hours = 0
-        self.start = 0
-        self.clock_run = False
-
         self.bg = "#333333"
         self.FrameColor = "#3C3F41"
 
@@ -69,7 +64,6 @@ class MyWindow:
 
         name.title("Ground Station Graphical User Interface V0.2")
         # name.iconbitmap('@res/img/favicon.XBM')
-        # name.configure(background=self.bg)
 
         window_geometry = str(self.width) + 'x' + str(self.height)
         self.name.geometry(window_geometry)
@@ -122,11 +116,9 @@ class MyWindow:
         self.make_environmental_section()
         self.make_system_section()
 
-        self.current_time = "00:00:00:00"
+        self.my_timer = Timer(name, 0, self.command_row - 1, 0, self.labels_column - 1)
 
-        self.clock_frame = Label(name, font=('times', 50, 'bold'), bg='black', fg='white', text="00:00:00:00")
-        self.clock_frame.grid(row=0, rowspan=self.command_row - 1, column=0, columnspan=self.labels_column - 1,
-                              sticky=N+S+E+W)
+        print(os.getcwd())
 
     def display_variables(self):
         self.temperature.set(self.temperature_data)
@@ -154,7 +146,6 @@ class MyWindow:
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.name.quit)
 
-        program_menu.add_command(label="Test", command=self.toggleTestMode)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
         program_menu.add_command(label="Log", command=self.log_menu)
 
@@ -251,17 +242,8 @@ class MyWindow:
         self.abort_button.grid(row=self.command_row + 3, column=self.command_column-1,
                                columnspan=self.command_column+1, sticky=N+S+E+W)
 
-
-    def toggleTestMode(self):
-        self.testing = not self.testing
-        print(self.testing)
-        if self.testing:
-            self.change_status_display("testing")
-        else:
-            self.change_status_display(self.mission_status)
-
     def log(self, status):
-        fo = open("logs/status_log.txt", "a")
+        fo = open("test.txt", "a")
         current_date = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
         if status == Status.ABORT:
             fo.write("-------MISSION ABORTED-------\n")
@@ -277,7 +259,7 @@ class MyWindow:
             fo.write("-----STATUS NOT VERIFIED-----\n")
 
         fo.write("DATE:" + current_date + "\n")
-        fo.write("TIMESTAMP:" + repr(self.current_time) + "\n")
+        fo.write("TIMESTAMP:" + repr(self.my_timer.current_time) + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
         fo.write("temperature = " + repr(self.temperature_data) + "\n")
@@ -303,7 +285,7 @@ class MyWindow:
     def about_menu(self):
 
         about_text = "Ground Station Graphical User Interface Version 0.2\n\n" \
-                    "Author: Ken Sodetz, Matt Drozt\n" \
+                    "Author: Matt Drozt, Ken Sodetz\n" \
                     "Since: 11/27/2018\n\n" \
                     "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
                     "Parses and displays data from the a Raspberry Pi 3 to verbosely display all\n" \
@@ -367,9 +349,9 @@ class MyWindow:
                 self.change_status_display(self.mission_status)
                 self.log(self.mission_status)
                 GPIO.output(self.gui_switch, GPIO.HIGH)
-                self.start = time.time()
-                self.clock_run = True
-                self.tick()
+                self.my_timer.start = time.time()
+                self.my_timer.clock_run = True
+                self.my_timer.tick()
                 self.verify_button.config(text="UNVERIFY")
 
         elif self.mission_status == Status.VERIFIED:
@@ -378,7 +360,7 @@ class MyWindow:
                 self.mission_status = Status.NOT_VERIFIED
                 self.change_status_display(self.mission_status)
                 self.log(self.mission_status)
-                self.clock_run = False
+                self.my_timer.clock_run = False
                 self.verify_button.config(text="VERIFY")
 
         elif self.mission_status == Status.ABORT:
@@ -387,9 +369,9 @@ class MyWindow:
                 self.mission_status = Status.VERIFIED
                 self.change_status_display(self.mission_status)
                 self.log(self.mission_status)
-                self.start = time.time()
-                self.clock_run = True
-                self.tick()
+                self.my_timer.start = time.time()
+                self.my_timer.clock_run = True
+                self.my_timer.tick()
                 self.verify_button.config(text="UNVERIFY")
 
     def abort_message_callback(self):
@@ -417,7 +399,7 @@ class MyWindow:
         self.abort_method = "CDM"
         self.mission_status = Status.ABORT
         self.log(self.mission_status)
-        self.clock_run = False
+        self.my_timer.clock_run = False
         self.verify_button.config(text="VERIFY")
         self.change_status_display(self.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
@@ -426,7 +408,7 @@ class MyWindow:
     def select_qdm(self, close_window):
         self.abort_method = "QDM"
         self.mission_status = Status.ABORT
-        self.clock_run = False
+        self.my_timer.clock_run = False
         self.verify_button.config(text="VERIFY")
         self.log(self.mission_status)
         self.change_status_display(self.mission_status)
@@ -442,26 +424,6 @@ class MyWindow:
             self.display_mission_status_text.set("NOT VERIFIED")
         elif status == Status.VERIFIED:
             self.display_mission_status_text.set("VERIFIED")
-
-    def tick(self):
-        current_time = str(time.time() - self.start)
-        dot = current_time.find('.')
-        self.milliseconds = current_time[dot + 1:dot + 3]
-        self.seconds = int(current_time[:dot])
-        self.minutes = int(self.seconds) // 60
-        self.seconds = int(self.seconds) % 60
-        self.hours = int(self.minutes) // 60
-        self.minutes = int(self.minutes) % 60
-
-        self. current_time = str(self.hours).zfill(2) + ":" + str(self.minutes).zfill(2) + ":" + str(self.seconds).zfill(2) + ":" + str(self.milliseconds).zfill(2)
-
-        self.clock_frame.config(text=str(self.hours).zfill(2) + ":" + str(self.minutes).zfill(2) + ":" +
-                                str(self.seconds).zfill(2) + ":" + str(self.milliseconds).zfill(2))
-        if self.clock_run:
-            self.clock_frame.after(10, self.tick)
-        else:
-            self.current_time = "00:00:00:00"
-            self.clock_frame.config(text="00:00:00:00")
 
 
 root = Tk()
