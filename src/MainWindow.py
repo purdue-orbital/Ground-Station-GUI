@@ -37,6 +37,10 @@ class Status(Enum):
 
 class MyWindow:
     def __init__(self, name):
+        ground_station_path = os.path.dirname(os.getcwd())
+        self.status_log_path = os.path.join(ground_station_path, "logs\status_log.txt")
+        self.image_folder_path = os.path.join(ground_station_path, "res\img")
+
         self.name = name
         self.width = 600
         self.height = 600
@@ -58,7 +62,7 @@ class MyWindow:
         self.abort_button = ttk.Button(self.name, text="ABORT", command=self.abort_message_callback)
 
         name.title("Ground Station Graphical User Interface V0.2")
-        # name.iconbitmap('@res/img/favicon.XBM')
+        name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
         window_geometry = str(self.width) + 'x' + str(self.height)
         self.name.geometry(window_geometry)
@@ -112,8 +116,6 @@ class MyWindow:
         self.make_system_section()
 
         self.my_timer = Timer(name, 0, self.command_row - 1, 0, self.labels_column - 1)
-
-        print(os.getcwd())
 
     def display_variables(self):
         self.temperature.set(self.temperature_data)
@@ -238,7 +240,7 @@ class MyWindow:
                                columnspan=self.command_column+1, sticky=N+S+E+W)
 
     def log(self, status):
-        fo = open("test.txt", "a")
+        fo = open(self.status_log_path, "a")
         current_date = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
         if status == Status.ABORT:
             fo.write("-------MISSION ABORTED-------\n")
@@ -289,12 +291,12 @@ class MyWindow:
 
         about_window = Toplevel(self.name)
         about_window.title("About")
-        about_window.resizable(width=True, height=False)
+        about_window.resizable(width=False, height=False)
         text = Text(about_window)
         text.insert(INSERT, about_text)
         text.config(state=DISABLED)
         text.pack()
-        self.name.img = img = PhotoImage(file="res/img/orbital-logo-reduced.gif")
+        self.name.img = img = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
         logo = Label(about_window, image=img)
         logo.place(x=0, y=200)
         button = Button(about_window, text="Close", command=lambda: about_window.destroy())
