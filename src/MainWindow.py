@@ -41,16 +41,11 @@ class MyWindow:
         self.width = 600
         self.height = 600
 
-        self.bg = "#333333"
-        self.FrameColor = "#3C3F41"
-
         self.data_column = 10
         self.labels_column = self.data_column - 2
 
         self.command_row = 7
         self.command_column = 3
-
-        self.testing = False
 
         self.mission_status = Status.NOT_VERIFIED
         self.display_mission_status_text = StringVar()
@@ -381,14 +376,15 @@ class MyWindow:
 
     def abort_method_window(self):
         method_window = Toplevel(self.name)
-        method_window.geometry("200x200")
+        method_window.geometry("250x150")
         method_window.resizable(width=False, height=False)
 
-        cmd_button = Button(method_window, text="CMD", command=lambda: self.select_cdm(method_window))
-        qdm_button = Button(method_window, text="QDM", command=lambda: self.select_qdm(method_window))
-        exit_button = Button(method_window, text="Close", command=lambda: method_window.destroy())
+        cmd_button = ttk.Button(method_window, text="CMD", width=20, command=lambda: self.select_cdm(method_window))
+        qdm_button = ttk.Button(method_window, text="QDM", width=20, command=lambda: self.select_qdm(method_window))
+        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: method_window.destroy())
 
-        msg = Message(method_window, text="Please select a mission abort method")
+        msg = Message(method_window, text="Please select a mission abort method", font=('times', 12, 'bold'), width=200,
+                      justify=CENTER, pady=15)
 
         msg.pack()
         cmd_button.pack()
@@ -416,9 +412,7 @@ class MyWindow:
         close_window.destroy()
 
     def change_status_display(self, status):
-        if self.testing:
-            self.display_mission_status_text.set("TESTING")
-        elif status == Status.ABORT:
+        if status == Status.ABORT:
             self.display_mission_status_text.set("ABORT")
         elif status == Status.NOT_VERIFIED:
             self.display_mission_status_text.set("NOT VERIFIED")
