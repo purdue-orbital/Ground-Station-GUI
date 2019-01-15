@@ -25,7 +25,6 @@ data (data that cannot be changed).
 
 """
 
-
 class Status(Enum):
     ABORT = "MISSION ABORTED"
     VERIFIED = "STATUS VERIFIED"
@@ -34,15 +33,16 @@ class Status(Enum):
     RESET = "VARIABLES RESET"
     RESTART = "PROGRAM RESTART"
 
-
 class MyWindow:
-    def __init__(self, name):
+    def __init__(self, name, queue):
+        self.queue = queue
+
         ground_station_path = os.getcwd()
         self.status_log_path = os.path.join(ground_station_path, "logs/status_log.txt")
         self.image_folder_path = os.path.join(ground_station_path, "res/img")
 
         self.name = name
-        self.width = 1920
+        self.width = 600
         self.height = 600
 
         self.data_column = 10
@@ -421,9 +421,26 @@ class MyWindow:
         elif status == Status.VERIFIED:
             self.display_mission_status_text.set("VERIFIED")
 
+    def processIncoming(self):
+        """Handle all messages currently in the queue, if any."""
+        while self.queue.qsize():
+            try:
+                dataJson = self.queue.get(0)
+                # Check contents of message and do whatever is needed. As a
+                # simple test, print it (in real life, you would
+                # suitably update the GUI's display in a richer fashion).
+                print(dataJson)
+                self.temperature_data = dataJson["temperature"]
+                self.pressure_data = dataJson["pressure"]
+                self.humidity_data = dataJson["humidity"]
+                self.altitude_data = dataJson["altitude"]
+                self.direction_data = dataJson["direction"]
+                self.acceleration_data = dataJson["acceleration"]
+                self.velocity_data = dataJson["velocity"]
+                self.user_angle_data = dataJson["user_angle"]
 
-root = Tk()
-window = MyWindow(root)
-
-root.mainloop()
-GPIO.cleanup()
+                self.display_variables()
+            except queue.Empty:
+                # just on general principles, although we don't
+                # expect this branch to be taken in this case
+                pass
