@@ -42,7 +42,7 @@ class MyWindow:
         self.image_folder_path = os.path.join(ground_station_path, "res/img")
 
         self.name = name
-        self.width = 600
+        self.width = 1920
         self.height = 600
 
         self.data_column = 10

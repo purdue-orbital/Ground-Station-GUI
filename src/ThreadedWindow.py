@@ -13,6 +13,7 @@ from Timer import *
 import threading
 import random
 import queue
+import json
 
 # class GuiPart:
 #     def __init__(self, master, queue, endCommand):
@@ -420,19 +421,28 @@ class MyWindow:
 
     def processIncoming(self):
         """Handle all messages currently in the queue, if any."""
-        while self.queue.qsize(  ):
+        while self.queue.qsize():
             try:
-                msg = self.queue.get(0)
+                dataJson = self.queue.get(0)
                 # Check contents of message and do whatever is needed. As a
                 # simple test, print it (in real life, you would
                 # suitably update the GUI's display in a richer fashion).
-                print(msg)
-                self.temperature_data = float(msg)
+                print(dataJson)
+                self.temperature_data = dataJson["temperature"]
+                self.pressure_data = dataJson["pressure"]
+                self.humidity_data = dataJson["humidity"]
+                self.altitude_data = dataJson["altitude"]
+                self.direction_data = dataJson["direction"]
+                self.acceleration_data = dataJson["acceleration"]
+                self.velocity_data = dataJson["velocity"]
+                self.user_angle_data = dataJson["user_angle"]
+
                 self.display_variables()
             except queue.Empty:
                 # just on general principles, although we don't
                 # expect this branch to be taken in this case
                 pass
+
 
 class ThreadedClient:
     """
@@ -457,8 +467,8 @@ class ThreadedClient:
         # Set up the thread to do asynchronous I/O
         # More threads can also be created and used, if necessary
         self.running = 1
-        self.thread1 = threading.Thread(target=self.workerThread1)
-        self.thread1.start(  )
+        self.thread1 = threading.Thread(target=self.checkQueue)
+        self.thread1.start( )
 
         # Start the periodic call in the GUI to check if the queue contains
         # anything
@@ -476,7 +486,7 @@ class ThreadedClient:
             sys.exit(1)
         self.master.after(200, self.periodicCall)
 
-    def workerThread1(self):
+    def checkQueue(self):
         """
         This is where we handle the asynchronous I/O. For example, it may be
         a 'select(  )'. One important thing to remember is that the thread has
@@ -486,15 +496,28 @@ class ThreadedClient:
             # To simulate asynchronous I/O, we create a random number at
             # random intervals. Replace the following two lines with the real
             # thing.
-            time.sleep(rand.random(  ) * 1.5)
-            msg = rand.random(  )
-            self.queue.put(msg)
+            time.sleep(rand.random() * 1.5)
+
+            preload = ( '{ "temperature":' + str(rand.random())[0:5] + ','
+                             '"pressure":' + str(rand.random())[0:5] + ','
+                             '"humidity":' + str(rand.random())[0:5] + ','
+                             '"altitude":' + str(rand.random())[0:5] + ','
+                             '"direction":' + str(rand.random())[0:5] + ','
+                             '"acceleration":' + str(rand.random())[0:5] + ','
+                             '"velocity":' + str(rand.random())[0:5] + ','
+                             '"user_angle":' + str(rand.random())[0:5] + ' }' )
+
+            print(preload)
+
+            dataJson = json.loads(preload)
+            self.queue.put(dataJson)
 
     def endApplication(self):
         self.running = 0
 
-rand = random.Random(  )
+
+rand = random.Random()
 root = Tk()
 
 client = ThreadedClient(root)
-root.mainloop(  )
+root.mainloop()
