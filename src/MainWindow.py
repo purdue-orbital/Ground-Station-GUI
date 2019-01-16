@@ -119,6 +119,7 @@ class MyWindow:
         self.my_timer = Timer(name, 0, self.command_row - 1, 0, self.labels_column - 1)
 
     def display_variables(self):
+        # Update variable labels
         self.temperature.set(self.temperature_data)
         self.pressure.set(self.pressure_data)
         self.humidity.set(self.humidity_data)
@@ -379,7 +380,7 @@ class MyWindow:
 
     def abort_method_window(self):
         method_window = Toplevel(self.name)
-        method_window.geometry("250x150")
+        method_window.geometry("250x200")
         method_window.resizable(width=False, height=False)
 
         cmd_button = ttk.Button(method_window, text="CMD", width=20, command=lambda: self.select_cdm(method_window))

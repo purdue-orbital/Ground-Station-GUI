@@ -23,6 +23,8 @@ class ThreadedClient:
     def __init__(self, master):
 
         self.master = master
+        # self.master.iconify for the memes
+        root.protocol("WM_DELETE_WINDOW", self.endApplication)
 
         self.queue = queue.Queue()
 
@@ -32,32 +34,17 @@ class ThreadedClient:
         self.thread1 = threading.Thread(target=self.checkQueue)
         self.thread1.start()
 
-        # Start the periodic call in the GUI to check if the queue contains
-        # anything
         self.update()
 
     def update(self):
-        """
-        Check every 200 ms if there is something new in the queue.
-        """
         self.gui.processIncoming()
         if not self.running:
-            # This is the brutal stop of the system. You may want to do
-            # some cleanup before actually shutting it down.
             import sys
             sys.exit(1)
         self.master.after(200, self.update)
 
     def checkQueue(self):
-        """
-        This is where we handle the asynchronous I/O. For example, it may be
-        a 'select(  )'. One important thing to remember is that the thread has
-        to yield control pretty regularly, by select or otherwise.
-        """
         while self.running:
-            # To simulate asynchronous I/O, we create a random number at
-            # random intervals. Replace the following two lines with the real
-            # thing.
             time.sleep(1)
 
             preload = ( '{ "temperature":' + str(rand.random())[0:5] + ','
