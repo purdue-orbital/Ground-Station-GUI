@@ -28,21 +28,25 @@ class ThreadedClient:
 
         self.gui = MyWindow(master, self.queue)
 
-        self.dataInputThread = threading.Thread(target=self.checkQueue)
-        self.dataInputThread.start( )
+        self.running = 1
+        self.thread1 = threading.Thread(target=self.checkQueue)
+        self.thread1.start()
 
         # Start the periodic call in the GUI to check if the queue contains
         # anything
         self.update()
 
     def update(self):
+        """
+        Check every 200 ms if there is something new in the queue.
+        """
         self.gui.processIncoming()
         if not self.running:
             # This is the brutal stop of the system. You may want to do
             # some cleanup before actually shutting it down.
             import sys
             sys.exit(1)
-        self.master.after(200, self.periodicCall)
+        self.master.after(200, self.update)
 
     def checkQueue(self):
         """
