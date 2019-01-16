@@ -42,7 +42,7 @@ printf "Checking Python version...\n"
 
 
 version=$( python3 -c 'import sys; print(sys.version_info[1])' )
-if [ $version -lt '5' ]; then
+if [[ ${version} -lt '5' ]]; then
 	printf "${RED}[ERROR] Python version must be 3.5 or higher\n"
 	printf "Your version is:${NC}\n"
 	python3 --version
@@ -55,7 +55,7 @@ printf "Python check passed\n"
 printf "Attempting to run src/MainWindow.py...\n"
 
 python3 src/MainWindow.py
-if [ $? == '1' ]; then
+if [[ $? == '1' ]]; then
 	printf "${RED}^^^^^^^^^^^^\n\n\n"
 	printf "[ERROR] src/MainWindow.py was unable to start.\n"
 	printf "If the underlined error shows ${YELLOW}ImportError${RED}, run ${YELLOW}./setup.sh ${RED}to ensure the proper environment has been set up.\n"

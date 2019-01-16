@@ -9,22 +9,22 @@ NC='\033[0m'
 gpio_txt=$( cat res/gpio_script.txt )
 dir="src/RPi"
 
-if [ "$1" = "-d"  ]; then
-	printf "Are you sure you want to setup in Devlopment mode? (y/n): "
+if [[ "$1" = "-d"  ]]; then
+	printf "Are you sure you want to setup in Development mode? (y/n): "
 	read ans
-	if [ "$ans" = "y" ]; then
+	if [[ "$ans" = "y" ]]; then
 		printf "${BLUE}Setting up in Development Mode\n"
-		if [[ -d $dir ]]; then
+		if [[ -d ${dir} ]]; then
 			printf "${YELLOW}Already in Development mode ($dir already exists). Cancelling...\n"
 			exit 0
 		fi
-		mkdir $dir
+		mkdir ${dir}
 		printf "${NC}Creating src/RPi directory\n"
 		touch src/RPi/__init__.py src/RPi/GPIO.py
 		printf "Creating files for dev environment\n"
 		echo -e "$gpio_txt" > src/RPi/GPIO.py
-		printf "${GREEN}Succesfully Setup Development Environment\n"
-	elif [ "$ans" = "n"  ]; then
+		printf "${GREEN}Successfully Setup Development Environment\n"
+	elif [[ "$ans" = "n"  ]]; then
 		printf "${YELLOW}Cancelling Development Setup\n"
 		exit 0	
 	else
@@ -32,7 +32,7 @@ if [ "$1" = "-d"  ]; then
 		printf "${RED}[Process Failed]\n"
 		exit 99
 	fi
-elif [ "$1" = "--help" ]; then
+elif [[ "$1" = "--help" ]]; then
 	printf "The setup script for Purdue Orbital's Ground Station GUI\n\n"
 	printf "Usage: ./setup.sh [arguments]\n\n"
 	printf "Arguments:\n"
@@ -42,19 +42,19 @@ elif [ "$1" = "--help" ]; then
 	printf "%s\t\t%s\n" "--help" "Print Help (this message) and exits"
 	# printf "%s\t%s\n" "--version" "Print Version and exits"
 	exit 0
-elif [ "$1" = "-f" ]; then
+elif [[ "$1" = "-f" ]]; then
 	printf "Are you sure you want to setup in Deployment/Field mode? (y/n): "
 	read ans
-	if [ "$ans" = "y" ]; then
+	if [[ "$ans" = "y" ]]; then
 		printf "${BLUE}Setting up in Field/Deployment mode\n"
-		if [[ ! -d $dir ]]; then
+		if [[ ! -d ${dir} ]]; then
 			printf "${YELLOW}Already ready for Deployment. Cancelling...\n"
 			exit 0
 		fi
 		rm -r "src/RPi"
 		printf "${GREEN}Setup success, ready for deployment.\n"
 		exit 0
-	elif [ "$ans" = "n"  ]; then
+	elif [[ "$ans" = "n"  ]]; then
 		printf "${YELLOW}Cancelling Field/Deployment Setup\n"
 		exit 0	
 	else
@@ -62,7 +62,7 @@ elif [ "$1" = "-f" ]; then
 		printf "${RED}[Process Failed]\n"
 		exit 99
 	fi
-elif [ -z "$1" ]; then
+elif [[ -z "$1" ]]; then
 	printf "Improper number of arguments. Run \"./setup.sh --help\" to view all possible arguments\n"
 	printf "${RED}[Process Failed]\n"
 	exit 99
