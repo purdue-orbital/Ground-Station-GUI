@@ -37,9 +37,10 @@ class MyWindow:
     def __init__(self, name, queue):
         self.queue = queue
 
-        ground_station_path = os.getcwd()
-        self.status_log_path = os.path.join(ground_station_path, "logs/status_log.txt")
-        self.image_folder_path = os.path.join(ground_station_path, "res/img")
+        # Base file writing from program's execution directory
+        program_path = os.path.dirname(os.path.realpath(__file__))
+        self.status_log_path = os.path.join(program_path, "../logs/status_log.txt")
+        self.image_folder_path = os.path.join(program_path, "../res/img")
 
         self.name = name
         self.width = 600
@@ -422,14 +423,11 @@ class MyWindow:
             self.display_mission_status_text.set("VERIFIED")
 
     def processIncoming(self):
-        """Handle all messages currently in the queue, if any."""
+        # Process data in queue
         while self.queue.qsize():
             try:
                 dataJson = self.queue.get(0)
-                # Check contents of message and do whatever is needed. As a
-                # simple test, print it (in real life, you would
-                # suitably update the GUI's display in a richer fashion).
-                print(dataJson)
+                # Set the data variables equal to the corresponding json entries
                 self.temperature_data = dataJson["temperature"]
                 self.pressure_data = dataJson["pressure"]
                 self.humidity_data = dataJson["humidity"]
@@ -438,9 +436,7 @@ class MyWindow:
                 self.acceleration_data = dataJson["acceleration"]
                 self.velocity_data = dataJson["velocity"]
                 self.user_angle_data = dataJson["user_angle"]
-
+                # Reload variables
                 self.display_variables()
-            except queue.Empty:
-                # just on general principles, although we don't
-                # expect this branch to be taken in this case
+            except self.queue.Empty:
                 pass
