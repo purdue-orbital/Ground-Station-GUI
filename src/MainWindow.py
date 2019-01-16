@@ -33,7 +33,7 @@ class Status(Enum):
     RESET = "VARIABLES RESET"
     RESTART = "PROGRAM RESTART"
 
-class MyWindow:
+class DataWindow:
     def __init__(self, name, queue):
         self.queue = queue
 

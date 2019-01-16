@@ -29,7 +29,7 @@ DarkGray = "#333333"
 LightGray = "#3C3F41"
 
 
-class MyWindow:
+class DataWindow:
     def __init__(self, name):
         self.name = name
         self.width = 600
@@ -456,7 +456,7 @@ class MyWindow:
 
 
 root = Tk()
-window = MyWindow(root)
+window = DataWindow(root)
 
 
 def config_resize(event):

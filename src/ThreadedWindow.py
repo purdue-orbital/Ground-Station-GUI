@@ -10,15 +10,6 @@ import random
 import queue
 import json
 
-# class GuiPart:
-#     def __init__(self, master, queue, endCommand):
-#         self.queue = queue
-#         # Set up the GUI
-#         console = ttk.Button(master, text='Done', command=endCommand)
-#         console.pack(  )
-#         # Add more GUI stuff here depending on your specific needs
-
-
 class ThreadedClient:
     def __init__(self, master):
 
@@ -28,7 +19,7 @@ class ThreadedClient:
 
         self.queue = queue.Queue()
 
-        self.gui = MyWindow(master, self.queue)
+        self.gui = DataWindow(master, self.queue)
 
         self.running = 1
         self.thread1 = threading.Thread(target=self.checkQueue)
