@@ -26,12 +26,22 @@ data (data that cannot be changed).
 
 """
 
+class Status(Enum):
+    ABORT = "MISSION ABORTED"
+    VERIFIED = "STATUS VERIFIED"
+    NOT_VERIFIED = "STATUS NOT VERIFIED"
+    MANUAL = "MANUAL LOG INVOKED"
+    RESET = "VARIABLES RESET"
+    RESTART = "PROGRAM RESTART"
 
-class MainWindow:
-    def __init__(self, name):
-        ground_station_path = os.getcwd()
-        self.status_log_path = os.path.join(ground_station_path, "logs/status_log.txt")
-        self.image_folder_path = os.path.join(ground_station_path, "res/img")
+class DataWindow:
+    def __init__(self, name, queue):
+        self.queue = queue
+
+        # Base file writing from program's execution directory
+        program_path = os.path.dirname(os.path.realpath(__file__))
+        self.status_log_path = os.path.join(program_path, "../logs/status_log.txt")
+        self.image_folder_path = os.path.join(program_path, "../res/img")
 
         self.name = name
 
@@ -74,8 +84,17 @@ class MainWindow:
         self.my_data = Data(name, 8, 10)
         self.my_control = Control(name, 7, 3)
 
-        self.my_control.verify_button.config(command=self.verify_message_callback)
-        self.my_control.abort_button.config(command=self.abort_message_callback)
+    def display_variables(self):
+        # Update variable labels
+        self.temperature.set(self.temperature_data)
+        self.pressure.set(self.pressure_data)
+        self.humidity.set(self.humidity_data)
+
+        self.altitude.set(self.altitude_data)
+        self.direction.set(self.direction_data)
+        self.acceleration.set(self.acceleration_data)
+        self.velocity.set(self.velocity_data)
+        self.user_angle.set(self.user_angle_data)
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
@@ -238,7 +257,7 @@ class MainWindow:
 
     def abort_method_window(self):
         method_window = Toplevel(self.name)
-        method_window.geometry("250x150")
+        method_window.geometry("250x200")
         method_window.resizable(width=False, height=False)
 
         cmd_button = ttk.Button(method_window, text="CMD", width=20, command=lambda: self.select_cdm(method_window))
@@ -273,9 +292,30 @@ class MainWindow:
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
 
+    def change_status_display(self, status):
+        if status == Status.ABORT:
+            self.display_mission_status_text.set("ABORT")
+        elif status == Status.NOT_VERIFIED:
+            self.display_mission_status_text.set("NOT VERIFIED")
+        elif status == Status.VERIFIED:
+            self.display_mission_status_text.set("VERIFIED")
 
-root = Tk()
-window = MainWindow(root)
+    def processIncoming(self):
+        # Process data in queue
+        while self.queue.qsize():
+            try:
+                dataJson = self.queue.get(0)
+                # Set the data variables equal to the corresponding json entries
+                self.temperature_data = dataJson["temperature"]
+                self.pressure_data = dataJson["pressure"]
+                self.humidity_data = dataJson["humidity"]
+                self.altitude_data = dataJson["altitude"]
+                self.direction_data = dataJson["direction"]
+                self.acceleration_data = dataJson["acceleration"]
+                self.velocity_data = dataJson["velocity"]
+                self.user_angle_data = dataJson["user_angle"]
+                # Reload variables
+                self.display_variables()
+            except self.queue.Empty:
+                pass
 
-root.mainloop()
-GPIO.cleanup()
