@@ -1,6 +1,7 @@
 .idea/
 TestWindow.py
 status_log.txt
+traceback.log
 ./idea/workspace.xml
 __pycache__
 *.pyc
