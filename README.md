@@ -8,7 +8,7 @@ These instructions will get you started for testing purposes.
 
 ### Prerequisites
 
-__Discalimer:__ _This software was specifically developed for use on a Raspberry Pi 3B. This software is currently in development and is not yet suitable for field use._
+__Disclaimer:__ _This software was specifically developed for use on a Raspberry Pi 3B. This software is currently in development and is not yet suitable for field use._
 
 Ensure Python3 is installed on your system. Python 3.5 is recommended.
 
