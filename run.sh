@@ -3,6 +3,9 @@ RED='\033[0;31m'
 YELLOW='\033[0;33m'
 NC='\033[0m'
 
+traceback_path='logs/traceback.log'
+program_path='src/ThreadedWindow.py'
+
 ascii="                              
                               
    :;;\`                       
@@ -52,13 +55,15 @@ fi
 
 printf "Python check passed\n"
 
-printf "Attempting to run src/MainWindow.py...\n"
+printf "Attempting to run ${program_path}\n\n"
 
-python3 src/MainWindow.py
+python3 ${program_path} 2> ${traceback_path}
 if [[ $? == '1' ]]; then
-	printf "${RED}^^^^^^^^^^^^\n\n\n"
-	printf "[ERROR] src/MainWindow.py was unable to start.\n"
+	tail -1 ${traceback_path}
+	printf "${RED}^^^^^^^^^^^^\n"
+	printf "[ERROR] ${program_path} was unable to start.\n"
 	printf "If the underlined error shows ${YELLOW}ImportError${RED}, run ${YELLOW}./setup.sh ${RED}to ensure the proper environment has been set up.\n"
+	printf "See ${YELLOW}${traceback_path} ${RED}for the full error stack.\n"
 	printf "[Process Failed]\n"
 	exit 99
 fi
