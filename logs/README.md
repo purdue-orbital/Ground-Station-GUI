@@ -1,5 +1,5 @@
 # Logging format
-Structure and an example of the logging function output. This will be stored in logs/status_log.txt
+Structure and an example of the logging function output. This will be stored in `logs/status_log.txt`
 ## Structure
 ```
   --------ACTION TAKEN---------
