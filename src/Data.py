@@ -4,7 +4,7 @@ from tkinter import *
 class Data:
     def __init__(self, place_window, labels_column, data_column):
         # Environment Data
-        self.temperature_data = 15000.0
+        self.temperature_data = 11
         self.pressure_data = 6000.0
         self.humidity_data = 100.0
 

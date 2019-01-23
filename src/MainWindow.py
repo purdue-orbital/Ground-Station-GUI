@@ -84,17 +84,17 @@ class DataWindow:
         self.my_data = Data(name, 8, 10)
         self.my_control = Control(name, 7, 3)
 
-    def display_variables(self):
-        # Update variable labels
-        self.temperature.set(self.temperature_data)
-        self.pressure.set(self.pressure_data)
-        self.humidity.set(self.humidity_data)
-
-        self.altitude.set(self.altitude_data)
-        self.direction.set(self.direction_data)
-        self.acceleration.set(self.acceleration_data)
-        self.velocity.set(self.velocity_data)
-        self.user_angle.set(self.user_angle_data)
+    # def display_variables(self):
+    #     # Update variable labels
+    #     self.temperature.set(self.temperature_data)
+    #     self.pressure.set(self.pressure_data)
+    #     self.humidity.set(self.humidity_data)
+    #
+    #     self.altitude.set(self.altitude_data)
+    #     self.direction.set(self.direction_data)
+    #     self.acceleration.set(self.acceleration_data)
+    #     self.velocity.set(self.velocity_data)
+    #     self.user_angle.set(self.user_angle_data)
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
@@ -292,13 +292,13 @@ class DataWindow:
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
 
-    def change_status_display(self, status):
-        if status == Status.ABORT:
-            self.display_mission_status_text.set("ABORT")
-        elif status == Status.NOT_VERIFIED:
-            self.display_mission_status_text.set("NOT VERIFIED")
-        elif status == Status.VERIFIED:
-            self.display_mission_status_text.set("VERIFIED")
+    # def change_status_display(self, status):
+    #     if status == Status.ABORT:
+    #         Control.display_mission_status_text.set("ABORT")
+    #     elif status == Status.NOT_VERIFIED:
+    #         Control.display_mission_status_text.set("NOT VERIFIED")
+    #     elif status == Status.VERIFIED:
+    #         Control.display_mission_status_text.set("VERIFIED")
 
     def processIncoming(self):
         # Process data in queue
@@ -306,16 +306,16 @@ class DataWindow:
             try:
                 dataJson = self.queue.get(0)
                 # Set the data variables equal to the corresponding json entries
-                self.temperature_data = dataJson["temperature"]
-                self.pressure_data = dataJson["pressure"]
-                self.humidity_data = dataJson["humidity"]
-                self.altitude_data = dataJson["altitude"]
-                self.direction_data = dataJson["direction"]
-                self.acceleration_data = dataJson["acceleration"]
-                self.velocity_data = dataJson["velocity"]
-                self.user_angle_data = dataJson["user_angle"]
+                self.my_data.temperature_data = dataJson["temperature"]
+                self.my_data.pressure_data = dataJson["pressure"]
+                self.my_data.humidity_data = dataJson["humidity"]
+                self.my_data.altitude_data = dataJson["altitude"]
+                self.my_data.direction_data = dataJson["direction"]
+                self.my_data.acceleration_data = dataJson["acceleration"]
+                self.my_data.velocity_data = dataJson["velocity"]
+                self.my_data.user_angle_data = dataJson["user_angle"]
                 # Reload variables
-                self.display_variables()
+                self.my_data.display_variables()
             except self.queue.Empty:
                 pass
 

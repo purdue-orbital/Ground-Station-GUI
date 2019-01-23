@@ -10,6 +10,7 @@ import random
 import queue
 import json
 
+
 class ThreadedClient:
     def __init__(self, master):
 
