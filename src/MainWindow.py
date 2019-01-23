@@ -26,14 +26,6 @@ data (data that cannot be changed).
 
 """
 
-class Status(Enum):
-    ABORT = "MISSION ABORTED"
-    VERIFIED = "STATUS VERIFIED"
-    NOT_VERIFIED = "STATUS NOT VERIFIED"
-    MANUAL = "MANUAL LOG INVOKED"
-    RESET = "VARIABLES RESET"
-    RESTART = "PROGRAM RESTART"
-
 class DataWindow:
     def __init__(self, name, queue):
         self.queue = queue
@@ -84,17 +76,8 @@ class DataWindow:
         self.my_data = Data(name, 8, 10)
         self.my_control = Control(name, 7, 3)
 
-    # def display_variables(self):
-    #     # Update variable labels
-    #     self.temperature.set(self.temperature_data)
-    #     self.pressure.set(self.pressure_data)
-    #     self.humidity.set(self.humidity_data)
-    #
-    #     self.altitude.set(self.altitude_data)
-    #     self.direction.set(self.direction_data)
-    #     self.acceleration.set(self.acceleration_data)
-    #     self.velocity.set(self.velocity_data)
-    #     self.user_angle.set(self.user_angle_data)
+        self.my_control.verify_button.config(command=self.verify_message_callback)
+        self.my_control.abort_button.config(command=self.abort_message_callback)
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
