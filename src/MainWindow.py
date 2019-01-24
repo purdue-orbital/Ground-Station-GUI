@@ -281,20 +281,20 @@ class DataWindow:
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
 
-    def processIncoming(self):
+    def process_incoming(self):
         # Process data in queue
         while self.queue.qsize():
             try:
-                dataJson = self.queue.get(0)
+                data_json = self.queue.get(0)
                 # Set the data variables equal to the corresponding json entries
-                self.my_data.temperature_data = dataJson["temperature"]
-                self.my_data.pressure_data = dataJson["pressure"]
-                self.my_data.humidity_data = dataJson["humidity"]
-                self.my_data.altitude_data = dataJson["altitude"]
-                self.my_data.direction_data = dataJson["direction"]
-                self.my_data.acceleration_data = dataJson["acceleration"]
-                self.my_data.velocity_data = dataJson["velocity"]
-                self.my_data.user_angle_data = dataJson["user_angle"]
+                self.my_data.temperature_data = data_json["temperature"]
+                self.my_data.pressure_data = data_json["pressure"]
+                self.my_data.humidity_data = data_json["humidity"]
+                self.my_data.altitude_data = data_json["altitude"]
+                self.my_data.direction_data = data_json["direction"]
+                self.my_data.acceleration_data = data_json["acceleration"]
+                self.my_data.velocity_data = data_json["velocity"]
+                self.my_data.user_angle_data = data_json["user_angle"]
                 # Reload variables
                 self.my_data.display_variables()
             except self.queue.Empty:

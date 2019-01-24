@@ -16,45 +16,46 @@ class ThreadedClient:
 
         self.master = master
         # self.master.iconify for the memes
-        root.protocol("WM_DELETE_WINDOW", self.endApplication)
+        root.protocol("WM_DELETE_WINDOW", self.end_application)
 
         self.queue = queue.Queue()
 
         self.gui = DataWindow(master, self.queue)
 
         self.running = 1
-        self.thread1 = threading.Thread(target=self.checkQueue)
+        self.thread1 = threading.Thread(target=self.check_queue)
         self.thread1.start()
 
         self.update()
 
     def update(self):
-        self.gui.processIncoming()
+        self.gui.process_incoming()
         if not self.running:
             import sys
             sys.exit(1)
         self.master.after(200, self.update)
 
-    def checkQueue(self):
+    def check_queue(self):
         while self.running:
             time.sleep(1)
 
-            preload = ( '{ "temperature":' + str(rand.random())[0:5] + ','
-                             '"pressure":' + str(rand.random())[0:5] + ','
-                             '"humidity":' + str(rand.random())[0:5] + ','
-                             '"altitude":' + str(rand.random())[0:5] + ','
-                             '"direction":' + str(rand.random())[0:5] + ','
-                             '"acceleration":' + str(rand.random())[0:5] + ','
-                             '"velocity":' + str(rand.random())[0:5] + ','
-                             '"user_angle":' + str(rand.random())[0:5] + ' }' )
+            preload = ('{"temperature":' + str(rand.random())[0:5] + ',' +
+                       '"pressure":' + str(rand.random())[0:5] + ',' +
+                       '"humidity":' + str(rand.random())[0:5] + ',' +
+                       '"altitude":' + str(rand.random())[0:5] + ',' +
+                       '"direction":' + str(rand.random())[0:5] + ',' +
+                       '"acceleration":' + str(rand.random())[0:5] + ',' +
+                       '"velocity":' + str(rand.random())[0:5] + ',' +
+                       '"user_angle":' + str(rand.random())[0:5] + ' }')
 
-            print(preload)
+            # print(preload)
 
-            dataJson = json.loads(preload)
-            self.queue.put(dataJson)
+            data_json = json.loads(preload)
+            self.queue.put(data_json)
 
-    def endApplication(self):
+    def end_application(self):
         self.running = 0
+        root.destroy()
 
 
 rand = random.Random()
