@@ -26,6 +26,7 @@ data (data that cannot be changed).
 
 """
 
+
 class DataWindow:
     def __init__(self, name, queue):
         self.queue = queue
@@ -36,12 +37,6 @@ class DataWindow:
         self.image_folder_path = os.path.join(program_path, "../res/img")
 
         self.name = name
-
-        self.data_column = 10
-        self.labels_column = self.data_column - 2
-
-        self.command_row = 7
-        self.command_column = 3
 
         self.abort_method = None
 
@@ -72,12 +67,17 @@ class DataWindow:
 
         self.make_grid()
 
-        self.my_timer = Timer(name, 0, self.command_row - 1, 0, self.labels_column - 1)
+        self.start_timer = Timer(name, 0, 3, 0, 7)
+        self.my_timer = Timer(name, 3, 3, 0, 7)
         self.my_data = Data(name, 8, 10)
         self.my_control = Control(name, 7, 3)
 
         self.my_control.verify_button.config(command=self.verify_message_callback)
         self.my_control.abort_button.config(command=self.abort_message_callback)
+
+        self.start_timer.start = time.time()
+        self.start_timer.clock_run = True
+        self.start_timer.tick()
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
@@ -105,7 +105,7 @@ class DataWindow:
 
     def make_grid(self):
         total_rows = 12
-        total_columns = self.data_column + 1
+        total_columns = 11
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
