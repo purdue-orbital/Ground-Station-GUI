@@ -4,20 +4,20 @@ from tkinter import *
 class Data:
     def __init__(self, place_window, labels_column, data_column):
         # Environment Data
-        self.temperature_data = 11
-        self.pressure_data = 6000.0
-        self.humidity_data = 100.0
+        self.temperature_data = 0
+        self.pressure_data = 0
+        self.humidity_data = 0
 
         self.temperature = StringVar()
         self.pressure = StringVar()
         self.humidity = StringVar()
 
         # System Data
-        self.altitude_data = 15000000
-        self.direction_data = .1234
-        self.acceleration_data = 90
-        self.velocity_data = 12
-        self.user_angle_data = 458
+        self.altitude_data = 0
+        self.direction_data = 0
+        self.acceleration_data = 0
+        self.velocity_data = 0
+        self.user_angle_data = 0
 
         self.altitude = StringVar()
         self.direction = StringVar()

@@ -27,6 +27,9 @@ class Control:
         self.abort_button.grid(row=command_row + 3, column=command_column - 1,
                                columnspan=command_column + 1, sticky=N + S + E + W)
 
+        self.verify_button.state(["disabled"])
+        self.abort_button.state(["disabled"])
+
     def change_status_display(self, status):
         if status == Status.ABORT:
             self.display_mission_status_text.set("ABORT")

@@ -75,10 +75,6 @@ class DataWindow:
         self.my_control.verify_button.config(command=self.verify_message_callback)
         self.my_control.abort_button.config(command=self.abort_message_callback)
 
-        self.start_timer.start = time.time()
-        self.start_timer.clock_run = True
-        self.start_timer.tick()
-
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
 
@@ -94,6 +90,7 @@ class DataWindow:
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.name.quit)
 
+        program_menu.add_command(label="Start Mission", command=self.start_mission)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
         program_menu.add_command(label="Log", command=self.log_menu)
 
@@ -115,6 +112,14 @@ class DataWindow:
 
         for row in my_rows:
             self.name.rowconfigure(row, weight=1, uniform=1)
+
+    def start_mission(self):
+        self.start_timer.start = time.time()
+        self.start_timer.clock_run = True
+        self.start_timer.tick()
+
+        self.my_control.verify_button.state(["!disabled"])
+        self.my_control.abort_button.state(["!disabled"])
 
     def reset_variables_window(self):
         # Creates a pop up window that asks if you are sure that you want to rest the variables.
@@ -142,7 +147,8 @@ class DataWindow:
             fo.write("-----STATUS NOT VERIFIED-----\n")
 
         fo.write("DATE:" + current_date + "\n")
-        fo.write("TIMESTAMP:" + repr(self.my_timer.current_time) + "\n")
+        fo.write("MISSION START TIMESTAMP:" + repr(self.start_timer.current_time) + "\n")
+        fo.write("VERIFY START TIMESTAMP:" + repr(self.my_timer.current_time) + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
         fo.write("temperature = " + repr(self.my_data.temperature_data) + "\n")
@@ -274,14 +280,6 @@ class DataWindow:
         self.my_control.change_status_display(self.my_control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
-
-    # def change_status_display(self, status):
-    #     if status == Status.ABORT:
-    #         Control.display_mission_status_text.set("ABORT")
-    #     elif status == Status.NOT_VERIFIED:
-    #         Control.display_mission_status_text.set("NOT VERIFIED")
-    #     elif status == Status.VERIFIED:
-    #         Control.display_mission_status_text.set("VERIFIED")
 
     def processIncoming(self):
         # Process data in queue
