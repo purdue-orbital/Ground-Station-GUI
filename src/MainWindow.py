@@ -251,7 +251,7 @@ class DataWindow:
 
         cmd_button = ttk.Button(method_window, text="CMD", width=20, command=lambda: self.select_cdm(method_window))
         qdm_button = ttk.Button(method_window, text="QDM", width=20, command=lambda: self.select_qdm(method_window))
-        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: method_window.destroy())
+        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: self.name.destroy())
 
         msg = Message(method_window, text="Please select a mission abort method", font=('times', 12, 'bold'), width=200,
                       justify=CENTER, pady=15)
@@ -299,4 +299,5 @@ class DataWindow:
                 self.my_data.display_variables()
             except self.queue.Empty:
                 pass
+
 

@@ -1,9 +1,10 @@
 import time
-from tkinter import *
+import tkinter as tk
+from tkinter import messagebox
 
 
 from Timer import *
-from MainWindow import *
+from MainWindow import DataWindow
 
 import threading
 import random
@@ -54,12 +55,13 @@ class ThreadedClient:
             self.queue.put(data_json)
 
     def end_application(self):
-        self.running = 0
-        root.destroy()
+        if messagebox.askyesno("Quit", "Do you want to quit?"):
+            self.running = 0
+            root.destroy()
 
 
 rand = random.Random()
-root = Tk()
+root = tk.Tk()
 
 client = ThreadedClient(root)
 root.mainloop()

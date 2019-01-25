@@ -1,20 +1,33 @@
+import sys
+
 BOARD = 1
 OUT = 1
 IN = 1
 
+
 def setmode(a):
-    print ("Mode Set")
+    print("Mode Set")
+
+
 def setup(a, b):
-    print ()
+    sys.stdout.write('')
+
+
 def output(a, b):
-    print ()
+    sys.stdout.write('')
+
+
 def cleanup():
-    print ('DONE')
-def setmode(a):
-    print ()
+    print("Goodbye")
+
+
 def setwarnings(flag):
     print("Warnings: {}".format(flag))
+
+
 def HIGH():
-    print ()
+    sys.stdout.write('')
+
+
 def LOW():
-    print ()
+    sys.stdout.write('')
