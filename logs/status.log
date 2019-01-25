@@ -1,0 +1,383 @@
+-------STATUS VERIFIED-------
+DATE:2019-01-07 19:59:48
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-----STATUS NOT VERIFIED-----
+DATE:2019-01-07 19:59:50
+TIMESTAMP:'00:00:02:13'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------STATUS VERIFIED-------
+DATE:2019-01-08 16:49:11
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------MISSION ABORTED-------
+DATE:2019-01-08 16:49:18
+TIMESTAMP:'00:00:07:76'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-----MANUAL LOG INVOKED------
+DATE:2019-01-09 18:04:39
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-----MANUAL LOG INVOKED------
+DATE:2019-01-09 18:07:08
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------STATUS VERIFIED-------
+DATE:2019-01-16 18:35:09
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------MISSION ABORTED-------
+DATE:2019-01-16 18:36:58
+TIMESTAMP:'00:01:49:08'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------PROGRAM RESTART-------
+DATE:2019-01-18 12:26:23
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------VARIABLES RESET-------
+DATE:2019-01-18 12:26:49
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------PROGRAM RESTART-------
+DATE:2019-01-18 12:49:11
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------PROGRAM RESTART-------
+DATE:2019-01-18 12:52:38
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-----MANUAL LOG INVOKED------
+DATE:2019-01-18 13:11:51
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-----MANUAL LOG INVOKED------
+DATE:2019-01-23 18:01:02
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------PROGRAM RESTART-------
+DATE:2019-01-23 18:09:49
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 15000.0
+pressure = 6000.0
+humidity = 100.0
+altitude = 15000000
+direction = 0.1234
+acceleration = 90
+velocity = 12
+----------LOGS END-----------
+-----------------------------
+
+-------PROGRAM RESTART-------
+DATE:2019-01-23 18:21:21
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 0.652
+pressure = 0.607
+humidity = 0.989
+altitude = 0.406
+direction = 0.419
+acceleration = 0.753
+velocity = 0.181
+----------LOGS END-----------
+-----------------------------
+
+-------PROGRAM RESTART-------
+DATE:2019-01-23 18:24:32
+TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 0.35
+pressure = 0.628
+humidity = 0.518
+altitude = 0.494
+direction = 0.692
+acceleration = 0.617
+velocity = 0.457
+----------LOGS END-----------
+-----------------------------
+
+-------STATUS VERIFIED-------
+DATE:2019-01-24 09:18:57
+MISSION START TIMESTAMP:'00:00:03:95'
+VERIFY START TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 0.675
+pressure = 0.332
+humidity = 0.583
+altitude = 0.95
+direction = 0.444
+acceleration = 0.503
+velocity = 0.209
+----------LOGS END-----------
+-----------------------------
+
+-------MISSION ABORTED-------
+DATE:2019-01-24 09:19:07
+MISSION START TIMESTAMP:'00:00:13:56'
+VERIFY START TIMESTAMP:'00:00:09:58'
+*****************************
+----------LOGS START---------
+temperature = 0.857
+pressure = 0.8
+humidity = 0.503
+altitude = 0.123
+direction = 0.206
+acceleration = 0.964
+velocity = 0.733
+----------LOGS END-----------
+-----------------------------
+
+-------PROGRAM RESTART-------
+DATE:2019-01-24 09:19:16
+MISSION START TIMESTAMP:'00:00:05:94'
+VERIFY START TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 0.432
+pressure = 0.9
+humidity = 0.519
+altitude = 0.139
+direction = 0.719
+acceleration = 0.59
+velocity = 0.527
+----------LOGS END-----------
+-----------------------------
+
+-------VARIABLES RESET-------
+DATE:2019-01-24 09:40:50
+MISSION START TIMESTAMP:'00:00:03:76'
+VERIFY START TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 0.358
+pressure = 0.933
+humidity = 0.965
+altitude = 0.677
+direction = 0.605
+acceleration = 0.674
+velocity = 0.07
+----------LOGS END-----------
+-----------------------------
+
+-------VARIABLES RESET-------
+DATE:2019-01-24 21:17:34
+MISSION START TIMESTAMP:'00:00:00:00'
+VERIFY START TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 0.713
+pressure = 0.763
+humidity = 0.503
+altitude = 0.106
+direction = 0.337
+acceleration = 0.991
+velocity = 0.867
+----------LOGS END-----------
+-----------------------------
+
+-----MANUAL LOG INVOKED------
+DATE:2019-01-24 21:17:37
+MISSION START TIMESTAMP:'00:00:00:00'
+VERIFY START TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 0.688
+pressure = 0.635
+humidity = 0.953
+altitude = 0.912
+direction = 0.626
+acceleration = 0.529
+velocity = 0.56
+----------LOGS END-----------
+-----------------------------
+
+-------VARIABLES RESET-------
+DATE:2019-01-24 21:18:46
+MISSION START TIMESTAMP:'00:00:00:00'
+VERIFY START TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 0.857
+pressure = 0.895
+humidity = 0.971
+altitude = 0.425
+direction = 0.767
+acceleration = 0.188
+velocity = 0.656
+----------LOGS END-----------
+-----------------------------
+
+-----MANUAL LOG INVOKED------
+DATE:2019-01-24 21:18:52
+MISSION START TIMESTAMP:'00:00:00:00'
+VERIFY START TIMESTAMP:'00:00:00:00'
+*****************************
+----------LOGS START---------
+temperature = 0.573
+pressure = 0.92
+humidity = 0.716
+altitude = 0.677
+direction = 0.47
+acceleration = 0.558
+velocity = 0.781
+----------LOGS END-----------
+-----------------------------
+
