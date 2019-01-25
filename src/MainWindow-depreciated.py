@@ -122,7 +122,7 @@ class DataWindow:
         self.infoText.config(text=" ")
 
     def log(self, status):
-        fo = open("status_log.txt", "a")
+        fo = open("status.log", "a")
         currentDate = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
         if status == "ABORT":
             fo.write("-------MISSION ABORTED-------\n")
@@ -158,7 +158,7 @@ class DataWindow:
     def log_menu(self):
         log_window = Toplevel(self.name)
         log_window.title("Log")
-        loggedLabel = Label(log_window, text="The current variables have been logged in 'status_log.txt'")
+        loggedLabel = Label(log_window, text="The current variables have been logged in 'status.log'")
         loggedLabel.pack()
         button = Button(log_window, text="Close", command=lambda: self.close_window(log_window))
         button.pack()
@@ -546,7 +546,7 @@ def doNothing():
 def log_menu():
     log_window = Toplevel(top)
     log_window.title("Log")
-    loggedLabel = Label(log_window, text="The current variables have been logged in 'status_log.txt'")
+    loggedLabel = Label(log_window, text="The current variables have been logged in 'status.log'")
     loggedLabel.pack()
     button = Button(log_window, text="Close", command=lambda: close_window(log_window))
     button.pack()
@@ -648,7 +648,7 @@ top.config(menu=menuBar)
 # ============================ #
 
 def log(status):
-    fo = open("status_log.txt", "a")
+    fo = open("status.log", "a")
     currentDate = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
     if status == "ABORT":
         fo.write("-------MISSION ABORTED-------\n")

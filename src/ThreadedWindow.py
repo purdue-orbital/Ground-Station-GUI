@@ -1,6 +1,7 @@
 import time
 import tkinter as tk
 from tkinter import messagebox
+import RPi.GPIO as GPIO
 
 
 from Timer import *
@@ -57,6 +58,7 @@ class ThreadedClient:
     def end_application(self):
         if messagebox.askyesno("Quit", "Do you want to quit?"):
             self.running = 0
+            GPIO.cleanup()
             root.destroy()
 
 

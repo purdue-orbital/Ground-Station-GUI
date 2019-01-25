@@ -33,7 +33,7 @@ class DataWindow:
 
         # Base file writing from program's execution directory
         program_path = os.path.dirname(os.path.realpath(__file__))
-        self.status_log_path = os.path.join(program_path, "../logs/status_log.txt")
+        self.status_log_path = os.path.join(program_path, "../logs/status.log")
         self.image_folder_path = os.path.join(program_path, "../res/img")
 
         self.name = name
@@ -165,7 +165,7 @@ class DataWindow:
     def log_menu(self):
         log_window = Toplevel(self.name)
         log_window.title("Manual Log")
-        logged_label = Label(log_window, text="The current variables have been logged in 'logs/status_log.txt'")
+        logged_label = Label(log_window, text="The current variables have been logged in 'logs/status.log'")
         logged_label.pack()
         button = Button(log_window, text="Close", command=lambda: log_window.destroy())
         button.pack()
