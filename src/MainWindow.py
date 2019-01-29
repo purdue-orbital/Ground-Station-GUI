@@ -90,7 +90,7 @@ class DataWindow:
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.name.quit)
 
-        program_menu.add_command(label="Start Mission", command=self.start_mission)
+        program_menu.add_command(label="Start/Stop Mission", command=self.start_mission)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
         program_menu.add_command(label="Log", command=self.log_menu)
 
@@ -114,12 +114,19 @@ class DataWindow:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
     def start_mission(self):
-        self.start_timer.start = time.time()
-        self.start_timer.clock_run = True
-        self.start_timer.tick()
+        if self.start_timer.clock_run:
+            self.start_timer.clock_run = False
 
-        self.my_control.verify_button.state(["!disabled"])
-        self.my_control.abort_button.state(["!disabled"])
+            self.my_control.verify_button.state(["disabled"])
+            self.my_control.abort_button.state(["disabled"])
+
+        elif not self.start_timer.clock_run:
+            self.start_timer.start = time.time()
+            self.start_timer.clock_run = True
+            self.start_timer.tick()
+
+            self.my_control.verify_button.state(["!disabled"])
+            self.my_control.abort_button.state(["!disabled"])
 
     def reset_variables_window(self):
         # Creates a pop up window that asks if you are sure that you want to rest the variables.
