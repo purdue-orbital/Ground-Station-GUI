@@ -32,7 +32,8 @@ class ThreadedClient:
 
     def update(self):
         self.gui.process_incoming()
-        if not self.running:
+        if not self.running or not self.gui.running:
+            self.end_application()
             import sys
             sys.exit(1)
         self.master.after(200, self.update)
@@ -60,6 +61,10 @@ class ThreadedClient:
             self.running = 0
             GPIO.cleanup()
             root.destroy()
+
+        else:
+            self.running = 1
+            self.gui.running = 1
 
 
 rand = random.Random()
