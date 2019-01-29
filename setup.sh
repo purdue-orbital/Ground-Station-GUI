@@ -12,7 +12,7 @@ dir="src/RPi"
 if [[ "$1" = "-d"  ]]; then
 	printf "Are you sure you want to setup in Development mode? (y/n): "
 	read ans
-	if [[ "$ans" = "y" ]]; then
+	if [ "$ans" = "y" ] || [ "$ans" = "Y" ] ; then
 		printf "${BLUE}Setting up in Development Mode\n"
 		if [[ -d ${dir} ]]; then
 			printf "${YELLOW}Already in Development mode ($dir already exists). Cancelling...\n"
@@ -24,7 +24,7 @@ if [[ "$1" = "-d"  ]]; then
 		printf "Creating files for dev environment\n"
 		echo -e "$gpio_txt" > src/RPi/GPIO.py
 		printf "${GREEN}Successfully Setup Development Environment\n"
-	elif [[ "$ans" = "n"  ]]; then
+	elif [ "$ans" = "n"  ] || [ "$ans" = "N" ] ; then
 		printf "${YELLOW}Cancelling Development Setup\n"
 		exit 0	
 	else
