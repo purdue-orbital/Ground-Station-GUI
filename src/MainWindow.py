@@ -76,7 +76,7 @@ class DataWindow:
         self.my_control.abort_button.config(command=self.abort_message_callback)
 
         # Running variable to see if program was terminated
-        self.running = 1
+        self.close = 0
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
@@ -91,7 +91,7 @@ class DataWindow:
 
         file_menu.add_command(label="Restart", command=self.restart_program)
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.end_application)
+        file_menu.add_command(label="Exit", command=self.attemptClose)
 
         program_menu.add_command(label="Start Mission", command=self.start_mission)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
@@ -303,5 +303,6 @@ class DataWindow:
             except self.queue.Empty:
                 pass
 
-    def end_application(self):
-        self.running = 0
+    def attemptClose(self):
+        print("Setting close")
+        self.close = 1

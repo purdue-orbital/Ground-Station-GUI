@@ -32,7 +32,7 @@ class ThreadedClient:
 
     def update(self):
         self.gui.process_incoming()
-        if not self.running or not self.gui.running:
+        if not self.running or self.gui.close:
             self.end_application()
             import sys
             sys.exit(1)
@@ -58,13 +58,15 @@ class ThreadedClient:
 
     def end_application(self):
         if messagebox.askyesno("Quit", "Do you want to quit?"):
+            print("Test")
             self.running = 0
+            self.gui.close = 0
             GPIO.cleanup()
             root.destroy()
 
         else:
-            self.running = 1
-            self.gui.running = 1
+            self.gui.close = 0
+            print("here")
 
 
 rand = random.Random()
