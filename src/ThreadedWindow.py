@@ -61,6 +61,12 @@ class ThreadedClient:
             GPIO.cleanup()
             root.destroy()
 
+            return 0
+
+        else:
+            self.gui.close = 0
+            return 0
+
 
 rand = random.Random()
 root = tk.Tk()
