@@ -6,7 +6,6 @@ from tkinter import messagebox
 from tkinter import ttk
 import RPi.GPIO as GPIO
 
-
 from Status import *
 from Timer import Timer
 from Data import Data
@@ -14,16 +13,12 @@ from Control import Control
 
 """
 ROCKET GUI Version 0.2
-
 Author: Matt Drozt, Ken Sodetz, Jay Rixie
 Since: 10/31/2018
-
-Created for Purdue Orbital Electrical and Software Sub team
-
+Created for Purdue Orbital Ground Stations Sub-Team
 Parses and displays data from the a Raspberry Pi 3 to verbosely
 display all pertinent system data (data that can be changed) and environmental
 data (data that cannot be changed).
-
 """
 
 
@@ -75,6 +70,9 @@ class DataWindow:
         self.my_control.verify_button.config(command=self.verify_message_callback)
         self.my_control.abort_button.config(command=self.abort_message_callback)
 
+        # Running variable to see if program was terminated
+        self.close = 0
+
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
 
@@ -88,9 +86,9 @@ class DataWindow:
 
         file_menu.add_command(label="Restart", command=self.restart_program)
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.name.quit)
+        file_menu.add_command(label="Exit", command=self.attempt_close)
 
-        program_menu.add_command(label="Start/Stop Mission", command=self.start_mission)
+        program_menu.add_command(label="Start Mission", command=self.start_mission)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
         program_menu.add_command(label="Log", command=self.log_menu)
 
@@ -114,19 +112,12 @@ class DataWindow:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
     def start_mission(self):
-        if self.start_timer.clock_run:
-            self.start_timer.clock_run = False
+        self.start_timer.start = time.time()
+        self.start_timer.clock_run = True
+        self.start_timer.tick()
 
-            self.my_control.verify_button.state(["disabled"])
-            self.my_control.abort_button.state(["disabled"])
-
-        elif not self.start_timer.clock_run:
-            self.start_timer.start = time.time()
-            self.start_timer.clock_run = True
-            self.start_timer.tick()
-
-            self.my_control.verify_button.state(["!disabled"])
-            self.my_control.abort_button.state(["!disabled"])
+        self.my_control.verify_button.state(["!disabled"])
+        self.my_control.abort_button.state(["!disabled"])
 
     def reset_variables_window(self):
         # Creates a pop up window that asks if you are sure that you want to rest the variables.
@@ -181,12 +172,12 @@ class DataWindow:
     def about_menu(self):
 
         about_text = "Ground Station Graphical User Interface Version 0.2\n\n" \
-                    "Author: Matt Drozt, Ken Sodetz\n" \
-                    "Since: 11/27/2018\n\n" \
-                    "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
-                    "Parses and displays data from the a Raspberry Pi 3 to verbosely display all\n" \
-                    "pertinent system data " \
-                    "(data that can be changed) and environmental data\n(data that cannot be changed)"
+                     "Author: Matt Drozt, Ken Sodetz\n" \
+                     "Since: 11/27/2018\n\n" \
+                     "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
+                     "Parses and displays data from the a Raspberry Pi 3 to verbosely display all\n" \
+                     "pertinent system data " \
+                     "(data that can be changed) and environmental data\n(data that cannot be changed)"
 
         about_window = Toplevel(self.name)
         about_window.title("About")
@@ -307,4 +298,5 @@ class DataWindow:
             except self.queue.Empty:
                 pass
 
-
+    def attempt_close(self):
+        self.close = 1
