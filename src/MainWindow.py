@@ -18,7 +18,7 @@ ROCKET GUI Version 0.2
 Author: Matt Drozt, Ken Sodetz, Jay Rixie
 Since: 10/31/2018
 
-Created for Purdue Orbital Ground Stations Sub-Team
+Created for Purdue Orbital Electrical and Software Sub team
 
 Parses and displays data from the a Raspberry Pi 3 to verbosely
 display all pertinent system data (data that can be changed) and environmental
@@ -75,9 +75,6 @@ class DataWindow:
         self.my_control.verify_button.config(command=self.verify_message_callback)
         self.my_control.abort_button.config(command=self.abort_message_callback)
 
-        # Running variable to see if program was terminated
-        self.close = 0
-
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
 
@@ -91,7 +88,7 @@ class DataWindow:
 
         file_menu.add_command(label="Restart", command=self.restart_program)
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.attemptClose)
+        file_menu.add_command(label="Exit", command=self.name.quit)
 
         program_menu.add_command(label="Start/Stop Mission", command=self.start_mission)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
@@ -310,5 +307,4 @@ class DataWindow:
             except self.queue.Empty:
                 pass
 
-    def attemptClose(self):
-        self.close = 1
+
