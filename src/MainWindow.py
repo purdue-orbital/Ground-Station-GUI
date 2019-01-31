@@ -304,5 +304,4 @@ class DataWindow:
                 pass
 
     def attemptClose(self):
-        print("Setting close")
         self.close = 1
