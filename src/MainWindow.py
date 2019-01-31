@@ -18,7 +18,7 @@ ROCKET GUI Version 0.2
 Author: Matt Drozt, Ken Sodetz, Jay Rixie
 Since: 10/31/2018
 
-Created for Purdue Orbital Ground Stations Sub-Team
+Created for Purdue Orbital Electrical and Software Sub team
 
 Parses and displays data from the a Raspberry Pi 3 to verbosely
 display all pertinent system data (data that can be changed) and environmental
@@ -75,9 +75,6 @@ class DataWindow:
         self.my_control.verify_button.config(command=self.verify_message_callback)
         self.my_control.abort_button.config(command=self.abort_message_callback)
 
-        # Running variable to see if program was terminated
-        self.close = 0
-
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
 
@@ -91,9 +88,9 @@ class DataWindow:
 
         file_menu.add_command(label="Restart", command=self.restart_program)
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.attemptClose)
+        file_menu.add_command(label="Exit", command=self.name.quit)
 
-        program_menu.add_command(label="Start Mission", command=self.start_mission)
+        program_menu.add_command(label="Start/Stop Mission", command=self.start_mission)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
         program_menu.add_command(label="Log", command=self.log_menu)
 
@@ -117,12 +114,19 @@ class DataWindow:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
     def start_mission(self):
-        self.start_timer.start = time.time()
-        self.start_timer.clock_run = True
-        self.start_timer.tick()
+        if self.start_timer.clock_run:
+            self.start_timer.clock_run = False
 
-        self.my_control.verify_button.state(["!disabled"])
-        self.my_control.abort_button.state(["!disabled"])
+            self.my_control.verify_button.state(["disabled"])
+            self.my_control.abort_button.state(["disabled"])
+
+        elif not self.start_timer.clock_run:
+            self.start_timer.start = time.time()
+            self.start_timer.clock_run = True
+            self.start_timer.tick()
+
+            self.my_control.verify_button.state(["!disabled"])
+            self.my_control.abort_button.state(["!disabled"])
 
     def reset_variables_window(self):
         # Creates a pop up window that asks if you are sure that you want to rest the variables.
@@ -303,5 +307,4 @@ class DataWindow:
             except self.queue.Empty:
                 pass
 
-    def attemptClose(self):
-        self.close = 1
+
