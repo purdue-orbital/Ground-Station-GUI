@@ -13,7 +13,7 @@ from Control import Control
 
 """
 ROCKET GUI Version 0.2
-Author: Matt Drozt, Ken Sodetz, Jay Rixie
+Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch
 Since: 10/31/2018
 Created for Purdue Orbital Ground Stations Sub-Team
 Parses and displays data from the a Raspberry Pi 3 to verbosely
@@ -63,12 +63,12 @@ class DataWindow:
         self.make_grid()
 
         self.start_timer = Timer(name, 0, 3, 0, 7)
-        self.my_timer = Timer(name, 3, 3, 0, 7)
-        self.my_data = Data(name, 8, 10)
-        self.my_control = Control(name, 7, 3)
+        self.timer = Timer(name, 3, 3, 0, 7)
+        self.data = Data(name, 8, 10)
+        self.control = Control(name, 7, 3)
 
-        self.my_control.verify_button.config(command=self.verify_message_callback)
-        self.my_control.abort_button.config(command=self.abort_message_callback)
+        self.control.verify_button.config(command=self.verify_message_callback)
+        self.control.abort_button.config(command=self.abort_message_callback)
 
         # Running variable to see if program was terminated
         self.close = 0
@@ -116,8 +116,8 @@ class DataWindow:
         self.start_timer.clock_run = True
         self.start_timer.tick()
 
-        self.my_control.verify_button.state(["!disabled"])
-        self.my_control.abort_button.state(["!disabled"])
+        self.control.verify_button.state(["!disabled"])
+        self.control.abort_button.state(["!disabled"])
 
     def reset_variables_window(self):
         # Creates a pop up window that asks if you are sure that you want to rest the variables.
@@ -125,7 +125,7 @@ class DataWindow:
         reset_window = messagebox.askokcancel("Reset All Variables?", "Are you sure you want to reset all variables?")
         if reset_window:
             self.log(Status.RESET)
-            self.my_data.reset_variables()
+            self.data.reset_variables()
 
     def log(self, status):
         fo = open(self.status_log_path, "a")
@@ -146,16 +146,16 @@ class DataWindow:
 
         fo.write("DATE:" + current_date + "\n")
         fo.write("MISSION START TIMESTAMP:" + repr(self.start_timer.current_time) + "\n")
-        fo.write("VERIFY START TIMESTAMP:" + repr(self.my_timer.current_time) + "\n")
+        fo.write("VERIFY START TIMESTAMP:" + repr(self.timer.current_time) + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
-        fo.write("temperature = " + repr(self.my_data.temperature_data) + "\n")
-        fo.write("pressure = " + repr(self.my_data.pressure_data) + "\n")
-        fo.write("humidity = " + repr(self.my_data.humidity_data) + "\n")
-        fo.write("altitude = " + repr(self.my_data.altitude_data) + "\n")
-        fo.write("direction = " + repr(self.my_data.direction_data) + "\n")
-        fo.write("acceleration = " + repr(self.my_data.acceleration_data) + "\n")
-        fo.write("velocity = " + repr(self.my_data.velocity_data) + "\n")
+        fo.write("temperature = " + repr(self.data.temperature_data) + "\n")
+        fo.write("pressure = " + repr(self.data.pressure_data) + "\n")
+        fo.write("humidity = " + repr(self.data.humidity_data) + "\n")
+        fo.write("altitude = " + repr(self.data.altitude_data) + "\n")
+        fo.write("direction = " + repr(self.data.direction_data) + "\n")
+        fo.write("acceleration = " + repr(self.data.acceleration_data) + "\n")
+        fo.write("velocity = " + repr(self.data.velocity_data) + "\n")
         fo.write("----------LOGS END-----------\n")
         fo.write("-----------------------------\n\n")
         fo.close()
@@ -172,7 +172,7 @@ class DataWindow:
     def about_menu(self):
 
         about_text = "Ground Station Graphical User Interface Version 0.2\n\n" \
-                     "Author: Matt Drozt, Ken Sodetz\n" \
+                     "Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch\n" \
                      "Since: 11/27/2018\n\n" \
                      "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
                      "Parses and displays data from the a Raspberry Pi 3 to verbosely display all\n" \
@@ -205,37 +205,37 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def verify_message_callback(self):
-        if self.my_control.mission_status == Status.NOT_VERIFIED:
+        if self.control.mission_status == Status.NOT_VERIFIED:
             verify_response = messagebox.askyesno("Verify Mission?", "Do you want to verify the mission")
             if verify_response:
-                self.my_control.mission_status = Status.VERIFIED
-                self.my_control.change_status_display(self.my_control.mission_status)
-                self.log(self.my_control.mission_status)
+                self.control.mission_status = Status.VERIFIED
+                self.control.change_status_display(self.control.mission_status)
+                self.log(self.control.mission_status)
                 GPIO.output(self.gui_switch, GPIO.HIGH)
-                self.my_timer.start = time.time()
-                self.my_timer.clock_run = True
-                self.my_timer.tick()
-                self.my_control.verify_button.config(text="UNVERIFY")
+                self.timer.start = time.time()
+                self.timer.clock_run = True
+                self.timer.tick()
+                self.control.verify_button.config(text="UNVERIFY")
 
-        elif self.my_control.mission_status == Status.VERIFIED:
+        elif self.control.mission_status == Status.VERIFIED:
             verify_response = messagebox.askyesno("Unverify Mission?", "Do you want to unverify the mission")
             if verify_response:
-                self.my_control.mission_status = Status.NOT_VERIFIED
-                self.my_control.change_status_display(self.my_control.mission_status)
-                self.log(self.my_control.mission_status)
-                self.my_timer.clock_run = False
-                self.my_control.verify_button.config(text="VERIFY")
+                self.control.mission_status = Status.NOT_VERIFIED
+                self.control.change_status_display(self.control.mission_status)
+                self.log(self.control.mission_status)
+                self.timer.clock_run = False
+                self.control.verify_button.config(text="VERIFY")
 
-        elif self.my_control.mission_status == Status.ABORT:
+        elif self.control.mission_status == Status.ABORT:
             verify_response = messagebox.askyesno("Verify Mission?", "Do you want to verify the mission")
             if verify_response:
-                self.my_control.mission_status = Status.VERIFIED
-                self.my_control.change_status_display(self.my_control.mission_status)
-                self.log(self.my_control.mission_status)
-                self.my_timer.start = time.time()
-                self.my_timer.clock_run = True
-                self.my_timer.tick()
-                self.my_control.verify_button.config(text="UNVERIFY")
+                self.control.mission_status = Status.VERIFIED
+                self.control.change_status_display(self.control.mission_status)
+                self.log(self.control.mission_status)
+                self.timer.start = time.time()
+                self.timer.clock_run = True
+                self.timer.tick()
+                self.control.verify_button.config(text="UNVERIFY")
 
     def abort_message_callback(self):
         abort_response = messagebox.askyesno("Abort Mission?", "Do you really want to abort the mission?")
@@ -261,21 +261,21 @@ class DataWindow:
 
     def select_cdm(self, close_window):
         self.abort_method = "CDM"
-        self.my_control.mission_status = Status.ABORT
-        self.log(self.my_control.mission_status)
-        self.my_timer.clock_run = False
-        self.my_control.verify_button.config(text="VERIFY")
-        self.my_control.change_status_display(self.my_control.mission_status)
+        self.control.mission_status = Status.ABORT
+        self.log(self.control.mission_status)
+        self.timer.clock_run = False
+        self.control.verify_button.config(text="VERIFY")
+        self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
 
     def select_qdm(self, close_window):
         self.abort_method = "QDM"
-        self.my_control.mission_status = Status.ABORT
-        self.my_timer.clock_run = False
-        self.my_control.verify_button.config(text="VERIFY")
-        self.log(self.my_control.mission_status)
-        self.my_control.change_status_display(self.my_control.mission_status)
+        self.control.mission_status = Status.ABORT
+        self.timer.clock_run = False
+        self.control.verify_button.config(text="VERIFY")
+        self.log(self.control.mission_status)
+        self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
 
@@ -285,16 +285,16 @@ class DataWindow:
             try:
                 data_json = self.queue.get(0)
                 # Set the data variables equal to the corresponding json entries
-                self.my_data.temperature_data = data_json["temperature"]
-                self.my_data.pressure_data = data_json["pressure"]
-                self.my_data.humidity_data = data_json["humidity"]
-                self.my_data.altitude_data = data_json["altitude"]
-                self.my_data.direction_data = data_json["direction"]
-                self.my_data.acceleration_data = data_json["acceleration"]
-                self.my_data.velocity_data = data_json["velocity"]
-                self.my_data.user_angle_data = data_json["user_angle"]
+                self.data.temperature_data = data_json["temperature"]
+                self.data.pressure_data = data_json["pressure"]
+                self.data.humidity_data = data_json["humidity"]
+                self.data.altitude_data = data_json["altitude"]
+                self.data.direction_data = data_json["direction"]
+                self.data.acceleration_data = data_json["acceleration"]
+                self.data.velocity_data = data_json["velocity"]
+                self.data.user_angle_data = data_json["user_angle"]
                 # Reload variables
-                self.my_data.display_variables()
+                self.data.display_variables()
             except self.queue.Empty:
                 pass
 

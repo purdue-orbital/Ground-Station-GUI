@@ -3,9 +3,8 @@ import tkinter as tk
 from tkinter import messagebox
 import RPi.GPIO as GPIO
 
-
 from Timer import *
-from MainWindow import DataWindow
+from DataWindow import DataWindow
 
 import threading
 import random
@@ -25,7 +24,7 @@ class ThreadedClient:
         self.gui = DataWindow(master, self.queue)
 
         self.running = 1
-        self.thread1 = threading.Thread(target=self.check_queue)
+        self.thread1 = threading.Thread(target=self.test_queue)
         self.thread1.start()
 
         self.update()
@@ -38,7 +37,10 @@ class ThreadedClient:
                 sys.exit(1)
         self.master.after(200, self.update)
 
-    def check_queue(self):
+    def insert_data(self, data):
+        self.queue.put(data)
+
+    def test_queue(self):
         while self.running:
             time.sleep(1)
 
