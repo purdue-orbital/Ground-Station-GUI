@@ -6,3 +6,4 @@ traceback.log
 __pycache__
 *.pyc
 src/RPi
+.vscode/

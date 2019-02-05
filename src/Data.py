@@ -1,7 +1,8 @@
 from tkinter import *
-
+from GraphWindows import *
 
 class Data:
+
     def __init__(self, place_window, labels_column, data_column):
         # Environment Data
         self.temperature_data = 0
@@ -35,6 +36,11 @@ class Data:
         pressure_label = Label(place_window, text="Pressure (kPa):")
         humidity_label = Label(place_window, text="Humidity (Percent):")
 
+        # Bind the functions to open a graph to the labels
+        temperature_label.bind('<Button-1>', GraphWindows.open_temp_graph)
+        pressure_label.bind('<Button-1>', GraphWindows.open_pressure_graph)
+        humidity_label.bind('<Button-1>', GraphWindows.open_humidity_graph)
+
         temperature_label.grid(row=1, column=labels_column)
         pressure_label.grid(row=2, column=labels_column)
         humidity_label.grid(row=3, column=labels_column)
@@ -60,6 +66,12 @@ class Data:
         acceleration_label = Label(place_window, text="Acceleration (m/s/s):")
         velocity_label = Label(place_window, text="Velocity (m/s):")
         angle_label = Label(place_window, text="Angle (rad):")
+
+        # Bind the functions to open a graph to the labels
+        altitude_label.bind('<Button-1>', GraphWindows.open_altitude_graph)
+        direction_label.bind('<Button-1>', GraphWindows.open_direction_graph)
+        acceleration_label.bind('<Button-1>', GraphWindows.open_acceleration_graph)
+        velocity_label.bind('<Button-1>', GraphWindows.open_velocity_graph )
 
         altitude_label.grid(row=space + 1, column=labels_column)
         direction_label.grid(row=space + 2, column=labels_column)
@@ -108,3 +120,4 @@ class Data:
         self.user_angle_data = 0.0
 
         self.display_variables()
+    
