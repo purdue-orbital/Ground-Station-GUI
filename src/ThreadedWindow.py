@@ -40,6 +40,9 @@ class ThreadedClient:
     def insert_data(self, data):
         self.queue.put(data)
 
+    def handle_radio(self):
+        print("test")
+
     def test_queue(self):
         while self.running:
             time.sleep(1)
