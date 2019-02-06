@@ -24,10 +24,15 @@ def cleanup():
 def setwarnings(flag):
     print("Warnings: {}".format(flag))
 
+def add_event_detect(channel, direction, function):
+    print("Adding event detection...")
 
 def HIGH():
     sys.stdout.write('')
 
 
 def LOW():
+    sys.stdout.write('')
+
+def RISING():
     sys.stdout.write('')

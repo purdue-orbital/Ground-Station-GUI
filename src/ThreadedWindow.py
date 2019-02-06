@@ -19,14 +19,21 @@ class ThreadedClient:
         # self.master.iconify for the memes
         root.protocol("WM_DELETE_WINDOW", self.end_application)
 
+        # Queue to buffer incoming data
         self.queue = queue.Queue()
 
+        # Window to display all data
         self.gui = DataWindow(master, self.queue)
 
+        # Create thread to spoof data in queue
         self.running = 1
         self.thread1 = threading.Thread(target=self.test_queue)
         self.thread1.start()
 
+        # Add event to detect GPIO pin 11
+        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch())
+
+        # Process data in queue
         self.update()
 
     def update(self):
@@ -60,6 +67,10 @@ class ThreadedClient:
 
             data_json = json.loads(preload)
             self.queue.put(data_json)
+
+    def launch(self):
+        print("Lauching")
+        # TODO send launch
 
     def end_application(self):
         if messagebox.askyesno("Quit", "Do you want to quit?"):
