@@ -62,7 +62,7 @@ class ThreadedClient:
             self.gui.close = 0
             GPIO.cleanup()
             root.destroy()
-            return 1
+            return 0
 
         else:
             self.gui.close = 0
