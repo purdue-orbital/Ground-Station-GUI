@@ -6,28 +6,7 @@ A simple python graphical user interface for communication with the launch platf
 
 These instructions will get you started for testing purposes. 
 
-### Prerequisites
-
 __Disclaimer:__ _This software was specifically developed for use on a Raspberry Pi 3B. This software is currently in development and is not yet suitable for field use._
-
-Ensure Python3 is installed on your system. Python 3.5 is recommended.
-
-To check which version of Python 3 you have installed, run 
-
-```sh
-$ python3 --version
-```
-
-If Python 3 is not installed, then run
-
-```sh
-$ sudo apt-get update
-$ sudo apt-get install python3.5
-```
-Ensure you have the tkinter python library. If you do not, run
-```sh
-$ sudo apt-get install python3-tk
-```
 
 ### Installing
 
@@ -63,10 +42,19 @@ _Be sure to run the setup script before running for the first time._
 $ ./run.sh
 ```
 
+The run script will aslo check the version of Python to ensure it is correct. If the script fails, a full error report can be found in `logs/traceback.log`.
+
 This will get the GUI running. However, to get the full functionality of the system, you will need to hook up the appropriate wires to the correct GPIO pins on the Raspberry Pi 3B.
 
 ### Hardware Connections
 
-Tutorial and schematics coming soon.
+The program interacts with the following GPIO pins, which are connected to the following pins on the Launch Initiation Board (LIB):
+
+Board  <--->  Raspberry Pi
+
+* Pin 01 <---> Pin 12 
+* Pin 11 <---> Pin 06
+* Pin 15 <---> Pin 11
+* Pin 22 <---> Pin 02
 
 
