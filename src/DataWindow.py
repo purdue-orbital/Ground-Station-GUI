@@ -71,7 +71,10 @@ class DataWindow:
         self.control.abort_button.config(command=self.abort_message_callback)
 
         # Running variable to see if program was terminated
-        self.close = 0
+        self.running = 1
+
+        # Running variable to check if in testing mode
+        self.testing = 0
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
@@ -298,5 +301,8 @@ class DataWindow:
             except self.queue.Empty:
                 pass
 
-    def attempt_close(self):
-        self.close = 1
+    def set_testing(self, isTesting):
+        self.testing = isTesting
+
+    def close(self):
+        self.running = 0

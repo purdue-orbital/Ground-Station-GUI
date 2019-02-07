@@ -30,6 +30,9 @@ class ThreadedClient:
         self.thread1 = threading.Thread(target=self.test_queue)
         self.thread1.start()
 
+        # Create testing variables
+        self.testing = 0
+
         # Add event to detect GPIO pin 11
         GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch())
 
@@ -44,11 +47,18 @@ class ThreadedClient:
                 sys.exit(1)
         self.master.after(200, self.update)
 
+    def set_testing(self, isTesting):
+        self.testing = isTesting
+        self.gui.set_testing(isTesting)
+
     def insert_data(self, data):
         self.queue.put(data)
 
     def handle_radio(self):
         print("test")
+
+    def error(self, message):
+        messagebox.showinfo("Error", message)
 
     def test_queue(self):
         while self.running:
@@ -75,10 +85,10 @@ class ThreadedClient:
     def end_application(self):
         if messagebox.askyesno("Quit", "Do you want to quit?"):
             self.running = 0
-            self.gui.close = 0
+            self.gui.close()
             GPIO.cleanup()
             root.destroy()
-            return 0
+            return 1
 
         else:
             self.gui.close = 0
