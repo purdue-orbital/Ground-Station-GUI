@@ -41,7 +41,7 @@ class ThreadedClient:
 
     def update(self):
         self.gui.process_incoming()
-        if not self.running or self.gui.close:
+        if not self.running or not self.gui.running:
             if self.end_application():
                 import sys
                 sys.exit(1)

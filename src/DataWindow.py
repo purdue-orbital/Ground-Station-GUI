@@ -89,7 +89,7 @@ class DataWindow:
 
         file_menu.add_command(label="Restart", command=self.restart_program)
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.attempt_close)
+        file_menu.add_command(label="Exit", command=self.close)
 
         program_menu.add_command(label="Start Mission", command=self.start_mission)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
