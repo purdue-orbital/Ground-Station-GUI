@@ -24,7 +24,7 @@ def cleanup():
 def setwarnings(flag):
     print("Warnings: {}".format(flag))
 
-def add_event_detect(channel, direction, function):
+def add_event_detect(channel, direction, callback):
     print("Adding event detection...")
 
 def HIGH():
