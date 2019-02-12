@@ -27,7 +27,7 @@ class Data:
 
         # Create and Place Section Header
         environmental_data_label = Label(place_window, text="Environmental Data", font=('times', 15, 'underline'))
-        environmental_data_label.grid(row=0, column=labels_column, columnspan=data_column,
+        environmental_data_label.grid(row=0, column=labels_column, columnspan=3,
                                       sticky=N + S + E + W)
 
         # Create and Place Labels for Data
@@ -52,7 +52,7 @@ class Data:
 
         # Create and Place Section Header
         system_data_label = Label(place_window, text="System Data", font=('times', 15, 'underline'))
-        system_data_label.grid(row=space, column=labels_column, columnspan=data_column, sticky=N + S + E + W)
+        system_data_label.grid(row=space, column=labels_column, columnspan=3, sticky=N + S + E + W)
 
         # Create and Place Labels for Data
         altitude_label = Label(place_window, text="Altitude (km):")

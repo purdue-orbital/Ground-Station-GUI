@@ -38,7 +38,7 @@ class DataWindow:
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
-        self.name.geometry('600x600')
+        self.name.geometry('1000x600')
 
         # Set up GPIO pins for use, see documentation for pin layout
         # orange wire
@@ -103,7 +103,7 @@ class DataWindow:
 
     def make_grid(self):
         total_rows = 12
-        total_columns = 11
+        total_columns = 12
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)

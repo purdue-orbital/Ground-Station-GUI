@@ -1,5 +1,6 @@
 import time
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
 import RPi.GPIO as GPIO
 
@@ -21,6 +22,18 @@ class ThreadedClient:
 
         # Queue to buffer incoming data
         self.queue = queue.Queue()
+
+        # Create Style
+        self.style = ttk.Style(root)
+        self.style.configure('lefttab.TNotebook', tabposition='ws')
+
+        # Create notebook
+        self.notebook = ttk.Notebook(root, style='lefttab.TNotebook')
+        f1 = tk.Frame(self.notebook, bg='red', width=200, height=200)
+        f2 = tk.Frame(self.notebook, bg='blue', width=200, height=200)
+        self.notebook.add(f1, text='Frame 1')
+        self.notebook.add(f2, text='Frame 2')
+        self.notebook.grid(row=1, column=12)
 
         # Window to display all data
         self.gui = DataWindow(master, self.queue)
