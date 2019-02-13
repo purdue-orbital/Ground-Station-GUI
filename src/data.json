@@ -12,8 +12,7 @@
     },
     "Magnetometer": {
       "x": 10,
-      "y": 10,
-      "z": 10
+      "y": 10
     },
     "Temperature": 10,
     "Accelerometer": {
