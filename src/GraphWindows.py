@@ -1,7 +1,7 @@
 from tkinter import *
 
+# This should be reorked after GUI is changed
 class GraphWindows:
-
     # open the temperature graph
     def open_temp_graph(event):
         print("temperature clicked")
@@ -27,5 +27,5 @@ class GraphWindows:
         print("acceleration graph")
 
     #open the velocity graph
-    def open_velocity_graph(event):
+    def open_velocity``_graph(event):
         print("velocity graph")
