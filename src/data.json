@@ -41,5 +41,10 @@
     }
   },
   "QDM": 1,
-  "CDM": 1
+  "CDM": 1,
+  "Stabilization": 1,
+  "Crash": 1,
+  "Ignition": 1,
+  "Drogue": 1,
+  "Main Chute": 1
 }
