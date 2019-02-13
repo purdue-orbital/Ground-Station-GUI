@@ -10,7 +10,10 @@
       "y": 10,
       "z": 10
     },
-    "Magnetometer": 10,
+    "Magnetometer": {
+      "x": 10,
+      "y": 10
+    },
     "Temperature": 10,
     "Accelerometer": {
       "x": 10,
