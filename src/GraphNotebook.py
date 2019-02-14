@@ -1,27 +1,24 @@
-from tkinter.ttk import Notebook
+from tkinter import ttk
+import tkinter as tk
 
-class GraphNotebook(Notebook):
-  def __init__(self, master=None, **kw):
+class GraphNotebook(ttk.Notebook):
+  def __init__(self, master=None):
+    # Create Style
+    self.style = ttk.Style(master)
+    self.style.configure('lefttab.TNotebook', tabposition='ws')
 
-    Notebook.__init__(self, master, **kw)
-    self.bind("<<NotebookTabChanged>>", self._on_tab_changed)
+    self.graphs = ttk.Notebook(master, width=200, height=200, style='lefttab.TNotebook')
+    # self.bind("<<NotebookTabChanged>>", self._on_tab_changed)
 
-  def _on_tab_changed(self,event):
+    f1 = tk.Frame(self.graphs, width=200, height=200)
+    f2 = tk.Frame(self.graphs, width=200, height=200)
+    self.graphs.add(f1, text='\n\n\nGyrometer\n\n\n\n\n\n\n\n\n\n')
+    self.graphs.add(f2, text='\n\n\nAccelerometer\n\n\n\n\n\n\n\n\n\n')
+    self.graphs.config(height=800)
+    self.graphs.grid(row=1, column=12, rowspan=4)
+
+  def _on_tab_changed(self, event):
     event.widget.update_idletasks()
 
     tab = event.widget.nametowidget(event.widget.select())
     event.widget.configure(height=tab.winfo_reqheight())
-
-
-if __name__== "__main__":
-    from tkinter import Frame, Tk
-    root = Tk()
-
-    notebook = GraphNotebook(root)
-    notebook.add(Frame(notebook, width=400, height=200, name="a"),text="TAB 1")
-    notebook.add(Frame(notebook, width=400, height=300, name="b"),text="TAB 2")
-    notebook.add(Frame(notebook, width=400, height=100, name="c"),text="TAB 3")
-
-    notebook.pack()
-
-    root.mainloop()
