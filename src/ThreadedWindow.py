@@ -25,15 +25,24 @@ class ThreadedClient:
 
         # Create Style
         self.style = ttk.Style(root)
-        self.style.configure('lefttab.TNotebook', tabposition='ws')
+        self.style.configure('lefttab.TNotebook', tabposition='ws', tabmargins=[2, 5, 2, 0], padding=[100, 100])
 
         # Create notebook
-        self.notebook = ttk.Notebook(root, style='lefttab.TNotebook')
-        f1 = tk.Frame(self.notebook, bg='red', width=200, height=200)
-        f2 = tk.Frame(self.notebook, bg='blue', width=200, height=200)
-        self.notebook.add(f1, text='Frame 1')
-        self.notebook.add(f2, text='Frame 2')
-        self.notebook.grid(row=1, column=12)
+        path = "../res/img/orbital-logo.gif"
+
+        # Creates a Tkinter-compatible photo image, which can be used everywhere Tkinter expects an image object.
+        img = tk.PhotoImage(file=path)
+
+        # The Label widget is a standard Tkinter widget used to display a text or image on the screen.
+        panel = tk.Label(master, image=img)
+
+        self.notebook = ttk.Notebook(root, width=200, height=200, style='lefttab.TNotebook')
+        f1 = tk.Frame(self.notebook, width=200, height=200)
+        f2 = tk.Frame(self.notebook, width=200, height=200)
+        self.notebook.add(f1, text='\n\n\nFrame 1\n\n\n', sticky="n", image=panel)
+        self.notebook.add(f2, text='Frame 2', sticky="s", image=panel)
+        self.notebook.config(height=800)
+        self.notebook.grid(row=1, column=12, rowspan=4)
 
         # Window to display all data
         self.gui = DataWindow(master, self.queue)
@@ -104,7 +113,7 @@ class ThreadedClient:
             return 1
 
         else:
-            self.gui.close = 0
+            self.gui.running = 1
             return 0
 
 
