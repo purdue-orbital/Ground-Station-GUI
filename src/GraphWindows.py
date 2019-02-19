@@ -27,5 +27,5 @@ class GraphWindows:
         print("acceleration graph")
 
     #open the velocity graph
-    def open_velocity``_graph(event):
+    def open_velocity_graph(event):
         print("velocity graph")

@@ -12,6 +12,8 @@ fig, axs = plt.subplots(nrows=2, ncols=3, sharex=True, sharey=True)
 plt.tight_layout()
 plt.subplots_adjust(wspace=0, hspace=0)
 
+#Setup titles and axis labels
+
 plt.axes(axs[0,0])
 plt.plot([5,7,10,15])
 plt.ylabel("Acceleration (m/s^2)")
@@ -23,6 +25,7 @@ plt.axes(axs[0,1])
 plt.title("Rocket")
 plt.plot([5,10,15])
 plt.axes(axs[1,1])
+plt.xlabel("Time (s)")
 plt.plot([5,10,15])
 plt.axes(axs[0,2])
 plt.title("Stratologger")
