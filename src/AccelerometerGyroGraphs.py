@@ -1,25 +1,92 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import queue
+import random
 import time
 
 def update_baloon_acc(x, y, z):
-    return 0
+    plt.sca(axs[0,0])
+    plt.cla()
+    plt.ylabel("Acceleration (m/s^2)")
+    plt.title("Balloon")
+    baloon_acc_xQ.get()
+    baloon_acc_xQ.put(x)
+    baloon_acc_yQ.get()
+    baloon_acc_yQ.put(y)
+    baloon_acc_zQ.get()
+    baloon_acc_zQ.put(z)
+    plt.plot(list(baloon_acc_xQ.queue))
+    plt.plot(list(baloon_acc_yQ.queue))
+    plt.plot(list(baloon_acc_zQ.queue))
 
 def update_baloon_gyro(x, y, z):
-    return 0
+    plt.sca(axs[1,0])
+    plt.cla()
+    plt.ylabel("Gyro (degrees/s)")
+    baloon_gyro_xQ.get()
+    baloon_gyro_xQ.put(x)
+    baloon_gyro_yQ.get()
+    baloon_gyro_yQ.put(y)
+    baloon_gyro_zQ.get()
+    baloon_gyro_zQ.put(z)
+    plt.plot(list(baloon_gyro_xQ.queue))
+    plt.plot(list(baloon_gyro_yQ.queue))
+    plt.plot(list(baloon_gyro_zQ.queue))
 
 def update_rocket_acc(x, y, z):
-    return 0
+    plt.sca(axs[0,1])
+    plt.cla()
+    plt.title("Rocket")
+    rocket_acc_xQ.get()
+    rocket_acc_xQ.put(x)
+    rocket_acc_yQ.get()
+    rocket_acc_yQ.put(y)
+    rocket_acc_zQ.get()
+    rocket_acc_zQ.put(z)
+    plt.plot(list(rocket_acc_xQ.queue))
+    plt.plot(list(rocket_acc_yQ.queue))
+    plt.plot(list(rocket_acc_zQ.queue))
 
 def update_rocket_gyro(x, y, z):
-    return 0
+    plt.sca(axs[1,1])
+    plt.cla()
+    plt.xlabel("Time (s)")
+    rocket_gyro_xQ.get()
+    rocket_gyro_xQ.put(x)
+    rocket_gyro_yQ.get()
+    rocket_gyro_yQ.put(y)
+    rocket_gyro_zQ.get()
+    rocket_gyro_zQ.put(z)
+    plt.plot(list(rocket_gyro_xQ.queue))
+    plt.plot(list(rocket_gyro_yQ.queue))
+    plt.plot(list(rocket_gyro_zQ.queue))
 
 def update_strato_acc(x, y, z):
-    return 0
+    plt.sca(axs[0,2])
+    plt.cla()
+    plt.title("Stratologger")
+    strato_acc_xQ.get()
+    strato_acc_xQ.put(x)
+    strato_acc_yQ.get()
+    strato_acc_yQ.put(y)
+    strato_acc_zQ.get()
+    strato_acc_zQ.put(z)
+    plt.plot(list(strato_acc_xQ.queue))
+    plt.plot(list(strato_acc_yQ.queue))
+    plt.plot(list(strato_acc_zQ.queue))
 
 def update_strato_gyro(x, y, z):
-    return 0
+    plt.sca(axs[1,2])
+    plt.cla()
+    strato_gyro_xQ.get()
+    strato_gyro_xQ.put(x)
+    strato_gyro_yQ.get()
+    strato_gyro_yQ.put(y)
+    strato_gyro_zQ.get()
+    strato_gyro_zQ.put(z)
+    plt.plot(list(strato_gyro_xQ.queue))
+    plt.plot(list(strato_gyro_yQ.queue))
+    plt.plot(list(strato_gyro_zQ.queue))
 
 
 # DARK THEME!!!!!
@@ -78,32 +145,32 @@ for i in range(0, amount_of_point_to_graph):
     strato_gyro_zQ.put(0)
 
 #Setup titles, axis labels, and plot the initial 0s
-baloon_acc_graph = plt.sca(axs[0,0])
+plt.sca(axs[0,0])
 plt.plot(list(baloon_acc_xQ.queue))
 plt.plot(list(baloon_acc_yQ.queue))
 plt.plot(list(baloon_acc_zQ.queue))
 plt.ylabel("Acceleration (m/s^2)")
 plt.title("Balloon")
 
-baloon_gyro_graph = plt.sca(axs[1,0])
+plt.sca(axs[1,0])
 plt.plot(list(baloon_gyro_xQ.queue))
 plt.plot(list(baloon_gyro_yQ.queue))
 plt.plot(list(baloon_gyro_zQ.queue))
 plt.ylabel("Gyro (degrees/s)")
 
-rocket_acc_graph = plt.sca(axs[0,1])
+plt.sca(axs[0,1])
 plt.title("Rocket")
 plt.plot(list(rocket_acc_xQ.queue))
 plt.plot(list(rocket_acc_yQ.queue))
 plt.plot(list(rocket_acc_zQ.queue))
 
-rocket_gyro_graph = plt.sca(axs[1,1])
+plt.sca(axs[1,1])
 plt.xlabel("Time (s)")
 plt.plot(list(rocket_gyro_xQ.queue))
 plt.plot(list(rocket_gyro_yQ.queue))
 plt.plot(list(rocket_gyro_zQ.queue))
 
-stato_acc_graph = plt.sca(axs[0,2])
+plt.sca(axs[0,2])
 plt.title("Stratologger")
 plt.plot(list(strato_acc_xQ.queue))
 plt.plot(list(strato_acc_yQ.queue))
@@ -116,5 +183,17 @@ plt.plot(list(strato_gyro_zQ.queue))
 
 # Run the loop so the graph gets updated every second
 while True:
+    # Random data for now
+    x = random.randint(-50,50)
+    y = random.randint(-50,50)
+    z = random.randint(-50,50)
+    # Call methods for each graph to update x,y,z
+    update_baloon_acc(x, y, z)
+    update_baloon_gyro(x, y, z)
+    update_rocket_acc(x, y, z)
+    update_rocket_gyro(x, y, z)
+    update_strato_acc(x, y, z)
+    update_strato_gyro(x, y, z)
+    # Sleep for a second, will probably be replaced with a callback or something
     plt.pause(0.001)
     time.sleep(1)
