@@ -25,7 +25,6 @@ class ThreadedClient:
         self.queue = queue.Queue()
 
         self.notebook = GraphNotebook()
-        self.notebook.grid(row=1, column=12, rowspan=4)
 
         # Window to display all data
         self.gui = DataWindow(master, self.queue)
