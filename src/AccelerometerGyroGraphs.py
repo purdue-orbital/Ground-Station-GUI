@@ -15,9 +15,9 @@ def update_baloon_acc(x, y, z):
     baloon_acc_yQ.put(y)
     baloon_acc_zQ.get()
     baloon_acc_zQ.put(z)
-    plt.plot(list(baloon_acc_xQ.queue))
-    plt.plot(list(baloon_acc_yQ.queue))
-    plt.plot(list(baloon_acc_zQ.queue))
+    plt.plot(list(baloon_acc_xQ.queue), 'xkcd:yellow')
+    plt.plot(list(baloon_acc_yQ.queue), 'xkcd:cyan')
+    plt.plot(list(baloon_acc_zQ.queue), 'xkcd:fuchsia')
 
 def update_baloon_gyro(x, y, z):
     plt.sca(axs[1,0])
@@ -29,9 +29,9 @@ def update_baloon_gyro(x, y, z):
     baloon_gyro_yQ.put(y)
     baloon_gyro_zQ.get()
     baloon_gyro_zQ.put(z)
-    plt.plot(list(baloon_gyro_xQ.queue))
-    plt.plot(list(baloon_gyro_yQ.queue))
-    plt.plot(list(baloon_gyro_zQ.queue))
+    plt.plot(list(baloon_gyro_xQ.queue), 'xkcd:yellow')
+    plt.plot(list(baloon_gyro_yQ.queue), 'xkcd:cyan')
+    plt.plot(list(baloon_gyro_zQ.queue), 'xkcd:fuchsia')
 
 def update_rocket_acc(x, y, z):
     plt.sca(axs[0,1])
@@ -43,9 +43,9 @@ def update_rocket_acc(x, y, z):
     rocket_acc_yQ.put(y)
     rocket_acc_zQ.get()
     rocket_acc_zQ.put(z)
-    plt.plot(list(rocket_acc_xQ.queue))
-    plt.plot(list(rocket_acc_yQ.queue))
-    plt.plot(list(rocket_acc_zQ.queue))
+    plt.plot(list(rocket_acc_xQ.queue), 'xkcd:yellow')
+    plt.plot(list(rocket_acc_yQ.queue), 'xkcd:cyan')
+    plt.plot(list(rocket_acc_zQ.queue), 'xkcd:fuchsia')
 
 def update_rocket_gyro(x, y, z):
     plt.sca(axs[1,1])
@@ -57,9 +57,9 @@ def update_rocket_gyro(x, y, z):
     rocket_gyro_yQ.put(y)
     rocket_gyro_zQ.get()
     rocket_gyro_zQ.put(z)
-    plt.plot(list(rocket_gyro_xQ.queue))
-    plt.plot(list(rocket_gyro_yQ.queue))
-    plt.plot(list(rocket_gyro_zQ.queue))
+    plt.plot(list(rocket_gyro_xQ.queue), 'xkcd:yellow')
+    plt.plot(list(rocket_gyro_yQ.queue), 'xkcd:cyan')
+    plt.plot(list(rocket_gyro_zQ.queue), 'xkcd:fuchsia')
 
 def update_strato_acc(x, y, z):
     plt.sca(axs[0,2])
@@ -71,9 +71,9 @@ def update_strato_acc(x, y, z):
     strato_acc_yQ.put(y)
     strato_acc_zQ.get()
     strato_acc_zQ.put(z)
-    plt.plot(list(strato_acc_xQ.queue))
-    plt.plot(list(strato_acc_yQ.queue))
-    plt.plot(list(strato_acc_zQ.queue))
+    plt.plot(list(strato_acc_xQ.queue), 'xkcd:yellow')
+    plt.plot(list(strato_acc_yQ.queue), 'xkcd:cyan')
+    plt.plot(list(strato_acc_zQ.queue), 'xkcd:fuchsia')
 
 def update_strato_gyro(x, y, z):
     plt.sca(axs[1,2])
@@ -84,9 +84,9 @@ def update_strato_gyro(x, y, z):
     strato_gyro_yQ.put(y)
     strato_gyro_zQ.get()
     strato_gyro_zQ.put(z)
-    plt.plot(list(strato_gyro_xQ.queue))
-    plt.plot(list(strato_gyro_yQ.queue))
-    plt.plot(list(strato_gyro_zQ.queue))
+    plt.plot(list(strato_gyro_xQ.queue), 'xkcd:yellow')
+    plt.plot(list(strato_gyro_yQ.queue), 'xkcd:cyan')
+    plt.plot(list(strato_gyro_zQ.queue), 'xkcd:fuchsia')
 
 
 # DARK THEME!!!!!
