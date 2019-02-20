@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import queue
 import random
 import time
@@ -195,5 +194,6 @@ while True:
     update_strato_acc(x, y, z)
     update_strato_gyro(x, y, z)
     # Sleep for a second, will probably be replaced with a callback or something
+    # ! Do not get rid of the pause, it messes it up for some reason
     plt.pause(0.001)
     time.sleep(1)
