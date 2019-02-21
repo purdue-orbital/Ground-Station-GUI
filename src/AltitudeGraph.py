@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import queue
 import random
 import time
+import sys
 
 def update_altitude(h):
     plt.cla()
@@ -10,10 +11,19 @@ def update_altitude(h):
     plt.title("Altitude vs Time")
     alititudeQ.get()
     alititudeQ.put(h)
-    plt.plot(list(alititudeQ.queue), 'xkcd:cyan')
+    fig = plt.plot(list(alititudeQ.queue), 'xkcd:cyan')
+
+def handle_close(event):
+    global shouldClose
+    shouldClose = True
 
 # DARK THEME!!!!!
 plt.style.use('dark_background')
+
+# Crappy code so it can close properly
+fig = plt.figure()
+fig.canvas.mpl_connect('close_event', handle_close)
+shouldClose = False
 
 # Adjust the space so there is more space  
 plt.tight_layout()
@@ -35,7 +45,7 @@ plt.title("Altitude vs Time")
 
 
 # Run the loop so the graph gets updated every second
-while True:
+while not shouldClose:
     # Random data for now
     r = random.randint(-50,50)
     # Call methods for each graph to update x,y,z

@@ -87,12 +87,21 @@ def update_strato_gyro(x, y, z):
     plt.plot(list(strato_gyro_yQ.queue), 'xkcd:cyan')
     plt.plot(list(strato_gyro_zQ.queue), 'xkcd:fuchsia')
 
+def handle_close(event):
+    global shouldClose
+    shouldClose = True    
+
 
 # DARK THEME!!!!!
 plt.style.use('dark_background')
 
 # Graph 6 plots in a 2x3 fashion
 fig, axs = plt.subplots(nrows=2, ncols=3, sharex=True, sharey=True)
+
+# Crappy code so it can close properly
+fig.canvas.mpl_connect('close_event', handle_close)
+shouldClose = False
+
 
 # Adjust the space so there is more space  
 plt.tight_layout()
