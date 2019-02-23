@@ -31,7 +31,7 @@ class ThreadedClient:
         self.thread1.start()
 
         # Add event to detect GPIO pin 11
-        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch())
+        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
 
         # Process data in queue
         self.update()
