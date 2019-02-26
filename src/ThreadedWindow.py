@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 
 from Timer import *
 from DataWindow import DataWindow
+
 from GraphNotebook import GraphNotebook
 
 import threading
@@ -23,8 +24,6 @@ class ThreadedClient:
 
         # Queue to buffer incoming data
         self.queue = queue.Queue()
-
-        self.notebook = GraphNotebook()
 
         # Window to display all data
         self.gui = DataWindow(master, self.queue)
