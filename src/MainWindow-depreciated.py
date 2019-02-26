@@ -315,7 +315,7 @@ class DataWindow:
         frameLeftLabel.place(x=int(90 / 600 * width), y=5 / 600 * height)
 
         frameRightLabel = Label(subFrameRight, text="System Data:", fg="white", bg=subFrameColor)
-        frameRightLabel.place(x=int(90 / 600 * width), y=5 / 600 * height)
+        frameRightLabel.place(x=int(90 / 600 * (width), y=5 / 600 * height)
 
         tempLabel = Label(subFrameLeft, text="Temperature (Celsius): ", fg="white", bg=bgColor, width=standardTextWidth)
         tempLabel.place(x=x_label_place, y=int(1/15 * height))

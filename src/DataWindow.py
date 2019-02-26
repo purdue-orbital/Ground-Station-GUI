@@ -38,7 +38,7 @@ class DataWindow:
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
-        self.name.geometry('600x600')
+        self.name.geometry('1000x600')
 
         # Set up GPIO pins for use, see documentation for pin layout
         # orange wire
@@ -71,7 +71,10 @@ class DataWindow:
         self.control.abort_button.config(command=self.abort_message_callback)
 
         # Running variable to see if program was terminated
-        self.close = 0
+        self.running = 1
+
+        # Running variable to check if in testing mode
+        self.testing = 0
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
@@ -86,7 +89,7 @@ class DataWindow:
 
         file_menu.add_command(label="Restart", command=self.restart_program)
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.attempt_close)
+        file_menu.add_command(label="Exit", command=self.close)
 
         program_menu.add_command(label="Start Mission", command=self.start_mission)
         program_menu.add_command(label="Reset", command=self.reset_variables_window)
@@ -100,7 +103,7 @@ class DataWindow:
 
     def make_grid(self):
         total_rows = 12
-        total_columns = 11
+        total_columns = 12
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
@@ -298,5 +301,8 @@ class DataWindow:
             except self.queue.Empty:
                 pass
 
-    def attempt_close(self):
-        self.close = 1
+    def set_testing(self, isTesting):
+        self.testing = isTesting
+
+    def close(self):
+        self.running = 0
