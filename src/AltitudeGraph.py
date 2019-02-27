@@ -1,56 +1,40 @@
+#! /usr/bin/python3.6
+import tkinter as tk
+from pandas import DataFrame
 import matplotlib.pyplot as plt
-import queue
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.animation as animation
 import random
-import time
-import sys
+import queue
 
-def update_altitude(h):
-    plt.cla()
-    plt.xlabel("Time (s)")
-    plt.ylabel("Altitude (m)")
-    plt.title("Altitude vs Time")
-    alititudeQ.get()
-    alititudeQ.put(h)
-    fig = plt.plot(list(alititudeQ.queue), 'xkcd:cyan')
-
-def handle_close(event):
-    global shouldClose
-    shouldClose = True
+root = tk.Tk()
 
 # DARK THEME!!!!!
 plt.style.use('dark_background')
 
-# Crappy code so it can close properly
-fig = plt.figure()
-fig.canvas.mpl_connect('close_event', handle_close)
-shouldClose = False
-
-# Adjust the space so there is more space  
-plt.tight_layout()
-plt.subplots_adjust(wspace=0, hspace=0)
-
-# Start in interactive mode so that the graph starts in a non blocking thread
-plt.ion()
-
+# initialize the queue to 0
 alititudeQ = queue.Queue()
-
-# Fill the queue with 0s so that we can graph something if the user opens the graph early
 amount_of_point_to_graph = 20
 for i in range(0, amount_of_point_to_graph):
     alititudeQ.put(0)
 
-plt.xlabel("Time (s)")
-plt.ylabel("Altitude (m)")
-plt.title("Altitude vs Time")
+# Initialize the data frame and attack it to tk
+df1 = DataFrame(list(alititudeQ.queue))
+figure1 = plt.Figure(figsize=(50, 50), dpi=250)
+ax1 = figure1.add_subplot(111)
+bar1 = FigureCanvasTkAgg(figure1, root)
+bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
+# Function to update the graph, we call it every second, should be replaced with a callback
+def animate(i):
+    alititudeQ.get()
+    alititudeQ.put(random.randint(-50, 50))
+    ax1.clear()
+    ax1.plot(list(alititudeQ.queue))
+    ax1.set_xlabel("Time (s)")
+    ax1.set_ylabel("Altitude (m)")
+    ax1.set_title("Altitude vs Time")
 
-# Run the loop so the graph gets updated every second
-while not shouldClose:
-    # Random data for now
-    r = random.randint(-50,50)
-    # Call methods for each graph to update x,y,z
-    update_altitude(r)
-    # Sleep for a second, will probably be replaced with a callback or something
-    # ! Do not get rid of the pause, it messes it up for some reason
-    plt.pause(0.001)
-    time.sleep(1)
+# Start the animation and run tk
+ani = animation.FuncAnimation(figure1, animate, interval=2000)
+root.mainloop()

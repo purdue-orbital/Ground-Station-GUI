@@ -1,3 +1,4 @@
+#! /usr/bin/python3.6
 import matplotlib.pyplot as plt
 import queue
 import random

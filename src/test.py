@@ -1,3 +1,4 @@
+#! /usr/bin/python3.6
 import tkinter as tk
 from pandas import DataFrame
 import matplotlib.pyplot as plt
@@ -19,7 +20,7 @@ for i in range(0, amount_of_point_to_graph):
 
 # Initialize the data frame and attack it to tk
 df1 = DataFrame(list(alititudeQ.queue))
-figure1 = plt.Figure(figsize=(50, 50), dpi=200)
+figure1 = plt.Figure(figsize=(50, 50), dpi=250)
 ax1 = figure1.add_subplot(111)
 bar1 = FigureCanvasTkAgg(figure1, root)
 bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
@@ -34,6 +35,6 @@ def animate(i):
     ax1.set_ylabel("Altitude (m)")
     ax1.set_title("Altitude vs Time")
 
-
+# Start the animation and run tk
 ani = animation.FuncAnimation(figure1, animate, interval=2000)
 root.mainloop()
