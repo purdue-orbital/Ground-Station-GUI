@@ -43,14 +43,17 @@ class ThreadedClient:
         self.update()
 
     def update(self):
+        # Loop function and handle data from interrupts
         self.gui.process_incoming()
         if not self.running or not self.gui.running:
             if self.end_application():
                 import sys
                 sys.exit(1)
+        # Call again
         self.master.after(200, self.update)
 
     def set_testing(self, isTesting):
+        # Getter for testing bool
         self.testing = isTesting
         self.gui.set_testing(isTesting)
 
