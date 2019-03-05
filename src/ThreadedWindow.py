@@ -8,6 +8,7 @@ from Timer import *
 from DataWindow import DataWindow
 
 from GraphNotebook import GraphNotebook
+from Mode import Mode
 
 import threading
 import random
@@ -21,6 +22,9 @@ class ThreadedClient:
         self.master = master
         # self.master.iconify for the memes
         root.protocol("WM_DELETE_WINDOW", self.end_application)
+
+        # Init Mode
+        self.mode = Mode.TESTING
 
         # Queue to buffer incoming data
         self.queue = queue.Queue()
