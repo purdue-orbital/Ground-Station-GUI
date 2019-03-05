@@ -7,6 +7,17 @@ import matplotlib.animation as animation
 import random
 import queue
 
+# ! Thread this function
+# Function to update the graph, we call it every second, should be replaced with a callback
+def updateAltitude(alt):
+    alititudeQ.get()
+    alititudeQ.put(random.randint(-50, 50))
+    ax1.clear()
+    ax1.plot(list(alititudeQ.queue))
+    ax1.set_xlabel("Time (s)")
+    ax1.set_ylabel("Altitude (m)")
+    ax1.set_title("Altitude vs Time")
+
 root = tk.Tk()
 
 # DARK THEME!!!!!
@@ -25,16 +36,5 @@ ax1 = figure1.add_subplot(111)
 bar1 = FigureCanvasTkAgg(figure1, root)
 bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
-# Function to update the graph, we call it every second, should be replaced with a callback
-def animate(i):
-    alititudeQ.get()
-    alititudeQ.put(random.randint(-50, 50))
-    ax1.clear()
-    ax1.plot(list(alititudeQ.queue))
-    ax1.set_xlabel("Time (s)")
-    ax1.set_ylabel("Altitude (m)")
-    ax1.set_title("Altitude vs Time")
-
 # Start the animation and run tk
-ani = animation.FuncAnimation(figure1, animate, interval=2000)
 root.mainloop()
