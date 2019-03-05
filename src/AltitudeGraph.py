@@ -3,15 +3,15 @@ import tkinter as tk
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib.animation as animation
 import random
 import queue
 
 # ! Thread this function
 # Function to update the graph, we call it every second, should be replaced with a callback
+
 def updateAltitude(alt):
     alititudeQ.get()
-    alititudeQ.put(random.randint(-50, 50))
+    alititudeQ.put(alt)
     ax1.clear()
     ax1.plot(list(alititudeQ.queue))
     ax1.set_xlabel("Time (s)")
@@ -37,4 +37,5 @@ bar1 = FigureCanvasTkAgg(figure1, root)
 bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
 # Start the animation and run tk
+updateAltitude(0)
 root.mainloop()

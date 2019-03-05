@@ -1,115 +1,102 @@
 #! /usr/bin/python3.6
+from tkinter import *
+import tkinter as tk
+from pandas import DataFrame
 import matplotlib.pyplot as plt
-import queue
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import random
-import time
+import queue
+
 
 def update_baloon_acc(x, y, z):
-    plt.sca(axs[0,0])
-    plt.cla()
-    plt.ylabel("Acceleration (m/s^2)")
-    plt.title("Balloon")
     baloon_acc_xQ.get()
     baloon_acc_xQ.put(x)
     baloon_acc_yQ.get()
     baloon_acc_yQ.put(y)
     baloon_acc_zQ.get()
     baloon_acc_zQ.put(z)
-    plt.plot(list(baloon_acc_xQ.queue), 'xkcd:yellow')
-    plt.plot(list(baloon_acc_yQ.queue), 'xkcd:cyan')
-    plt.plot(list(baloon_acc_zQ.queue), 'xkcd:fuchsia')
+    ax1.clear()
+    ax1.set_ylabel("Acceleration (m/s^2)")
+    ax1.set_title("Balloon")
+    ax1.plot(list(baloon_acc_xQ.queue), 'xkcd:yellow')
+    ax1.plot(list(baloon_acc_yQ.queue), 'xkcd:cyan')
+    ax1.plot(list(baloon_acc_zQ.queue), 'xkcd:fuchsia')
 
-def update_baloon_gyro(x, y, z):
-    plt.sca(axs[1,0])
-    plt.cla()
-    plt.ylabel("Gyro (degrees/s)")
-    baloon_gyro_xQ.get()
-    baloon_gyro_xQ.put(x)
-    baloon_gyro_yQ.get()
-    baloon_gyro_yQ.put(y)
-    baloon_gyro_zQ.get()
-    baloon_gyro_zQ.put(z)
-    plt.plot(list(baloon_gyro_xQ.queue), 'xkcd:yellow')
-    plt.plot(list(baloon_gyro_yQ.queue), 'xkcd:cyan')
-    plt.plot(list(baloon_gyro_zQ.queue), 'xkcd:fuchsia')
-
-def update_rocket_acc(x, y, z):
-    plt.sca(axs[0,1])
-    plt.cla()
-    plt.title("Rocket")
-    rocket_acc_xQ.get()
-    rocket_acc_xQ.put(x)
-    rocket_acc_yQ.get()
-    rocket_acc_yQ.put(y)
-    rocket_acc_zQ.get()
-    rocket_acc_zQ.put(z)
-    plt.plot(list(rocket_acc_xQ.queue), 'xkcd:yellow')
-    plt.plot(list(rocket_acc_yQ.queue), 'xkcd:cyan')
-    plt.plot(list(rocket_acc_zQ.queue), 'xkcd:fuchsia')
-
-def update_rocket_gyro(x, y, z):
-    plt.sca(axs[1,1])
-    plt.cla()
-    plt.xlabel("Time (s)")
-    rocket_gyro_xQ.get()
-    rocket_gyro_xQ.put(x)
-    rocket_gyro_yQ.get()
-    rocket_gyro_yQ.put(y)
-    rocket_gyro_zQ.get()
-    rocket_gyro_zQ.put(z)
-    plt.plot(list(rocket_gyro_xQ.queue), 'xkcd:yellow')
-    plt.plot(list(rocket_gyro_yQ.queue), 'xkcd:cyan')
-    plt.plot(list(rocket_gyro_zQ.queue), 'xkcd:fuchsia')
 
 def update_strato_acc(x, y, z):
-    plt.sca(axs[0,2])
-    plt.cla()
-    plt.title("Stratologger")
     strato_acc_xQ.get()
     strato_acc_xQ.put(x)
     strato_acc_yQ.get()
     strato_acc_yQ.put(y)
     strato_acc_zQ.get()
     strato_acc_zQ.put(z)
-    plt.plot(list(strato_acc_xQ.queue), 'xkcd:yellow')
-    plt.plot(list(strato_acc_yQ.queue), 'xkcd:cyan')
-    plt.plot(list(strato_acc_zQ.queue), 'xkcd:fuchsia')
+    ax2.set_title("Stratologger")
+    ax2.plot(list(strato_acc_xQ.queue), 'xkcd:yellow')
+    ax2.plot(list(strato_acc_yQ.queue), 'xkcd:cyan')
+    ax2.plot(list(strato_acc_zQ.queue), 'xkcd:fuchsia')
+
+
+def update_rocket_acc(x, y, z):
+    rocket_acc_xQ.get()
+    rocket_acc_xQ.put(x)
+    rocket_acc_yQ.get()
+    rocket_acc_yQ.put(y)
+    rocket_acc_zQ.get()
+    rocket_acc_zQ.put(z)
+    ax3.set_title("Rocket")
+    ax3.plot(list(rocket_acc_xQ.queue), 'xkcd:yellow')
+    ax3.plot(list(rocket_acc_yQ.queue), 'xkcd:cyan')
+    ax3.plot(list(rocket_acc_zQ.queue), 'xkcd:fuchsia')
+
+
+def update_baloon_gyro(x, y, z):
+    baloon_gyro_xQ.get()
+    baloon_gyro_xQ.put(x)
+    baloon_gyro_yQ.get()
+    baloon_gyro_yQ.put(y)
+    baloon_gyro_zQ.get()
+    baloon_gyro_zQ.put(z)
+    ax4.clear()
+    ax4.set_ylabel("Gyro (degrees/s)")
+    ax4.plot(list(baloon_gyro_xQ.queue), 'xkcd:yellow')
+    ax4.plot(list(baloon_gyro_yQ.queue), 'xkcd:cyan')
+    ax4.plot(list(baloon_gyro_zQ.queue), 'xkcd:fuchsia')
+
 
 def update_strato_gyro(x, y, z):
-    plt.sca(axs[1,2])
-    plt.cla()
+    rocket_gyro_xQ.get()
+    rocket_gyro_xQ.put(x)
+    rocket_gyro_yQ.get()
+    rocket_gyro_yQ.put(y)
+    rocket_gyro_zQ.get()
+    rocket_gyro_zQ.put(z)
+    ax5.set_xlabel("Time (s)")
+    ax5.plot(list(rocket_gyro_xQ.queue), 'xkcd:yellow')
+    ax5.plot(list(rocket_gyro_yQ.queue), 'xkcd:cyan')
+    ax5.plot(list(rocket_gyro_zQ.queue), 'xkcd:fuchsia')
+
+
+def update_rocket_gyro(x, y, z):
     strato_gyro_xQ.get()
     strato_gyro_xQ.put(x)
     strato_gyro_yQ.get()
     strato_gyro_yQ.put(y)
     strato_gyro_zQ.get()
     strato_gyro_zQ.put(z)
-    plt.plot(list(strato_gyro_xQ.queue), 'xkcd:yellow')
-    plt.plot(list(strato_gyro_yQ.queue), 'xkcd:cyan')
-    plt.plot(list(strato_gyro_zQ.queue), 'xkcd:fuchsia')
+    ax6.plot(list(strato_gyro_xQ.queue), 'xkcd:yellow')
+    ax6.plot(list(strato_gyro_yQ.queue), 'xkcd:cyan')
+    ax6.plot(list(strato_gyro_zQ.queue), 'xkcd:fuchsia')
 
-def handle_close(event):
-    global shouldClose
-    shouldClose = True    
 
+root = tk.Tk()
+
+# top 3 graphs
+frameTop = Frame(root)
+# bottom 3 graphs
+frameBot = Frame(root)
 
 # DARK THEME!!!!!
 plt.style.use('dark_background')
-
-# Graph 6 plots in a 2x3 fashion
-fig, axs = plt.subplots(nrows=2, ncols=3, sharex=True, sharey=True)
-
-# Crappy code so it can close properly
-fig.canvas.mpl_connect('close_event', handle_close)
-shouldClose = False
-
-
-# Adjust the space so there is more space  
-plt.tight_layout()
-plt.subplots_adjust(wspace=0, hspace=0)
-
-# Start in interactive mode so that the graph starts in a non blocking thread
-plt.ion()
 
 # Create several queue that holds the number for each line in every graph
 baloon_acc_xQ = queue.Queue()
@@ -153,57 +140,44 @@ for i in range(0, amount_of_point_to_graph):
     strato_gyro_yQ.put(0)
     strato_gyro_zQ.put(0)
 
-#Setup titles, axis labels, and plot the initial 0s
-plt.sca(axs[0,0])
-plt.plot(list(baloon_acc_xQ.queue))
-plt.plot(list(baloon_acc_yQ.queue))
-plt.plot(list(baloon_acc_zQ.queue))
-plt.ylabel("Acceleration (m/s^2)")
-plt.title("Balloon")
+# Initialize the data frame and attack it to tk
+figure1 = plt.Figure(figsize=(4.8, 4.8), dpi=100)
+ax1 = figure1.add_subplot(111)
+bar1 = FigureCanvasTkAgg(figure1, frameTop)
+bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
-plt.sca(axs[1,0])
-plt.plot(list(baloon_gyro_xQ.queue))
-plt.plot(list(baloon_gyro_yQ.queue))
-plt.plot(list(baloon_gyro_zQ.queue))
-plt.ylabel("Gyro (degrees/s)")
+figure2 = plt.Figure(figsize=(4.8, 4.8), dpi=100)
+ax2 = figure2.add_subplot(111)
+bar2 = FigureCanvasTkAgg(figure2, frameTop)
+bar2.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
-plt.sca(axs[0,1])
-plt.title("Rocket")
-plt.plot(list(rocket_acc_xQ.queue))
-plt.plot(list(rocket_acc_yQ.queue))
-plt.plot(list(rocket_acc_zQ.queue))
+figure3 = plt.Figure(figsize=(4.8, 4.8), dpi=100)
+ax3 = figure3.add_subplot(111)
+bar3 = FigureCanvasTkAgg(figure3, frameTop)
+bar3.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
-plt.sca(axs[1,1])
-plt.xlabel("Time (s)")
-plt.plot(list(rocket_gyro_xQ.queue))
-plt.plot(list(rocket_gyro_yQ.queue))
-plt.plot(list(rocket_gyro_zQ.queue))
+figure4 = plt.Figure(figsize=(4.8, 4.8), dpi=100)
+ax4 = figure4.add_subplot(111)
+bar4 = FigureCanvasTkAgg(figure4, frameBot)
+bar4.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
-plt.sca(axs[0,2])
-plt.title("Stratologger")
-plt.plot(list(strato_acc_xQ.queue))
-plt.plot(list(strato_acc_yQ.queue))
-plt.plot(list(strato_acc_zQ.queue))
+figure5 = plt.Figure(figsize=(4.8, 4.8), dpi=100)
+ax5 = figure5.add_subplot(111)
+bar5 = FigureCanvasTkAgg(figure5, frameBot)
+bar5.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
-plt.sca(axs[1,2])
-plt.plot(list(strato_gyro_xQ.queue))
-plt.plot(list(strato_gyro_yQ.queue))
-plt.plot(list(strato_gyro_zQ.queue))
+figure6 = plt.Figure(figsize=(4.8, 4.8), dpi=100)
+ax6 = figure6.add_subplot(111)
+bar6 = FigureCanvasTkAgg(figure6, frameBot)
+bar6.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
-# Run the loop so the graph gets updated every second
-while True:
-    # Random data for now
-    x = random.randint(-50,50)
-    y = random.randint(-50,50)
-    z = random.randint(-50,50)
-    # Call methods for each graph to update x,y,z
-    update_baloon_acc(x, y, z)
-    update_baloon_gyro(x, y, z)
-    update_rocket_acc(x, y, z)
-    update_rocket_gyro(x, y, z)
-    update_strato_acc(x, y, z)
-    update_strato_gyro(x, y, z)
-    # Sleep for a second, will probably be replaced with a callback or something
-    # ! Do not get rid of the pause, it messes it up for some reason
-    plt.pause(0.001)
-    time.sleep(1)
+# add both the top 3 and bottom 3 grahps to the main frame
+frameTop.pack(fill=tk.BOTH)
+frameBot.pack(fill=tk.BOTH)
+update_baloon_acc(5, 6, 7)
+update_baloon_gyro(5, 6, 7)
+update_rocket_acc(5, 6, 7)
+update_rocket_gyro(5, 6, 7)
+update_strato_acc(5, 6, 7)
+update_strato_gyro(5, 6, 7)
+root.mainloop()
