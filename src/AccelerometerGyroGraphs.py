@@ -7,7 +7,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import random
 import queue
 
-
+# ! Thread these function
+# Functions to update the graphs
 def update_baloon_acc(x, y, z):
     baloon_acc_xQ.get()
     baloon_acc_xQ.put(x)

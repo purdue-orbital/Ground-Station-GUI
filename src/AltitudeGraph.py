@@ -7,8 +7,7 @@ import random
 import queue
 
 # ! Thread this function
-# Function to update the graph, we call it every second, should be replaced with a callback
-
+# Function to update the graph
 def updateAltitude(alt):
     alititudeQ.get()
     alititudeQ.put(alt)
@@ -37,5 +36,5 @@ bar1 = FigureCanvasTkAgg(figure1, root)
 bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
 # Start the animation and run tk
-updateAltitude(0)
+updateAltitude(1)
 root.mainloop()
