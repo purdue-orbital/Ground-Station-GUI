@@ -1,11 +1,14 @@
 import time
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
 import RPi.GPIO as GPIO
 
-
 from Timer import *
-from MainWindow import DataWindow
+from DataWindow import DataWindow
+
+from GraphNotebook import GraphNotebook
+from Mode import Mode
 
 import threading
 import random
@@ -20,24 +23,54 @@ class ThreadedClient:
         # self.master.iconify for the memes
         root.protocol("WM_DELETE_WINDOW", self.end_application)
 
+        # Init Mode
+        self.mode = Mode.TESTING
+
+        # Queue to buffer incoming data
         self.queue = queue.Queue()
 
+        # Window to display all data
         self.gui = DataWindow(master, self.queue)
 
+        # Create thread to spoof data in queue
         self.running = 1
-        self.thread1 = threading.Thread(target=self.check_queue)
+        self.thread1 = threading.Thread(target=self.test_queue)
         self.thread1.start()
 
+        # Create testing variables
+        self.testing = 0
+
+        # Add event to detect GPIO pin 11
+        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
+
+        # Process data in queue
         self.update()
 
     def update(self):
+        # Loop function and handle data from interrupts
         self.gui.process_incoming()
-        if not self.running:
-            import sys
-            sys.exit(1)
+        if not self.running or not self.gui.running:
+            if self.end_application():
+                import sys
+                sys.exit(1)
+        # Call again
         self.master.after(200, self.update)
 
-    def check_queue(self):
+    def set_testing(self, isTesting):
+        # Getter for testing bool
+        self.testing = isTesting
+        self.gui.set_testing(isTesting)
+
+    def insert_data(self, data):
+        self.queue.put(data)
+
+    def handle_radio(self):
+        print("test")
+
+    def error(self, message):
+        messagebox.showinfo("Error", message)
+
+    def test_queue(self):
         while self.running:
             time.sleep(1)
 
@@ -55,11 +88,21 @@ class ThreadedClient:
             data_json = json.loads(preload)
             self.queue.put(data_json)
 
+    def launch(self):
+        print("Lauching")
+        # TODO send launch
+
     def end_application(self):
         if messagebox.askyesno("Quit", "Do you want to quit?"):
             self.running = 0
+            self.gui.close()
             GPIO.cleanup()
             root.destroy()
+            return 1
+
+        else:
+            self.gui.running = 1
+            return 0
 
 
 rand = random.Random()
