@@ -73,9 +73,6 @@ class DataWindow:
         # Running variable to see if program was terminated
         self.running = 1
 
-        # Running variable to check if in testing mode
-        self.testing = 0
-
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
 
@@ -300,9 +297,6 @@ class DataWindow:
                 self.data.display_variables()
             except self.queue.Empty:
                 pass
-
-    def set_testing(self, isTesting):
-        self.testing = isTesting
 
     def close(self):
         self.running = 0
