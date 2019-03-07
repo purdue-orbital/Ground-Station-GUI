@@ -5,6 +5,8 @@ WARN='\033[0;33m'
 INFO='\033[0;36m'
 NC='\033[0m'
 
+# install pip dependencies
+sudo pip install -r ./src/requirements.txt
 
 gpio_txt=$( cat res/gpio_script.txt )
 dir="src/RPi"
