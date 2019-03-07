@@ -6,10 +6,12 @@ from tkinter import messagebox
 from tkinter import ttk
 import RPi.GPIO as GPIO
 
-from Status import *
+from Status import Status
 from Timer import Timer
 from Data import Data
 from Control import Control
+from GraphNotebook import GraphNotebook
+from QualityCheck import QualityCheck
 
 """
 ROCKET GUI Version 0.2
@@ -38,7 +40,7 @@ class DataWindow:
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
-        self.name.geometry('1000x600')
+        self.name.geometry('600x600')
 
         # Set up GPIO pins for use, see documentation for pin layout
         # orange wire
@@ -62,10 +64,23 @@ class DataWindow:
 
         self.make_grid()
 
-        self.start_timer = Timer(name, 0, 3, 0, 7)
-        self.timer = Timer(name, 3, 3, 0, 7)
-        self.data = Data(name, 8, 10)
-        self.control = Control(name, 7, 3)
+        self.start_timer = Timer(name, 0, 2, 0, 4)
+        self.timer = Timer(name, 2, 2, 0, 4)
+        # self.data = Data(name, 8, 10)
+        self.control = Control(name, 5, 2, 1)
+
+        # Place Quality Indicators and Labels
+        self.QDM_check = QualityCheck(name, "QDM", 5, 0)
+        self.CDM_check = QualityCheck(name, "CDM", 5, 2)
+        self.platform_stability_check = QualityCheck(name, "Platform Stability", 5, 4)
+        self.CRASH_check = QualityCheck(name, "CRASH System", 5, 6)
+
+        self.ignition_check = QualityCheck(name, "Ignition", 6, 0)
+        self.drogue_check = QualityCheck(name, "Drogue Chute", 6, 2)
+        self.main_check = QualityCheck(name, "Main Chute", 6, 4)
+
+        self.graphNotebook = GraphNotebook(0, 10, 2, 5, name)
+        self.graphNotebook.add_tab(Label(text="Test"))
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
@@ -102,7 +117,7 @@ class DataWindow:
         self.name.config(menu=menu_bar)
 
     def make_grid(self):
-        total_rows = 12
+        total_rows = 10
         total_columns = 12
 
         my_rows = range(0, total_rows)
