@@ -59,9 +59,10 @@ printf "Attempting to run ${program_path}\n\n"
 
 python3 ${program_path} 2> ${traceback_path}
 if [[ $? == '1' ]]; then
-	tail -1 ${traceback_path}
-	printf "${FAIL}^^^^^^^^^^^^\n"
-	printf "[ERROR] ${program_path} was unable to start.\n"
+	traceback=$( tail -1 ${traceback_path} )
+	printf "${traceback}\n"
+	printf "${FAIL}^%0.s" $(seq 1 ${#traceback})
+	printf "\n[ERROR] ${program_path} was unable to start.\n"
 	printf "If the underlined error shows ${INFO}ImportError${FAIL}, run ${INFO}./setup.sh ${FAIL}to ensure the proper environment has been set up.\n"
 	printf "See ${INFO}${traceback_path} ${FAIL}for the full error stack.\n"
 	printf "[Process Failed]${NC}\n"
