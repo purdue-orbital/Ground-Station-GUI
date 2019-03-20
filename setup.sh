@@ -94,7 +94,7 @@ elif [[ "$1" = "-f" ]]; then
 # Install dependencies 
 elif [[ "$1" = "-i" ]]; then
 	printf "${NC}Installing packages from requirements.txt ...\n"
-	sudo pip install -r ./requirements.txt
+	sudo pip3 install -r ./requirements.txt
 	if [[ $? == '1' ]]; then
 		printf "${FAIL}Failed to install packages\n"
 		exit 99
