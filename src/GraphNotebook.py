@@ -33,6 +33,6 @@ if __name__ == "__main__":
     example.geometry("300x300")
 
     notebook = GraphNotebook(0, 0, 2, 5, example)
-    notebook.add_tab(Label(text="Test"))
+    notebook.add_tab("Test Tab", Label(text="Test"))
 
     example.mainloop()

@@ -8,14 +8,15 @@ class QualityCheck:
         self.quality_label = Label(place_window, text=check_name, font=('times', 12, 'underline'))
         self.quality_label.grid(row=row_place, column=column_place, sticky=S + E + W)
 
-        self.quality_indicator = Label(bg="red", pady=5, padx=5)
-        self.quality_indicator.grid(row=row_place + 1, column=column_place, sticky=N + S + E + W)
+        # self.quality_indicator = Label(bg="red", pady=5, padx=5)
+        self.quality_indicator = Label(text="No Go", pady=5, padx=5)
+        self.quality_indicator.grid(row=row_place + 1, column=column_place, sticky=N + E + W)
 
     def display_quality(self):
         if self.ready:
-            self.quality_indicator.config(bg="green")
+            self.quality_indicator.config(text="Go")
         else:
-            self.quality_indicator.config(bg="red")
+            self.quality_indicator.config(text="No Go")
 
 
 # Example Case

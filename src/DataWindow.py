@@ -25,6 +25,8 @@ data (data that cannot be changed).
 
 
 class DataWindow:
+    # TODO: Fix the Log Function so that it works with new JSON
+
     def __init__(self, name, queue):
         self.queue = queue
 
@@ -70,17 +72,19 @@ class DataWindow:
         self.control = Control(name, 5, 2, 1)
 
         # Place Quality Indicators and Labels
-        self.QDM_check = QualityCheck(name, "QDM", 5, 0)
-        self.CDM_check = QualityCheck(name, "CDM", 5, 2)
-        self.platform_stability_check = QualityCheck(name, "Platform Stability", 5, 4)
-        self.CRASH_check = QualityCheck(name, "CRASH System", 5, 6)
+        self.QDM_check = QualityCheck(name, "QDM", 1, 10)
+        self.CDM_check = QualityCheck(name, "CDM", 3, 10)
 
-        self.ignition_check = QualityCheck(name, "Ignition", 6, 0)
-        self.drogue_check = QualityCheck(name, "Drogue Chute", 6, 2)
-        self.main_check = QualityCheck(name, "Main Chute", 6, 4)
+        self.drogue_check = QualityCheck(name, "Drogue Chute", 1, 12)
+        self.ignition_check = QualityCheck(name, "Ignition", 2, 12)
+        self.main_check = QualityCheck(name, "Main Chute", 3, 12)
 
-        self.graphNotebook = GraphNotebook(0, 10, 2, 5, name)
-        self.graphNotebook.add_tab(Label(text="Test"))
+        self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14)
+        self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14)
+
+        self.graphNotebook = GraphNotebook(0, 5, 5, 5, name)
+        self.graphNotebook.add_tab("Movement", Label(text="Tab 1"))
+        self.graphNotebook.add_tab("Altitude", Label(text="Tab 2"))
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
@@ -117,8 +121,8 @@ class DataWindow:
         self.name.config(menu=menu_bar)
 
     def make_grid(self):
-        total_rows = 10
-        total_columns = 12
+        total_rows = 20
+        total_columns = 20
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
@@ -143,7 +147,7 @@ class DataWindow:
         reset_window = messagebox.askokcancel("Reset All Variables?", "Are you sure you want to reset all variables?")
         if reset_window:
             self.log(Status.RESET)
-            self.data.reset_variables()
+            # self.data.reset_variables()
 
     def log(self, status):
         fo = open(self.status_log_path, "a")
@@ -228,7 +232,7 @@ class DataWindow:
             if verify_response:
                 self.control.mission_status = Status.VERIFIED
                 self.control.change_status_display(self.control.mission_status)
-                self.log(self.control.mission_status)
+                # self.log(self.control.mission_status)
                 GPIO.output(self.gui_switch, GPIO.HIGH)
                 self.timer.start = time.time()
                 self.timer.clock_run = True
@@ -240,7 +244,7 @@ class DataWindow:
             if verify_response:
                 self.control.mission_status = Status.NOT_VERIFIED
                 self.control.change_status_display(self.control.mission_status)
-                self.log(self.control.mission_status)
+                # self.log(self.control.mission_status)
                 self.timer.clock_run = False
                 self.control.verify_button.config(text="VERIFY")
 
@@ -249,7 +253,7 @@ class DataWindow:
             if verify_response:
                 self.control.mission_status = Status.VERIFIED
                 self.control.change_status_display(self.control.mission_status)
-                self.log(self.control.mission_status)
+                # self.log(self.control.mission_status)
                 self.timer.start = time.time()
                 self.timer.clock_run = True
                 self.timer.tick()
@@ -280,7 +284,7 @@ class DataWindow:
     def select_cdm(self, close_window):
         self.abort_method = "CDM"
         self.control.mission_status = Status.ABORT
-        self.log(self.control.mission_status)
+        # self.log(self.control.mission_status)
         self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
         self.control.change_status_display(self.control.mission_status)
@@ -292,7 +296,7 @@ class DataWindow:
         self.control.mission_status = Status.ABORT
         self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
-        self.log(self.control.mission_status)
+        # self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
