@@ -1,4 +1,9 @@
 from digi.xbee.devices import XBeeDevice, RemoteXBeeDevice, XBee64BitAddress
+from digi.xbee.util import utils
+
+import logging
+
+
 
 local_xbee = XBeeDevice("/dev/ttyS13", 9600)
 
@@ -11,6 +16,21 @@ local_xbee.send_data(remote_xbee, "Hello World!")
 
 
 local_xbee.close()
+
+
+dev_logger = logging.getLogger("local_xbee")
+
+handler = logging.StreamHandler()
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+handler.setFormatter(formatter)
+
+dev_logger.addHandler(handler)
+
+dev_logger = utils.enable_logger("local_xbee", logging.INFO)
+
+dev_logger.getMessage()
 
 
 
