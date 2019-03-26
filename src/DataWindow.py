@@ -68,7 +68,8 @@ class DataWindow:
 
         self.start_timer = Timer(name, 0, 2, 0, 4)
         self.timer = Timer(name, 2, 2, 0, 4)
-        # self.data = Data(name, 8, 10)
+        self.dataRocket = Data(name, 5, 7)
+        self.dataBalloon = Data(name, 8, 10)
         self.control = Control(name, 5, 2, 1)
 
         # Place Quality Indicators and Labels
@@ -82,9 +83,9 @@ class DataWindow:
         self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14)
         self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14)
 
-        self.graphNotebook = GraphNotebook(0, 5, 5, 18, name)
-        self.graphNotebook.add_tab("Movement", Label(text="Tab 1"))
-        self.graphNotebook.add_tab("Altitude", Label(text="Tab 2"))
+        # self.graphNotebook = GraphNotebook(0, 5, 5, 18, name)
+        # self.graphNotebook.add_tab("Movement", Label(text="Tab 1"))
+        # self.graphNotebook.add_tab("Altitude", Label(text="Tab 2"))
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
@@ -122,7 +123,7 @@ class DataWindow:
 
     def make_grid(self):
         total_rows = 18
-        total_columns = 20
+        total_columns = 15
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
