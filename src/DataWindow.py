@@ -82,7 +82,7 @@ class DataWindow:
         self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14)
         self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14)
 
-        self.graphNotebook = GraphNotebook(0, 5, 5, 5, name)
+        self.graphNotebook = GraphNotebook(0, 5, 5, 18, name)
         self.graphNotebook.add_tab("Movement", Label(text="Tab 1"))
         self.graphNotebook.add_tab("Altitude", Label(text="Tab 2"))
 
@@ -121,7 +121,7 @@ class DataWindow:
         self.name.config(menu=menu_bar)
 
     def make_grid(self):
-        total_rows = 20
+        total_rows = 18
         total_columns = 20
 
         my_rows = range(0, total_rows)
@@ -134,9 +134,10 @@ class DataWindow:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
     def start_mission(self):
-        self.start_timer.start = time.time()
-        self.start_timer.clock_run = True
-        self.start_timer.tick()
+        if not self.start_timer.clock_run:
+            self.start_timer.start = time.time()
+            self.start_timer.clock_run = True
+            self.start_timer.tick()
 
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])

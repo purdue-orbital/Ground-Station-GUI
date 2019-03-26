@@ -14,7 +14,7 @@ class GraphNotebook(ttk.Notebook):
         # self.bind("<<NotebookTabChanged>>", self._on_tab_changed)
 
         self.graphs.config(height=height)
-        self.graphs.grid(row=row, column=col, rowspan=span)
+        self.graphs.grid(row=row, column=col, rowspan=span, columnspan=span)
 
     def add_tab(self, title, *widgets):
         f = tk.Frame(self.graphs, width=200, height=200)
