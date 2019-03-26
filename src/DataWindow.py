@@ -68,8 +68,15 @@ class DataWindow:
 
         self.start_timer = Timer(name, 0, 2, 0, 4)
         self.timer = Timer(name, 2, 2, 0, 4)
+
         self.dataRocket = Data(name, 5, 7)
         self.dataBalloon = Data(name, 8, 10)
+
+        self.altGraph = ttk.Button(name, text="Altitude")
+        self.sixGraph = ttk.Button(name, text="Direction")
+        self.altGraph.grid(column=5, columnspan=3, row=15, sticky=N + S + E + W)
+        self.sixGraph.grid(column=8, columnspan=3, row=15, sticky=N + S + E + W)
+
         self.control = Control(name, 5, 2, 1)
 
         # Place Quality Indicators and Labels
