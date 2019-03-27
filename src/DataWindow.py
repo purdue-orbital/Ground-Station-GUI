@@ -10,6 +10,7 @@ from Status import *
 from Timer import Timer
 from Data import Data
 from Control import Control
+from Comms import Comm
 
 """
 ROCKET GUI Version 0.2
@@ -115,6 +116,9 @@ class DataWindow:
         self.start_timer.start = time.time()
         self.start_timer.clock_run = True
         self.start_timer.tick()
+
+        Comm.get_instance().testing()
+        Comm.get_instance().send("Starting")
 
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])
