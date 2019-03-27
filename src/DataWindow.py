@@ -69,13 +69,13 @@ class DataWindow:
         self.start_timer = Timer(name, 0, 2, 0, 4)
         self.timer = Timer(name, 2, 2, 0, 4)
 
-        self.dataRocket = Data(name, 5, 7)
-        self.dataBalloon = Data(name, 8, 10)
+        self.dataRocket = Data(name, "Rocket Data", 5, 7)
+        self.dataBalloon = Data(name, "Balloon Data", 8, 10)
 
         self.altGraph = ttk.Button(name, text="Altitude")
         self.sixGraph = ttk.Button(name, text="Direction")
-        self.altGraph.grid(column=5, columnspan=3, row=15, sticky=N + S + E + W)
-        self.sixGraph.grid(column=8, columnspan=3, row=15, sticky=N + S + E + W)
+        self.altGraph.grid(column=5, columnspan=3, row=13, rowspan=2, sticky=N + S + E + W)
+        self.sixGraph.grid(column=8, columnspan=3, row=13, rowspan=2, sticky=N + S + E + W)
 
         self.control = Control(name, 5, 2, 1)
 
@@ -89,10 +89,6 @@ class DataWindow:
 
         self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14)
         self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14)
-
-        # self.graphNotebook = GraphNotebook(0, 5, 5, 18, name)
-        # self.graphNotebook.add_tab("Movement", Label(text="Tab 1"))
-        # self.graphNotebook.add_tab("Altitude", Label(text="Tab 2"))
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
@@ -156,7 +152,8 @@ class DataWindow:
         reset_window = messagebox.askokcancel("Reset All Variables?", "Are you sure you want to reset all variables?")
         if reset_window:
             self.log(Status.RESET)
-            # self.data.reset_variables()
+            self.dataBalloon.reset_variables()
+            self.dataRocket.reset_variables()
 
     def log(self, status):
         fo = open(self.status_log_path, "a")
