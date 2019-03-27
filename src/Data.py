@@ -45,16 +45,16 @@ class Data:
         accelY_label = Label(place_window, text="Acceleration Y:")
         accelZ_label = Label(place_window, text="Acceleration Z:")
 
-        longitude_data_label = Label(place_window, text=self.longitude.get())
-        latitude_data_label = Label(place_window, text=self.latitude.get())
-        gyroX_data_label = Label(place_window, text=self.gyroX.get())
-        gyroY_data_label = Label(place_window, text=self.gyroY.get())
-        gyroZ_data_label = Label(place_window, text=self.gyroZ.get())
-        cardinalDirection_data_label = Label(place_window, text=self.cardinalDirection.get())
-        temperature_data_label = Label(place_window, text=self.temperature.get())
-        accelX_data_label = Label(place_window, text=self.accelX.get())
-        accelY_data_label = Label(place_window, text=self.accelY.get())
-        accelZ_data_label = Label(place_window, text=self.accelZ.get())
+        longitude_data_label = Label(place_window, textvariable=self.longitude)
+        latitude_data_label = Label(place_window, textvariable=self.latitude)
+        gyroX_data_label = Label(place_window, textvariable=self.gyroX)
+        gyroY_data_label = Label(place_window, textvariable=self.gyroY)
+        gyroZ_data_label = Label(place_window, textvariable=self.gyroZ)
+        cardinalDirection_data_label = Label(place_window, textvariable=self.cardinalDirection)
+        temperature_data_label = Label(place_window, textvariable=self.temperature)
+        accelX_data_label = Label(place_window, textvariable=self.accelX)
+        accelY_data_label = Label(place_window, textvariable=self.accelY)
+        accelZ_data_label = Label(place_window, textvariable=self.accelZ)
 
         longitude_label.grid(row=1, column=labels_column)
         latitude_label.grid(row=2, column=labels_column)
@@ -78,7 +78,6 @@ class Data:
         accelY_data_label.grid(row=9, column=data_column)
         accelZ_data_label.grid(row=10, column=data_column)
 
-
     def display_variables(self):
         self.longitude.set(self.longitude_data)
         self.latitude.set(self.latitude_data)
@@ -88,8 +87,8 @@ class Data:
         self.cardinalDirection.set(self.cardinalDirection_data)
         self.temperature.set(self.temperature_data)
         self.accelX.set(self.accelX_data)
-        self.accelY.set(self.accelY)
-        self.accelZ.set(self.accelZ)
+        self.accelY.set(self.accelY_data)
+        self.accelZ.set(self.accelZ_data)
 
     def reset_variables(self):
         # Resets all of the data on screen to zero

@@ -126,7 +126,7 @@ class DataWindow:
 
     def make_grid(self):
         total_rows = 18
-        total_columns = 15
+        total_columns = 12
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
