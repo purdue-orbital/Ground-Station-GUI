@@ -35,7 +35,7 @@ class ThreadedClient:
         self.gui = DataWindow(master, self.queue)
 
         # Create thread to spoof data in queue
-        # self.running = 1
+        self.running = 1
         # self.thread1 = threading.Thread(target=self.test_queue)
         # self.thread1.start()
 
