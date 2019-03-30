@@ -36,8 +36,8 @@ class ThreadedClient:
 
         # Create thread to spoof data in queue
         self.running = 1
-        self.thread1 = threading.Thread(target=self.test_queue)
-        self.thread1.start()
+        #self.thread1 = threading.Thread(target=self.test_queue)
+        #self.thread1.start()
 
         # Create thread to receive data
         self.threadReceive = threading.Thread(target=self.receive_data)

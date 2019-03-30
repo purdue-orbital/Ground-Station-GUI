@@ -74,12 +74,12 @@ class ModuleSingleton:
             self.device.open()
 
             def data_receive_callback(msg):
-                address = xbee_message.remote_device.get_64bit_addr()
-                data = xbee_message.data.decode("utf8")
+                data = msg.data.decode("utf8")
 
-                json_data = json.load(data)
+                json_data = json.loads(data)
 
                 self.queue.put(json_data)
+
 
             self.device.add_data_received_callback(data_receive_callback)
 
