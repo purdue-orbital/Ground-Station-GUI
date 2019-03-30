@@ -1,5 +1,6 @@
 import logging
 import sys
+import json
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress, RemoteXBeeDevice, XBeeException
 
@@ -75,7 +76,10 @@ class ModuleSingleton:
             def data_receive_callback(msg):
                 address = xbee_message.remote_device.get_64bit_addr()
                 data = xbee_message.data.decode("utf8")
-                self.queue.put(data)
+
+                json_data = json.load(data)
+
+                self.queue.put(json_data)
 
             self.device.add_data_received_callback(data_receive_callback)
 
