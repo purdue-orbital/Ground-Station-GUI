@@ -20,9 +20,25 @@ REMOTE_NODE_ADDRESS = "0013A2004148887C"
 
 
 class Module:
+    __instance = None
+
+    def get_instance(self):
+        if Module.__instance is None:
+            Module()
+        return Module.__instance
+
+    def __init__(self):
+        if Module.__instance is not None:
+            raise Exception("Constructor should not be called")
+        else:
+            Module.__instance = ModuleSingleton()
+
+
+class ModuleSingleton:
     def __init__(self):
         self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
         self.remote_device = None
+        self.queue = None
 
         try:
             self.remote_device = RemoteXBeeDevice(self.device, XBee64BitAddress.from_hex_string(REMOTE_NODE_ADDRESS))
@@ -32,7 +48,7 @@ class Module:
             print("Exception has occurred")
 
     def send(self, data):
-
+        print("Testing data: " + data)
         try:
             self.device.open()
             print("Sending data to %s >> %s..." % (self.remote_device.get_64bit_addr(), DATA_TO_SEND))
@@ -44,17 +60,22 @@ class Module:
             self.device.send_data(self.remote_device, data)
 
             print("Success")
+
         finally:
             if self.device is not None and self.device.is_open():
                 self.device.close()
+
+    def bind_queue(self, queue):
+        self.queue = queue
 
     def receive(self):
         try:
             self.device.open()
 
             def data_receive_callback(msg):
-                print("From %s >> %s" % (msg.remote_device.get_64bit_addr(),
-                                         msg.data.decode()))
+                address = xbee_message.remote_device.get_64bit_addr()
+                data = xbee_message.data.decode("utf8")
+                self.queue.put(data)
 
             self.device.add_data_received_callback(data_receive_callback)
 

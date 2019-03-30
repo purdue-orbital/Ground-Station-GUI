@@ -1,4 +1,5 @@
 from Mode import Mode
+from communications.RadioModule import Module
 
 
 class Comm:
@@ -19,6 +20,7 @@ class Comm:
 class CommSingleton:
     def __init__(self):
         self.__mode = Mode.STANDBY
+        self.__radio = Module()
 
     def standby(self):
         self.__mode = Mode.STANDBY
@@ -39,4 +41,6 @@ class CommSingleton:
 
         if self.__mode == Mode.FLIGHT:
             print("Flight")
+            self.__radio.send("test")
+
             # TODO Send command
