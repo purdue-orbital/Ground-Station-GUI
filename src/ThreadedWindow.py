@@ -28,7 +28,7 @@ class ThreadedClient:
         self.queue = queue.Queue()
 
         # Create Module class and bind queue
-        self.radio = Module.get_instance()
+        self.radio = Module.get_instance(self)
         self.radio.bind_queue(self.queue)
 
         # Window to display all data
@@ -89,6 +89,28 @@ class ThreadedClient:
                        '"acceleration":' + str(rand.random())[0:5] + ',' +
                        '"velocity":' + str(rand.random())[0:5] + ',' +
                        '"user_angle":' + str(rand.random())[0:5] + ' }')
+
+            preload = (
+                '{' +
+                    '"alt": ' + str(rand.random())[0:5] + ',' +
+                    '"GPS": {' +
+                        '"long": ' + str(rand.random())[0:5] + ',' +
+                        '"lat": ' + str(rand.random())[0:5] +
+                    '},' +
+                    '"gyro": {' +
+                        '"x": ' + str(rand.random())[0:5] + ',' +
+                        '"y": ' + str(rand.random())[0:5] + ',' +
+                        '"z": ' + str(rand.random())[0:5] +
+                    '},' +
+                    '"mag": ' + str(rand.random())[0:5] + ',' +
+                    '"temp": ' + str(rand.random())[0:5] + ',' +
+                    '"acc": {' +
+                        '"x": ' + str(rand.random())[0:5] + ',' +
+                        '"y": ' + str(rand.random())[0:5] + ',' +
+                        '"z": ' + str(rand.random())[0:5] +
+                    '}' +
+                '}'
+            )
 
             # print(preload)
 

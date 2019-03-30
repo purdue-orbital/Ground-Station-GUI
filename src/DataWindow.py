@@ -287,16 +287,35 @@ class DataWindow:
         # Process data in queue
         while self.queue.qsize():
             try:
-                data_json = self.queue.get(0)
+                data_json = self.queue.get()
+
+                print(data_json)
+
+                placeHolderAlt = data_json["alt"]
+                placeHolderGPS = data_json["GPS"]
+                placeHolderLong = placeHolderGPS["long"]
+                placeHolderLat = placeHolderGPS["lat"]
+                placeHolderGyro = data_json["gyro"]
+                placeHolderGyroX = placeHolderGyro["x"]
+                placeHolderGyroY = placeHolderGyro["y"]
+                placeHolderGyroZ = placeHolderGyro["z"]
+                placeHolderMag = data_json["mag"]
+                placeHolderTemp = data_json["temp"]
+                placeHolderAcc = data_json["acc"]
+                placeHolderAccX = placeHolderAcc["x"]
+                placeHolderAccY = placeHolderAcc["y"]
+                placeHolderAccZ = placeHolderAcc["z"]
+
+
                 # Set the data variables equal to the corresponding json entries
-                self.data.temperature_data = data_json["temperature"]
-                self.data.pressure_data = data_json["pressure"]
-                self.data.humidity_data = data_json["humidity"]
-                self.data.altitude_data = data_json["altitude"]
-                self.data.direction_data = data_json["direction"]
-                self.data.acceleration_data = data_json["acceleration"]
-                self.data.velocity_data = data_json["velocity"]
-                self.data.user_angle_data = data_json["user_angle"]
+                # self.data.temperature_data = data_json["temperature"]
+                # self.data.pressure_data = data_json["pressure"]
+                # self.data.humidity_data = data_json["humidity"]
+                # self.data.altitude_data = data_json["altitude"]
+                # self.data.direction_data = data_json["direction"]
+                # self.data.acceleration_data = data_json["acceleration"]
+                # self.data.velocity_data = data_json["velocity"]
+                # self.data.user_angle_data = data_json["user_angle"]
                 # Reload variables
                 self.data.display_variables()
             except self.queue.Empty:
