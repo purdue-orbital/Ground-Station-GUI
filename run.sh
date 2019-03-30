@@ -5,6 +5,14 @@ NC='\033[0m'
 
 traceback_path='logs/traceback.log'
 program_path='src/ThreadedWindow.py'
+status_log_path='logs/status.log'
+log_test='src/ReadLog.py'
+
+if [[ $1 == "-t" ]]; then
+    printf "Testing Program Logs\n"
+    python3 ${log_test}
+    exit 99
+fi
 
 ascii="                              
                               

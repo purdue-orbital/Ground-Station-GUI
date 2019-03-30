@@ -1,0 +1,50 @@
+{
+  "rocket": {
+    "altitude": 10,
+    "GPS": {
+      "longitude": 10,
+      "latitude": 10
+    },
+    "Gyroscope": {
+      "x": 10,
+      "y": 10,
+      "z": 10
+    },
+    "Magnetometer": {
+      "x": 10,
+      "y": 10
+    },
+    "Temperature": 10,
+    "Accelerometer": {
+      "x": 10,
+      "y": 10,
+      "z": 10
+    }
+  },
+  "balloon": {
+    "altitude": 10,
+    "GPS": {
+      "longitude": 10,
+      "latitude": 10
+    },
+    "Gyroscope": {
+      "x": 10,
+      "y": 10,
+      "z": 10
+    },
+    "Magnetometer": 10,
+    "Temperature": 10,
+    "Accelerometer": {
+      "x": 10,
+      "y": 10,
+      "z": 10
+    }
+  },
+  "QDM": 1,
+  "CDM": 1,
+  "Stabilization": 1,
+  "Crash": 1,
+  "Ignition": 1,
+  "Drogue": 1,
+  "Main_Chute": 1
+}
