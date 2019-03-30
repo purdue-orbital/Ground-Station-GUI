@@ -6,10 +6,13 @@ from tkinter import messagebox
 from tkinter import ttk
 import RPi.GPIO as GPIO
 
-from Status import *
+from Status import Status
 from Timer import Timer
 from Data import Data
 from Control import Control
+from GraphNotebook import GraphNotebook
+from QualityCheck import QualityCheck
+
 from Comms import Comm
 
 """
@@ -24,6 +27,8 @@ data (data that cannot be changed).
 
 
 class DataWindow:
+    # TODO: Fix the Log Function so that it works with new JSON
+
     def __init__(self, name, queue):
         self.queue = queue
 
@@ -39,7 +44,7 @@ class DataWindow:
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
-        self.name.geometry('1000x600')
+        self.name.geometry('600x600')
 
         # Set up GPIO pins for use, see documentation for pin layout
         # orange wire
@@ -63,10 +68,29 @@ class DataWindow:
 
         self.make_grid()
 
-        self.start_timer = Timer(name, 0, 3, 0, 7)
-        self.timer = Timer(name, 3, 3, 0, 7)
-        self.data = Data(name, 8, 10)
-        self.control = Control(name, 7, 3)
+        self.start_timer = Timer(name, 0, 2, 0, 4)
+        self.timer = Timer(name, 2, 2, 0, 4)
+
+        self.dataRocket = Data(name, "Rocket Data", 5, 7)
+        self.dataBalloon = Data(name, "Balloon Data", 8, 10)
+
+        self.altGraph = ttk.Button(name, text="Altitude")
+        self.sixGraph = ttk.Button(name, text="Direction")
+        self.altGraph.grid(column=5, columnspan=3, row=13, rowspan=2, sticky=N + S + E + W)
+        self.sixGraph.grid(column=8, columnspan=3, row=13, rowspan=2, sticky=N + S + E + W)
+
+        self.control = Control(name, 5, 2, 1)
+
+        # Place Quality Indicators and Labels
+        self.QDM_check = QualityCheck(name, "QDM", 1, 10)
+        self.CDM_check = QualityCheck(name, "CDM", 3, 10)
+
+        self.drogue_check = QualityCheck(name, "Drogue Chute", 1, 12)
+        self.ignition_check = QualityCheck(name, "Ignition", 2, 12)
+        self.main_check = QualityCheck(name, "Main Chute", 3, 12)
+
+        self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14)
+        self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14)
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
@@ -100,7 +124,7 @@ class DataWindow:
         self.name.config(menu=menu_bar)
 
     def make_grid(self):
-        total_rows = 12
+        total_rows = 18
         total_columns = 12
 
         my_rows = range(0, total_rows)
@@ -113,9 +137,10 @@ class DataWindow:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
     def start_mission(self):
-        self.start_timer.start = time.time()
-        self.start_timer.clock_run = True
-        self.start_timer.tick()
+        if not self.start_timer.clock_run:
+            self.start_timer.start = time.time()
+            self.start_timer.clock_run = True
+            self.start_timer.tick()
 
         Comm.get_instance().testing()
         Comm.get_instance().send("Starting")
@@ -129,7 +154,8 @@ class DataWindow:
         reset_window = messagebox.askokcancel("Reset All Variables?", "Are you sure you want to reset all variables?")
         if reset_window:
             self.log(Status.RESET)
-            self.data.reset_variables()
+            self.dataBalloon.reset_variables()
+            self.dataRocket.reset_variables()
 
     def log(self, status):
         fo = open(self.status_log_path, "a")
@@ -214,7 +240,7 @@ class DataWindow:
             if verify_response:
                 self.control.mission_status = Status.VERIFIED
                 self.control.change_status_display(self.control.mission_status)
-                self.log(self.control.mission_status)
+                # self.log(self.control.mission_status)
                 GPIO.output(self.gui_switch, GPIO.HIGH)
                 self.timer.start = time.time()
                 self.timer.clock_run = True
@@ -226,7 +252,7 @@ class DataWindow:
             if verify_response:
                 self.control.mission_status = Status.NOT_VERIFIED
                 self.control.change_status_display(self.control.mission_status)
-                self.log(self.control.mission_status)
+                # self.log(self.control.mission_status)
                 self.timer.clock_run = False
                 self.control.verify_button.config(text="VERIFY")
 
@@ -235,7 +261,7 @@ class DataWindow:
             if verify_response:
                 self.control.mission_status = Status.VERIFIED
                 self.control.change_status_display(self.control.mission_status)
-                self.log(self.control.mission_status)
+                # self.log(self.control.mission_status)
                 self.timer.start = time.time()
                 self.timer.clock_run = True
                 self.timer.tick()
@@ -266,7 +292,7 @@ class DataWindow:
     def select_cdm(self, close_window):
         self.abort_method = "CDM"
         self.control.mission_status = Status.ABORT
-        self.log(self.control.mission_status)
+        # self.log(self.control.mission_status)
         self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
         self.control.change_status_display(self.control.mission_status)
@@ -278,7 +304,7 @@ class DataWindow:
         self.control.mission_status = Status.ABORT
         self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
-        self.log(self.control.mission_status)
+        # self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
