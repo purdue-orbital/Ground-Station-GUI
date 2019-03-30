@@ -35,9 +35,9 @@ class ThreadedClient:
         self.gui = DataWindow(master, self.queue)
 
         # Create thread to spoof data in queue
-        self.running = 1
-        self.thread1 = threading.Thread(target=self.test_queue)
-        self.thread1.start()
+        # self.running = 1
+        # self.thread1 = threading.Thread(target=self.test_queue)
+        # self.thread1.start()
 
         # Create thread to receive data
         self.threadReceive = threading.Thread(target=self.receive_data)
@@ -91,23 +91,25 @@ class ThreadedClient:
                        '"user_angle":' + str(rand.random())[0:5] + ' }')
 
             preload = (
-                '{' +
-                    '"alt": ' + str(rand.random())[0:5] + ',' +
-                    '"GPS": {' +
-                        '"long": ' + str(rand.random())[0:5] + ',' +
-                        '"lat": ' + str(rand.random())[0:5] +
-                    '},' +
-                    '"gyro": {' +
-                        '"x": ' + str(rand.random())[0:5] + ',' +
-                        '"y": ' + str(rand.random())[0:5] + ',' +
-                        '"z": ' + str(rand.random())[0:5] +
-                    '},' +
-                    '"mag": ' + str(rand.random())[0:5] + ',' +
-                    '"temp": ' + str(rand.random())[0:5] + ',' +
-                    '"acc": {' +
-                        '"x": ' + str(rand.random())[0:5] + ',' +
-                        '"y": ' + str(rand.random())[0:5] + ',' +
-                        '"z": ' + str(rand.random())[0:5] +
+                '{ "rocket" : '
+                    '{' +
+                        '"alt": ' + str(rand.random())[0:5] + ',' +
+                        '"GPS": {' +
+                            '"long": ' + str(rand.random())[0:5] + ',' +
+                            '"lat": ' + str(rand.random())[0:5] +
+                        '},' +
+                        '"gyro": {' +
+                            '"x": ' + str(rand.random())[0:5] + ',' +
+                            '"y": ' + str(rand.random())[0:5] + ',' +
+                            '"z": ' + str(rand.random())[0:5] +
+                        '},' +
+                        '"mag": ' + str(rand.random())[0:5] + ',' +
+                        '"temp": ' + str(rand.random())[0:5] + ',' +
+                        '"acc": {' +
+                            '"x": ' + str(rand.random())[0:5] + ',' +
+                            '"y": ' + str(rand.random())[0:5] + ',' +
+                            '"z": ' + str(rand.random())[0:5] +
+                        '}' +
                     '}' +
                 '}'
             )

@@ -9,7 +9,7 @@ class Data:
         self.gyroX_data = 0
         self.gyroY_data = 0
         self.gyroZ_data = 0
-        self.cardinalDirection_data = 0
+        self.cardinalDirection_data = 0 # NOT IN JSON
         self.temperature_data = 0
         self.accelX_data = 0
         self.accelY_data = 0
