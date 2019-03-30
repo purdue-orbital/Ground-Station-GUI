@@ -316,42 +316,33 @@ class DataWindow:
                 data_json = self.queue.get()
 
                 print(data_json)
-                rocket_json = data_json["rocket"]
+                origin = data_json["origin"]
+                print(origin)
+                if origin == "rocket":
+                    data = self.dataRocket
+                elif origin == "balloon":
+                    data = self.dataBalloon
+                else:
+                    print("JSON ORIGIN INCORRECT")
 
-                alt = rocket_json["alt"]
-                gps_json = rocket_json["GPS"]
-                self.dataRocket.longitude_data = gps_json["long"]
-                self.dataRocket.latitude_data = gps_json["lat"]
-                gyro_json = rocket_json["gyro"]
-                self.dataRocket.gyroX_data = gyro_json["x"]
-                self.dataRocket.gyroY_data = gyro_json["y"]
-                self.dataRocket.gyroZ_data = gyro_json["z"]
-                self.dataRocket.cardinalDirection_data = rocket_json["mag"]
-                self.dataRocket.temperature_data = rocket_json["temp"]
-                acc_json = rocket_json["acc"]
-                self.dataRocket.accelX_data = acc_json["x"]
-                self.dataRocket.accelY_data = acc_json["y"]
-                self.dataRocket.accelZ_data = acc_json["z"]
+                alt = data_json["alt"]
+                gps_json = data_json["GPS"]
+                data.longitude_data = gps_json["long"]
+                data.latitude_data = gps_json["lat"]
+                gyro_json = data_json["gyro"]
+                data.gyroX_data = gyro_json["x"]
+                data.gyroY_data = gyro_json["y"]
+                data.gyroZ_data = gyro_json["z"]
+                data.cardinalDirection_data = data_json["mag"]
+                data.temperature_data = data_json["temp"]
+                acc_json = data_json["acc"]
+                data.accelX_data = acc_json["x"]
+                data.accelY_data = acc_json["y"]
+                data.accelZ_data = acc_json["z"]
 
+                data.display_variables()
 
-                balloon_json = data_json["balloon"]
-
-                alt = balloon_json["alt"]
-                gps_json = balloon_json["GPS"]
-                self.dataRocket.longitude_data = gps_json["long"]
-                self.dataRocket.latitude_data = gps_json["lat"]
-                gyro_json = balloon_json["gyro"]
-                self.dataRocket.gyroX_data = gyro_json["x"]
-                self.dataRocket.gyroY_data = gyro_json["y"]
-                self.dataRocket.gyroZ_data = gyro_json["z"]
-                self.dataRocket.cardinalDirection_data = balloon_json["mag"]
-                self.dataRocket.temperature_data = balloon_json["temp"]
-                acc_json = balloon_json["acc"]
-                self.dataRocket.accelX_data = acc_json["x"]
-                self.dataRocket.accelY_data = acc_json["y"]
-                self.dataRocket.accelZ_data = acc_json["z"]
-
-                self.dataRocket.display_variables()
+                print("l")
 
                 # Set the data variables equal to the corresponding json entries
                 # self.data.temperature_data = data_json["temperature"]
