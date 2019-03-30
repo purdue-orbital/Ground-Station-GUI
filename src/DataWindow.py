@@ -13,6 +13,8 @@ from Control import Control
 from GraphNotebook import GraphNotebook
 from QualityCheck import QualityCheck
 
+from Comms import Comm
+
 """
 ROCKET GUI Version 0.2
 Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch
@@ -96,9 +98,6 @@ class DataWindow:
         # Running variable to see if program was terminated
         self.running = 1
 
-        # Running variable to check if in testing mode
-        self.testing = 0
-
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
 
@@ -142,6 +141,9 @@ class DataWindow:
             self.start_timer.start = time.time()
             self.start_timer.clock_run = True
             self.start_timer.tick()
+
+        Comm.get_instance().testing()
+        Comm.get_instance().send("Starting")
 
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])
@@ -325,9 +327,6 @@ class DataWindow:
                 self.data.display_variables()
             except self.queue.Empty:
                 pass
-
-    def set_testing(self, isTesting):
-        self.testing = isTesting
 
     def close(self):
         self.running = 0

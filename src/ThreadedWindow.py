@@ -8,6 +8,8 @@ from Timer import *
 from DataWindow import DataWindow
 
 from GraphNotebook import GraphNotebook
+from Mode import Mode
+from communications.RadioModule import Module
 
 import threading
 import random
@@ -25,6 +27,10 @@ class ThreadedClient:
         # Queue to buffer incoming data
         self.queue = queue.Queue()
 
+        # Create Module class and bind queue
+        self.radio = Module.get_instance(self)
+        self.radio.bind_queue(self.queue)
+
         # Window to display all data
         self.gui = DataWindow(master, self.queue)
 
@@ -32,6 +38,10 @@ class ThreadedClient:
         self.running = 1
         self.thread1 = threading.Thread(target=self.test_queue)
         self.thread1.start()
+
+        # Create thread to receive data
+        self.threadReceive = threading.Thread(target=self.receive_data)
+        self.threadReceive.start()
 
         # Create testing variables
         self.testing = 0
@@ -43,19 +53,23 @@ class ThreadedClient:
         self.update()
 
     def update(self):
+        # Loop function and handle data from interrupts
         self.gui.process_incoming()
         if not self.running or not self.gui.running:
             if self.end_application():
                 import sys
                 sys.exit(1)
+        # Call again
         self.master.after(200, self.update)
 
     def set_testing(self, isTesting):
+        # Getter for testing bool
         self.testing = isTesting
         self.gui.set_testing(isTesting)
 
-    def insert_data(self, data):
-        self.queue.put(data)
+    def receive_data(self):
+        while(1):
+            self.radio.receive()
 
     def handle_radio(self):
         print("test")

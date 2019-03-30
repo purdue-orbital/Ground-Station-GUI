@@ -106,3 +106,4 @@ class Data:
         self.accelZ_data = 0
 
         self.display_variables()
+
