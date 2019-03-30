@@ -315,22 +315,42 @@ class DataWindow:
                 data_json = self.queue.get()
 
                 print(data_json)
+                rocket_json = data_json["rocket"]
 
-                placeHolderAlt = data_json["alt"]
-                placeHolderGPS = data_json["GPS"]
-                placeHolderLong = placeHolderGPS["long"]
-                placeHolderLat = placeHolderGPS["lat"]
-                placeHolderGyro = data_json["gyro"]
-                placeHolderGyroX = placeHolderGyro["x"]
-                placeHolderGyroY = placeHolderGyro["y"]
-                placeHolderGyroZ = placeHolderGyro["z"]
-                placeHolderMag = data_json["mag"]
-                placeHolderTemp = data_json["temp"]
-                placeHolderAcc = data_json["acc"]
-                placeHolderAccX = placeHolderAcc["x"]
-                placeHolderAccY = placeHolderAcc["y"]
-                placeHolderAccZ = placeHolderAcc["z"]
+                alt = rocket_json["alt"]
+                gps_json = rocket_json["GPS"]
+                self.dataRocket.longitude_data = gps_json["long"]
+                self.dataRocket.latitude_data = gps_json["lat"]
+                gyro_json = rocket_json["gyro"]
+                self.dataRocket.gyroX_data = gyro_json["x"]
+                self.dataRocket.gyroY_data = gyro_json["y"]
+                self.dataRocket.gyroZ_data = gyro_json["z"]
+                self.dataRocket.cardinalDirection_data = rocket_json["mag"]
+                self.dataRocket.temperature_data = rocket_json["temp"]
+                acc_json = rocket_json["acc"]
+                self.dataRocket.accelX_data = acc_json["x"]
+                self.dataRocket.accelY_data = acc_json["y"]
+                self.dataRocket.accelZ_data = acc_json["z"]
 
+
+                balloon_json = data_json["balloon"]
+
+                alt = balloon_json["alt"]
+                gps_json = balloon_json["GPS"]
+                self.dataRocket.longitude_data = gps_json["long"]
+                self.dataRocket.latitude_data = gps_json["lat"]
+                gyro_json = balloon_json["gyro"]
+                self.dataRocket.gyroX_data = gyro_json["x"]
+                self.dataRocket.gyroY_data = gyro_json["y"]
+                self.dataRocket.gyroZ_data = gyro_json["z"]
+                self.dataRocket.cardinalDirection_data = balloon_json["mag"]
+                self.dataRocket.temperature_data = balloon_json["temp"]
+                acc_json = balloon_json["acc"]
+                self.dataRocket.accelX_data = acc_json["x"]
+                self.dataRocket.accelY_data = acc_json["y"]
+                self.dataRocket.accelZ_data = acc_json["z"]
+
+                self.dataRocket.display_variables()
 
                 # Set the data variables equal to the corresponding json entries
                 # self.data.temperature_data = data_json["temperature"]
@@ -342,7 +362,6 @@ class DataWindow:
                 # self.data.velocity_data = data_json["velocity"]
                 # self.data.user_angle_data = data_json["user_angle"]
                 # Reload variables
-                self.data.display_variables()
             except self.queue.Empty:
                 pass
 
