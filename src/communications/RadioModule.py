@@ -1,3 +1,6 @@
+import logging
+import sys
+
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress, RemoteXBeeDevice, XBeeException
 
 # Local port number:
@@ -12,7 +15,7 @@ BAUD_RATE = 9600
 
 DATA_TO_SEND = "Hello XBee!"
 
-# Remote node MAC address in hexidecimal format
+# Remote node MAC address in hexadecimal format
 REMOTE_NODE_ADDRESS = "0013A2004148887C"
 
 
@@ -22,8 +25,8 @@ class Module:
         self.remote_device = None
 
         try:
-            remote_device = RemoteXBeeDevice(self.device, XBee64BitAddress.from_hex_string(REMOTE_NODE_ADDRESS))
-            if remote_device is None:
+            self.remote_device = RemoteXBeeDevice(self.device, XBee64BitAddress.from_hex_string(REMOTE_NODE_ADDRESS))
+            if self.remote_device is None:
                 print("Could not find the remote device")
         except XBeeException:
             print("Exception has occurred")
@@ -34,7 +37,11 @@ class Module:
             self.device.open()
             print("Sending data to %s >> %s..." % (self.remote_device.get_64bit_addr(), DATA_TO_SEND))
 
-            self.device.send_data_async(self.remote_device, data)
+            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="[root] %(levelname)s - %(message)s")
+
+            logger = logging.getLogger(self.device.get_node_id())
+
+            self.device.send_data(self.remote_device, data)
 
             print("Success")
         finally:
@@ -56,5 +63,3 @@ class Module:
         finally:
             if self.device is not None and self.device.is_open():
                 self.device.close()
-
-

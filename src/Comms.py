@@ -4,13 +4,13 @@ from Mode import Mode
 class Comm:
     __instance = None
 
-    def get_instance():
-        if Comm.__instance == None:
+    def get_instance(self):
+        if Comm.__instance is None:
             Comm()
         return Comm.__instance
 
     def __init__(self):
-        if Comm.__instance != None:
+        if Comm.__instance is not None:
             raise Exception("Constructor should not be called")
         else:
             Comm.__instance = CommSingleton()

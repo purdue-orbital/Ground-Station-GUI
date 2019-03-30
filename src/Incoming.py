@@ -1,6 +1,7 @@
 from ThreadedWindow import ThreadedClient
 import math
 
+
 class Incoming:
     def __init__(self, client):
         self.client = client
@@ -10,4 +11,3 @@ class Incoming:
 
     def find_cardinal_direction(self, x, y):
         return math.atan2(y, x)
-
