@@ -28,7 +28,7 @@ class ThreadedClient:
         self.queue = queue.Queue()
 
         # Create Module class and bind queue
-        self.radio = Module.get_instance()
+        self.radio = Module.get_instance(self)
         self.radio.bind_queue(self.queue)
 
         # Window to display all data
