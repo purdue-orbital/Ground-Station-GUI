@@ -142,11 +142,11 @@ class DataWindow:
             self.start_timer.clock_run = True
             self.start_timer.tick()
 
-        Comm.get_instance().testing()
-        Comm.get_instance().send("Starting")
-
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])
+
+        Comm.get_instance().testing()
+        Comm.get_instance().send("Starting")
 
     def reset_variables_window(self):
         # Creates a pop up window that asks if you are sure that you want to rest the variables.
