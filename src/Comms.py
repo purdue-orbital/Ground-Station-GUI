@@ -1,3 +1,5 @@
+import json
+
 from Mode import Mode
 from communications.RadioModule import Module
 
@@ -40,7 +42,9 @@ class CommSingleton:
             print(command)
 
         if self.__mode == Mode.FLIGHT:
-            print("Flight")
-            self.__radio.send("test")
+            command_json = {}
+            command_json['command'] = command
+            print(command_json)
+            self.__radio.send(command_json)
 
             # TODO Send command
