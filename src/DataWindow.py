@@ -10,10 +10,10 @@ from Status import Status
 from Timer import Timer
 from Data import Data
 from Control import Control
-from GraphNotebook import GraphNotebook
+from Comms import Comm
 from QualityCheck import QualityCheck
 
-from Comms import Comm
+
 
 """
 ROCKET GUI Version 0.2
@@ -143,9 +143,6 @@ class DataWindow:
 
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])
-
-        Comm.get_instance().testing()
-        Comm.get_instance().send("Starting")
 
     def reset_variables_window(self):
         # Creates a pop up window that asks if you are sure that you want to rest the variables.
@@ -287,8 +284,13 @@ class DataWindow:
         cmd_button.pack()
         qdm_button.pack()
         exit_button.pack()
+        send_button.pack()
 
     def select_cdm(self, close_window):
+        c = Comm.get_instance(self)
+        c.flight()
+        c.send("cdm")
+
         self.abort_method = "CDM"
         self.control.mission_status = Status.ABORT
         # self.log(self.control.mission_status)
@@ -299,6 +301,11 @@ class DataWindow:
         close_window.destroy()
 
     def select_qdm(self, close_window):
+        # TODO Make Comms Global
+        c = Comm.get_instance(self)
+        c.flight()
+        c.send("qdm")
+
         self.abort_method = "QDM"
         self.control.mission_status = Status.ABORT
         self.timer.clock_run = False
@@ -316,7 +323,7 @@ class DataWindow:
 
                 print(data_json)
                 origin = data_json["origin"]
-                print(origin)
+
                 if origin == "rocket":
                     data = self.dataRocket
                 elif origin == "balloon":

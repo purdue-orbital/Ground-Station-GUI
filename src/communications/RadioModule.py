@@ -25,11 +25,13 @@ class Module:
 
     def get_instance(self):
         if Module.__instance is None:
+            print(Module.__instance)
             Module()
         return Module.__instance
 
     def __init__(self):
         if Module.__instance is not None:
+            print(Module.__instance)
             raise Exception("Constructor should not be called")
         else:
             Module.__instance = ModuleSingleton()
@@ -38,6 +40,7 @@ class Module:
 class ModuleSingleton:
     def __init__(self):
         self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
+        self.device.open()
         self.remote_device = None
         self.queue = None
 
@@ -51,7 +54,6 @@ class ModuleSingleton:
     def send(self, data):
         print("Testing data: " + data)
         try:
-            self.device.open()
             print("Sending data to %s >> %s..." % (self.remote_device.get_64bit_addr(), DATA_TO_SEND))
 
             logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="[root] %(levelname)s - %(message)s")
@@ -64,15 +66,14 @@ class ModuleSingleton:
 
         finally:
             if self.device is not None and self.device.is_open():
-                self.device.close()
+                # self.device.close()
+                print("Commented out close")
 
     def bind_queue(self, queue):
         self.queue = queue
 
     def receive(self):
         try:
-            self.device.open()
-
             def data_receive_callback(msg):
                 data = msg.data.decode("utf8")
 
@@ -87,4 +88,5 @@ class ModuleSingleton:
             input()
         finally:
             if self.device is not None and self.device.is_open():
-                self.device.close()
+                #self.device.close()
+                print("Commented out close")

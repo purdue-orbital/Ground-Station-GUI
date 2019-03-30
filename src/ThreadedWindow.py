@@ -10,6 +10,7 @@ from DataWindow import DataWindow
 from GraphNotebook import GraphNotebook
 from Mode import Mode
 from communications.RadioModule import Module
+from Comms import Comm
 
 import threading
 import random
@@ -68,7 +69,7 @@ class ThreadedClient:
         self.gui.set_testing(isTesting)
 
     def receive_data(self):
-        while(1):
+        while (1):
             self.radio.receive()
 
     def handle_radio(self):
@@ -116,7 +117,11 @@ class ThreadedClient:
             self.queue.put(data_json)
 
     def launch(self):
-        print("Lauching")
+        print("LAUNCHING")
+        # TODO
+        c = Comm.get_instance(self)
+        c.flight()
+        c.send("launch")
         # TODO send launch
 
     def end_application(self):
