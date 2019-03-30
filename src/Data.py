@@ -14,6 +14,7 @@ class Data:
         self.accelX_data = 0
         self.accelY_data = 0
         self.accelZ_data = 0
+        self.altitude_data = 0
 
         self.longitude = StringVar()
         self.latitude = StringVar()
@@ -25,6 +26,8 @@ class Data:
         self.accelX = StringVar()
         self.accelY = StringVar()
         self.accelZ = StringVar()
+        self.accelZ = StringVar()
+        self.altitude = StringVar()
 
         self.display_variables()
 
@@ -44,6 +47,7 @@ class Data:
         accelX_label = Label(place_window, text="Acceleration X:")
         accelY_label = Label(place_window, text="Acceleration Y:")
         accelZ_label = Label(place_window, text="Acceleration Z:")
+        altitude_label = Label(place_window, text="Altitude: ")
 
         longitude_data_label = Label(place_window, textvariable=self.longitude)
         latitude_data_label = Label(place_window, textvariable=self.latitude)
@@ -55,6 +59,7 @@ class Data:
         accelX_data_label = Label(place_window, textvariable=self.accelX)
         accelY_data_label = Label(place_window, textvariable=self.accelY)
         accelZ_data_label = Label(place_window, textvariable=self.accelZ)
+        altitude_data_label = Label(place_window, textvariable=self.altitude)
 
         longitude_label.grid(row=1, column=labels_column)
         latitude_label.grid(row=2, column=labels_column)
@@ -66,6 +71,7 @@ class Data:
         accelX_label.grid(row=8, column=labels_column)
         accelY_label.grid(row=9, column=labels_column)
         accelZ_label.grid(row=10, column=labels_column)
+        altitude_label.grid(row=11, column=labels_column)
 
         longitude_data_label.grid(row=1, column=data_column)
         latitude_data_label.grid(row=2, column=data_column)
@@ -77,6 +83,7 @@ class Data:
         accelX_data_label.grid(row=8, column=data_column)
         accelY_data_label.grid(row=9, column=data_column)
         accelZ_data_label.grid(row=10, column=data_column)
+        altitude_data_label.grid(row=11, column=data_column)
 
     def display_variables(self):
         self.longitude.set(self.longitude_data)
@@ -89,6 +96,7 @@ class Data:
         self.accelX.set(self.accelX_data)
         self.accelY.set(self.accelY_data)
         self.accelZ.set(self.accelZ_data)
+        self.altitude.set(self.altitude_data)
 
     def reset_variables(self):
         # Resets all of the data on screen to zero
@@ -104,6 +112,7 @@ class Data:
         self.accelX_data = 0
         self.accelY_data = 0
         self.accelZ_data = 0
+        self.altitude_data = 0
 
         self.display_variables()
 
