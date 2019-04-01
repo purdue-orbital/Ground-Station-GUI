@@ -16,7 +16,7 @@ from QualityCheck import QualityCheck
 from Comms import Comm
 
 """
-ROCKET GUI Version 0.2
+ROCKET GUI Version 0.2ss
 Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch
 Since: 10/31/2018
 Created for Purdue Orbital Ground Stations Sub-Team
@@ -27,10 +27,14 @@ data (data that cannot be changed).
 
 
 class DataWindow:
-    # TODO: Fix the Log Function so that it works with new JSON
 
     def __init__(self, name, queue):
         self.queue = queue
+        bgColor = "#484949"
+        framesBg = "#969694"
+        self.framesBg = framesBg
+        timeBg = "#1e1e1e"
+        yellow = "#f8fc16"
 
         # Base file writing from program's execution directory
         program_path = os.path.dirname(os.path.realpath(__file__))
@@ -44,7 +48,8 @@ class DataWindow:
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
-        self.name.geometry('600x600')
+        self.name.geometry('1000x600')
+        self.name.configure(bg=bgColor)
 
         # Set up GPIO pins for use, see documentation for pin layout
         # orange wire
@@ -68,29 +73,41 @@ class DataWindow:
 
         self.make_grid()
 
-        self.start_timer = Timer(name, 0, 2, 0, 4)
-        self.timer = Timer(name, 2, 2, 0, 4)
+        # Make timer sections
+        self.start_timer = Timer(name, 0, 2, 0, 5, timeBg)
+        self.timer = Timer(name, 2, 2, 0, 5, timeBg)
 
-        self.dataRocket = Data(name, "Rocket Data", 5, 7)
-        self.dataBalloon = Data(name, "Balloon Data", 8, 10)
+        # Make data sections
+        self.dataRocket = Data(name, "Rocket Data", 6, 8, framesBg)
+        self.dataBalloon = Data(name, "Balloon Data", 9, 11, framesBg)
 
-        self.altGraph = ttk.Button(name, text="Altitude")
-        self.sixGraph = ttk.Button(name, text="Direction")
-        self.altGraph.grid(column=5, columnspan=3, row=13, rowspan=2, sticky=N + S + E + W)
-        self.sixGraph.grid(column=8, columnspan=3, row=13, rowspan=2, sticky=N + S + E + W)
+        # Config button styles
+        ttk.Style().configure("yellow.TButton", background=yellow)
 
-        self.control = Control(name, 5, 2, 1)
+        # Place Graph buttons TODO: Move these to data class
+        self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton")
+        self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton")
+        self.altGraph.grid(column=6, columnspan=3, row=11, rowspan=1, sticky=N + S + E + W)
+        self.sixGraph.grid(column=9, columnspan=3, row=11, rowspan=1, sticky=N + S + E + W)
+
+        # Adds our logo
+        logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
+        logoLabel = Label(name, image=logo)
+        logoLabel.image = logo
+        logoLabel.grid(row=12, column=6, rowspan=5, columnspan=6)
+
+        self.control = Control(name, 5, 2, 1, framesBg)
 
         # Place Quality Indicators and Labels
-        self.QDM_check = QualityCheck(name, "QDM", 1, 10)
-        self.CDM_check = QualityCheck(name, "CDM", 3, 10)
+        self.QDM_check = QualityCheck(name, "QDM", 1, 10, framesBg)
+        self.CDM_check = QualityCheck(name, "CDM", 3, 10, framesBg)
 
-        self.drogue_check = QualityCheck(name, "Drogue Chute", 1, 12)
-        self.ignition_check = QualityCheck(name, "Ignition", 2, 12)
-        self.main_check = QualityCheck(name, "Main Chute", 3, 12)
+        self.drogue_check = QualityCheck(name, "Drogue Chute", 1, 12, framesBg)
+        self.ignition_check = QualityCheck(name, "Ignition", 2, 12, framesBg)
+        self.main_check = QualityCheck(name, "Main Chute", 3, 12, framesBg)
 
-        self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14)
-        self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14)
+        self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14, framesBg)
+        self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14, framesBg)
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
@@ -136,6 +153,11 @@ class DataWindow:
         for row in my_rows:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
+        for col in range(1, 4):
+            for row in range(5, 16):
+                colorFrame = Label(self.name, bg=self.framesBg)
+                colorFrame.grid(row=row, column=col, sticky=N + S + E + W)
+
     def start_mission(self):
         if not self.start_timer.clock_run:
             self.start_timer.start = time.time()
@@ -179,13 +201,28 @@ class DataWindow:
         fo.write("VERIFY START TIMESTAMP:" + repr(self.timer.current_time) + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
-        fo.write("temperature = " + repr(self.data.temperature_data) + "\n")
-        fo.write("pressure = " + repr(self.data.pressure_data) + "\n")
-        fo.write("humidity = " + repr(self.data.humidity_data) + "\n")
-        fo.write("altitude = " + repr(self.data.altitude_data) + "\n")
-        fo.write("direction = " + repr(self.data.direction_data) + "\n")
-        fo.write("acceleration = " + repr(self.data.acceleration_data) + "\n")
-        fo.write("velocity = " + repr(self.data.velocity_data) + "\n")
+        fo.write("----------ROCKET DATA--------\n")
+        fo.write("Longitude = " + repr(self.dataRocket.longitude_data) + "\n")
+        fo.write("Latitude = " + repr(self.dataRocket.latitude_data) + "\n")
+        fo.write("Gyro(X) = " + repr(self.dataRocket.gyroX_data) + "\n")
+        fo.write("Gyro(Y) = " + repr(self.dataRocket.gyroY_data) + "\n")
+        fo.write("Gyro(Z) = " + repr(self.dataRocket.gyroZ_data) + "\n")
+        fo.write("Cardinal Direction = " + repr(self.dataRocket.cardinalDirection_data) + "\n")
+        fo.write("Temperature = " + repr(self.dataRocket.temperature_data) + "\n")
+        fo.write("Acceleration(X) = " + repr(self.dataRocket.accelX_data) + "\n")
+        fo.write("Acceleration(Y) = " + repr(self.dataRocket.accelY_data) + "\n")
+        fo.write("Acceleration(Z) = " + repr(self.dataRocket.accelZ_data) + "\n")
+        fo.write("----------BALLOON DATA-------\n")
+        fo.write("Longitude = " + repr(self.dataBalloon.longitude_data) + "\n")
+        fo.write("Latitude = " + repr(self.dataBalloon.latitude_data) + "\n")
+        fo.write("Gyro(X) = " + repr(self.dataBalloon.gyroX_data) + "\n")
+        fo.write("Gyro(Y) = " + repr(self.dataBalloon.gyroY_data) + "\n")
+        fo.write("Gyro(Z) = " + repr(self.dataBalloon.gyroZ_data) + "\n")
+        fo.write("Cardinal Direction = " + repr(self.dataBalloon.cardinalDirection_data) + "\n")
+        fo.write("Temperature = " + repr(self.dataBalloon.temperature_data) + "\n")
+        fo.write("Acceleration(X) = " + repr(self.dataBalloon.accelX_data) + "\n")
+        fo.write("Acceleration(Y) = " + repr(self.dataBalloon.accelY_data) + "\n")
+        fo.write("Acceleration(Z) = " + repr(self.dataBalloon.accelZ_data) + "\n")
         fo.write("----------LOGS END-----------\n")
         fo.write("-----------------------------\n\n")
         fo.close()
@@ -240,7 +277,7 @@ class DataWindow:
             if verify_response:
                 self.control.mission_status = Status.VERIFIED
                 self.control.change_status_display(self.control.mission_status)
-                # self.log(self.control.mission_status)
+                self.log(self.control.mission_status)
                 GPIO.output(self.gui_switch, GPIO.HIGH)
                 self.timer.start = time.time()
                 self.timer.clock_run = True
@@ -252,7 +289,7 @@ class DataWindow:
             if verify_response:
                 self.control.mission_status = Status.NOT_VERIFIED
                 self.control.change_status_display(self.control.mission_status)
-                # self.log(self.control.mission_status)
+                self.log(self.control.mission_status)
                 self.timer.clock_run = False
                 self.control.verify_button.config(text="VERIFY")
 
@@ -261,7 +298,7 @@ class DataWindow:
             if verify_response:
                 self.control.mission_status = Status.VERIFIED
                 self.control.change_status_display(self.control.mission_status)
-                # self.log(self.control.mission_status)
+                self.log(self.control.mission_status)
                 self.timer.start = time.time()
                 self.timer.clock_run = True
                 self.timer.tick()
@@ -292,7 +329,7 @@ class DataWindow:
     def select_cdm(self, close_window):
         self.abort_method = "CDM"
         self.control.mission_status = Status.ABORT
-        # self.log(self.control.mission_status)
+        self.log(self.control.mission_status)
         self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
         self.control.change_status_display(self.control.mission_status)
@@ -304,7 +341,7 @@ class DataWindow:
         self.control.mission_status = Status.ABORT
         self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
-        # self.log(self.control.mission_status)
+        self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()

@@ -4,7 +4,7 @@ from tkinter import ttk
 
 
 class Control:
-    def __init__(self, place_window, command_row, command_column, col_span):
+    def __init__(self, place_window, command_row, command_column, col_span, bg):
 
         self.mission_status = Status.NOT_VERIFIED
         self.display_mission_status_text = StringVar()
@@ -12,22 +12,26 @@ class Control:
         self.display_mission_status = Label(place_window, textvariable=self.display_mission_status_text)
 
         # Config Status Label
-        mission_status_label = Label(place_window, text="Current Status", font=('times', 15, 'underline'))
+        mission_status_label = Label(place_window, text="Current Status", font=('times', 15, 'underline'), bg=bg)
         mission_status_label.grid(row=command_row, column=command_column,
                                   columnspan=col_span, sticky=N + S + E + W)
 
         self.display_mission_status = Label(place_window, textvariable=self.display_mission_status_text,
-                                            font=('times', 20, 'bold'))
+                                            font=('times', 20, 'bold'), bg=bg)
         self.display_mission_status.grid(row=command_row + 1, column=command_column,
                                          columnspan=col_span, sticky=N + S + E + W)
 
+        # Config button styles
+        ttk.Style().configure("green.TButton", background="green")
+        ttk.Style().configure("red.TButton", background="red")
+
         # Config Verify Button
-        self.verify_button = ttk.Button(place_window, text="VERIFY")
+        self.verify_button = ttk.Button(place_window, text="VERIFY", style="green.TButton")
         self.verify_button.grid(row=command_row + 2, column=command_column,
                                 columnspan=col_span, sticky=N + S + E + W)
 
         # Config Abort Button
-        self.abort_button = ttk.Button(place_window, text="ABORT")
+        self.abort_button = ttk.Button(place_window, text="ABORT", style="red.TButton")
         self.abort_button.grid(row=command_row + 3, column=command_column,
                                columnspan=col_span, sticky=N + S + E + W)
 
