@@ -12,6 +12,7 @@ from Data import Data
 from Control import Control
 from GraphNotebook import GraphNotebook
 from QualityCheck import QualityCheck
+from AltitudeGraph import AltitudeGraph
 
 from Comms import Comm
 
@@ -85,7 +86,8 @@ class DataWindow:
         ttk.Style().configure("yellow.TButton", background=yellow)
 
         # Place Graph buttons TODO: Move these to data class
-        self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton")
+        self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.openAltitudeGraph)
+        self.altitude_graph = AltitudeGraph()
         self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton")
         self.altGraph.grid(column=6, columnspan=3, row=11, rowspan=1, sticky=N + S + E + W)
         self.sixGraph.grid(column=9, columnspan=3, row=11, rowspan=1, sticky=N + S + E + W)
@@ -350,20 +352,53 @@ class DataWindow:
         # Process data in queue
         while self.queue.qsize():
             try:
-                data_json = self.queue.get(0)
+                data_json = self.queue.get()
+
+                print(data_json)
+                origin = data_json["origin"]
+
+                if origin == "rocket":
+                    data = self.dataRocket
+                elif origin == "balloon":
+                    data = self.dataBalloon
+                else:
+                    print("JSON ORIGIN INCORRECT")
+
+                alt = data_json["alt"]
+                gps_json = data_json["GPS"]
+                data.longitude_data = gps_json["long"]
+                data.latitude_data = gps_json["lat"]
+                gyro_json = data_json["gyro"]
+                data.gyroX_data = gyro_json["x"]
+                data.gyroY_data = gyro_json["y"]
+                data.gyroZ_data = gyro_json["z"]
+                data.cardinalDirection_data = data_json["mag"]
+                data.temperature_data = data_json["temp"]
+                acc_json = data_json["acc"]
+                data.accelX_data = acc_json["x"]
+                data.accelY_data = acc_json["y"]
+                data.accelZ_data = acc_json["z"]
+
+                data.display_variables()
+                self.altitude_graph.update_altitude(alt)
+
+                print("l")
+
                 # Set the data variables equal to the corresponding json entries
-                self.data.temperature_data = data_json["temperature"]
-                self.data.pressure_data = data_json["pressure"]
-                self.data.humidity_data = data_json["humidity"]
-                self.data.altitude_data = data_json["altitude"]
-                self.data.direction_data = data_json["direction"]
-                self.data.acceleration_data = data_json["acceleration"]
-                self.data.velocity_data = data_json["velocity"]
-                self.data.user_angle_data = data_json["user_angle"]
+                # self.data.temperature_data = data_json["temperature"]
+                # self.data.pressure_data = data_json["pressure"]
+                # self.data.humidity_data = data_json["humidity"]
+                # self.data.altitude_data = data_json["altitude"]
+                # self.data.direction_data = data_json["direction"]
+                # self.data.acceleration_data = data_json["acceleration"]
+                # self.data.velocity_data = data_json["velocity"]
+                # self.data.user_angle_data = data_json["user_angle"]
                 # Reload variables
-                self.data.display_variables()
             except self.queue.Empty:
                 pass
 
     def close(self):
         self.running = 0
+
+    def openAltitudeGraph(self):
+        self.altitude_graph.open_Graph()
