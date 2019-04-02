@@ -331,7 +331,7 @@ class DataWindow:
                 else:
                     print("JSON ORIGIN INCORRECT")
 
-                alt = data_json["alt"]
+                data.altitude = data_json["alt"]
                 gps_json = data_json["GPS"]
                 data.longitude_data = gps_json["long"]
                 data.latitude_data = gps_json["lat"]
@@ -348,18 +348,6 @@ class DataWindow:
 
                 data.display_variables()
 
-                print("l")
-
-                # Set the data variables equal to the corresponding json entries
-                # self.data.temperature_data = data_json["temperature"]
-                # self.data.pressure_data = data_json["pressure"]
-                # self.data.humidity_data = data_json["humidity"]
-                # self.data.altitude_data = data_json["altitude"]
-                # self.data.direction_data = data_json["direction"]
-                # self.data.acceleration_data = data_json["acceleration"]
-                # self.data.velocity_data = data_json["velocity"]
-                # self.data.user_angle_data = data_json["user_angle"]
-                # Reload variables
             except self.queue.Empty:
                 pass
 
