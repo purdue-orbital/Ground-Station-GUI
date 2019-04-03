@@ -69,7 +69,11 @@ class ThreadedClient:
         self.gui.set_testing(isTesting)
 
     def receive_data(self):
-        self.radio.receive()
+        while (1):
+            self.radio.receive()
+
+    def handle_radio(self):
+        print("test")
 
     def error(self, message):
         messagebox.showinfo("Error", message)
