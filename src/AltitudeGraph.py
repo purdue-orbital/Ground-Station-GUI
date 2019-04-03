@@ -1,51 +1,34 @@
 #! /usr/bin/python3.6
 import tkinter as tk
-import matplotlib.pyplot as plt2
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import random
 import queue
 
 class AltitudeGraph:
-    def update_altitude(self, h):
-        plt2.pause(0.001)
-        plt2.cla()
-        plt2.xlabel("Time (s)")
-        plt2.ylabel("Altitude (m)")
-        plt2.title("Altitude vs Time")
-        self.alititudeQ.get()
-        self.alititudeQ.put(h)
-        self.fig = plt2.plot(list(self.alititudeQ.queue), 'xkcd:cyan')
-
-    def open_graph(self):
-        plt2.pause(0.001)
-        plt2.cla()
-        plt2.xlabel("Time (s)")
-        plt2.ylabel("Altitude (m)")
-        plt2.title("Altitude vs Time")
-        self.fig = plt2.plot(list(self.alititudeQ.queue), 'xkcd:cyan')
+    def update_altitude(self, alt_queue):
+        plt.pause(0.001)
+        self.axs.cla()
+        self.axs.set_xlabel("Time (s)")
+        self.axs.set_ylabel("Altitude (m)")
+        self.axs.set_title("Altitude vs Time")
+        self.axs.plot(list(alt_queue.queue), 'xkcd:cyan')
 
     def __init__(self):
         # DARK THEME!!!!!
-        plt2.style.use('dark_background')
+        plt.style.use('dark_background')
         # Crappy code so it can close properly
-        self.fig = plt2.figure()
+        self.fig2, self.axs = plt.subplots()
         # Adjust the space so there is more space  
-        plt2.tight_layout()
-        plt2.subplots_adjust(wspace=0, hspace=0)
+        plt.tight_layout()
+        plt.subplots_adjust(wspace=0, hspace=0)
 
         # Start in interactive mode so that the graph starts in a non blocking thread
-        plt2.ion()
+        plt.ion()
 
-        self.alititudeQ = queue.Queue()
-
-        # Fill the queue with 0s so that we can graph something if the user opens the graph early
-        self.amount_of_point_to_graph = 20
-        for i in range(0, self.amount_of_point_to_graph):
-            self.alititudeQ.put(0)
-
-        plt2.xlabel("Time (s)")
-        plt2.ylabel("Altitude (m)")
-        plt2.title("Altitude vs Time")
+        self.axs.set_xlabel("Time (s)")
+        self.axs.set_ylabel("Altitude (m)")
+        self.axs.set_title("Altitude vs Time")
 
         # # Run the loop so the graph gets updated every second
         # while True:
