@@ -331,7 +331,7 @@ class DataWindow:
                 else:
                     print("JSON ORIGIN INCORRECT")
 
-                data.altitude = data_json["alt"]
+                data.altitude_data = data_json["alt"]
                 gps_json = data_json["GPS"]
                 data.longitude_data = gps_json["long"]
                 data.latitude_data = gps_json["lat"]
