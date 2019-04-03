@@ -41,6 +41,19 @@ class ModuleSingleton:
     def __init__(self):
         self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
         self.device.open()
+
+        def data_receive_callback(msg):
+            data = msg.data.decode("utf8")
+
+            json_data = json.loads(data)
+
+            self.queue.put(json_data)
+
+            print("Data received and logged\n\n")
+            #self.receive()
+
+        self.device.add_data_received_callback(data_receive_callback)
+
         self.remote_device = None
         self.queue = None
 
@@ -74,16 +87,6 @@ class ModuleSingleton:
 
     def receive(self):
         try:
-            def data_receive_callback(msg):
-                data = msg.data.decode("utf8")
-
-                json_data = json.loads(data)
-
-                self.queue.put(json_data)
-
-
-            self.device.add_data_received_callback(data_receive_callback)
-
             print("Waiting for data...\n")
             input()
         finally:
