@@ -2,14 +2,13 @@ from tkinter import *
 
 
 class QualityCheck:
-    def __init__(self, place_window, check_name, column_place, row_place):
+    def __init__(self, place_window, check_name, column_place, row_place, bg):
         self.ready = False
 
-        self.quality_label = Label(place_window, text=check_name, font=('times', 12, 'underline'))
+        self.quality_label = Label(place_window, text=check_name, font=('times', 12, 'underline'), bg=bg)
         self.quality_label.grid(row=row_place, column=column_place, sticky=S + E + W)
 
-        # self.quality_indicator = Label(bg="red", pady=5, padx=5)
-        self.quality_indicator = Label(text="No Go", pady=5, padx=5)
+        self.quality_indicator = Label(text="No Go", pady=5, padx=5, bg=bg)
         self.quality_indicator.grid(row=row_place + 1, column=column_place, sticky=N + E + W)
 
     def display_quality(self):
