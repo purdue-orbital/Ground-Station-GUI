@@ -11,11 +11,7 @@ class AccelerometerGyroGraphs:
     #     self.update_rocket_acc(3,4,5)
     #     self.update_rocket_gyro(8,9,10)
 
-    def pause(self):
-        plt.pause(0.001)
-
     def update_baloon_acc(self, x_queue, y_queue, z_queue):
-        print("UBC")
         self.ax_ba.cla()
         self.ax_ba.set_ylabel("Acceleration (m/s^2)")
         self.ax_ba.set_title("Balloon")
@@ -25,12 +21,12 @@ class AccelerometerGyroGraphs:
         # self.baloon_acc_yQ.put(y)
         # self.baloon_acc_zQ.get()
         # self.baloon_acc_zQ.put(z)
-        self.ax_ba.plot(list(self.x_queue.queue), 'xkcd:yellow')
-        self.ax_ba.plot(list(self.y_queue.queue), 'xkcd:cyan')
-        self.ax_ba.plot(list(self.z_queue.queue), 'xkcd:fuchsia')
+        self.ax_ba.plot(list(x_queue.queue), 'xkcd:yellow')
+        self.ax_ba.plot(list(y_queue.queue), 'xkcd:cyan')
+        self.ax_ba.plot(list(z_queue.queue), 'xkcd:fuchsia')
+        plt.pause(0.001)
 
     def update_baloon_gyro(self, x_queue, y_queue, z_queue):
-        print("UBG")
         self.ax_bg.cla()
         self.ax_bg.set_ylabel("Gyro (degrees/s)")
         # self.baloon_gyro_xQ.get()
@@ -39,12 +35,12 @@ class AccelerometerGyroGraphs:
         # self.baloon_gyro_yQ.put(y)
         # self.baloon_gyro_zQ.get()
         # self.baloon_gyro_zQ.put(z)
-        self.ax_bg.plot(list(self.x_queue.queue), 'xkcd:yellow')
-        self.ax_bg.plot(list(self.y_queue.queue), 'xkcd:cyan')
-        self.ax_bg.plot(list(self.z_queue.queue), 'xkcd:fuchsia')
+        self.ax_bg.plot(list(x_queue.queue), 'xkcd:yellow')
+        self.ax_bg.plot(list(y_queue.queue), 'xkcd:cyan')
+        self.ax_bg.plot(list(z_queue.queue), 'xkcd:fuchsia')
+        plt.pause(0.001)
 
     def update_rocket_acc(self, x_queue, y_queue, z_queue):
-        print("URA")
         self.ax_ra.cla()
         self.ax_ra.set_xlabel("Time (s)")
         self.ax_ra.set_title("Rocket")
@@ -54,12 +50,12 @@ class AccelerometerGyroGraphs:
         # self.rocket_acc_yQ.put(y)
         # self.rocket_acc_zQ.get()
         # self.rocket_acc_zQ.put(z)
-        self.ax_ra.plot(list(self.x_queue.queue), 'xkcd:yellow')
-        self.ax_ra.plot(list(self.y_queue.queue), 'xkcd:cyan')
-        self.ax_ra.plot(list(self.z_queue.queue), 'xkcd:fuchsia')
+        self.ax_ra.plot(list(x_queue.queue), 'xkcd:yellow')
+        self.ax_ra.plot(list(y_queue.queue), 'xkcd:cyan')
+        self.ax_ra.plot(list(z_queue.queue), 'xkcd:fuchsia')
+        plt.pause(0.001)
 
     def update_rocket_gyro(self, x_queue, y_queue, z_queue):
-        print("URG")
         self.ax_rg.cla()
         self.ax_rg.set_xlabel("Time (s)")
         # self.rocket_gyro_xQ.get()
@@ -68,9 +64,10 @@ class AccelerometerGyroGraphs:
         # self.rocket_gyro_yQ.put(y)
         # self.rocket_gyro_zQ.get()
         # self.rocket_gyro_zQ.put(z)
-        self.ax_rg.plot(list(self.x_queue.queue), 'xkcd:yellow')
-        self.ax_rg.plot(list(self.y_queue.queue), 'xkcd:cyan')
-        self.ax_rg.plot(list(self.z_queue.queue), 'xkcd:fuchsia')
+        self.ax_rg.plot(list(x_queue.queue), 'xkcd:yellow')
+        self.ax_rg.plot(list(y_queue.queue), 'xkcd:cyan')
+        self.ax_rg.plot(list(z_queue.queue), 'xkcd:fuchsia')
+        plt.pause(0.001)
 
     def __init__(self):
         # DARK THEME!!!!!

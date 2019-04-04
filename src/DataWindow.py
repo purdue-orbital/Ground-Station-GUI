@@ -137,21 +137,19 @@ class DataWindow:
 
         amount_of_point_to_graph = 20
         for i in range(0, amount_of_point_to_graph):
-            self.baloon_acc_xQ.put(1)
-            self.baloon_acc_yQ.put(2)
-            self.baloon_acc_zQ.put(3)
-            self.baloon_gyro_xQ.put(1)
-            self.baloon_gyro_yQ.put(2)
-            self.baloon_gyro_zQ.put(3)
-            self.rocket_acc_xQ.put(1)
-            self.rocket_acc_yQ.put(2)
-            self.rocket_acc_zQ.put(3)
-            self.rocket_gyro_xQ.put(1)
-            self.rocket_gyro_yQ.put(2)
-            self.rocket_gyro_zQ.put(3)            
-            self.alititudeQ.put(5)
-
-
+            self.baloon_acc_xQ.put(0)
+            self.baloon_acc_yQ.put(0)
+            self.baloon_acc_zQ.put(0)
+            self.baloon_gyro_xQ.put(0)
+            self.baloon_gyro_yQ.put(0)
+            self.baloon_gyro_zQ.put(0)
+            self.rocket_acc_xQ.put(0)
+            self.rocket_acc_yQ.put(0)
+            self.rocket_acc_zQ.put(0)
+            self.rocket_gyro_xQ.put(0)
+            self.rocket_gyro_yQ.put(0)
+            self.rocket_gyro_zQ.put(0)            
+            self.alititudeQ.put(0)
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
@@ -479,9 +477,7 @@ class DataWindow:
 
     def open_acc_gyro_graphs(self):
         self.acc_gyro_graphs = AccelerometerGyroGraphs()
-        # self.acc_gyro_graphs.update_rocket_acc(self.alititudeQ, self.alititudeQ, self.alititudeQ)
         self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
         self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)  
         self.acc_gyro_graphs.update_baloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
         self.acc_gyro_graphs.update_baloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
-        self.acc_gyro_graphs.pause()
