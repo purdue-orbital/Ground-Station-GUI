@@ -7,10 +7,10 @@ import RPi.GPIO as GPIO
 from Timer import *
 from DataWindow import DataWindow
 
-from GraphNotebook import GraphNotebook
+# from GraphNotebook import GraphNotebook
 from Mode import Mode
 from communications.RadioModule import Module
-from Comms import Comm
+from CommunicationDriver import Comm
 
 import threading
 import random

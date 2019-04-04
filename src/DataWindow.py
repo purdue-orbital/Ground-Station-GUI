@@ -11,7 +11,7 @@ from Status import Status
 from Timer import Timer
 from Data import Data
 from Control import Control
-from Comms import Comm
+from CommunicationDriver import Comm
 from QualityCheck import QualityCheck
 from AltitudeGraph import AltitudeGraph
 from AccelerometerGyroGraphs import AccelerometerGyroGraphs

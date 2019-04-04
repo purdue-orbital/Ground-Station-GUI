@@ -1,3 +1,4 @@
+#! /usr/bin/python3.6
 import json
 
 from Mode import Mode
@@ -42,8 +43,7 @@ class CommSingleton:
             print(command)
 
         if self.__mode == Mode.FLIGHT:
-            command_json = {}
-            command_json['command'] = command
+            command_json = {'command': command}
             try:
                 print(command_json)
                 self.__radio.send(json.dumps(command_json))
