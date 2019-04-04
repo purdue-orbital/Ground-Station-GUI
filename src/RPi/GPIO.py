@@ -1,0 +1,38 @@
+import sys
+
+BOARD = 1
+OUT = 1
+IN = 1
+
+
+def setmode(a):
+    print("Mode Set")
+
+
+def setup(a, b):
+    sys.stdout.write('')
+
+
+def output(a, b):
+    sys.stdout.write('')
+
+
+def cleanup():
+    print("Goodbye")
+
+
+def setwarnings(flag):
+    print("Warnings: {}".format(flag))
+
+def add_event_detect(channel, direction, callback):
+    print("Adding event detection...")
+
+def HIGH():
+    sys.stdout.write('')
+
+
+def LOW():
+    sys.stdout.write('')
+
+def RISING():
+    sys.stdout.write('')

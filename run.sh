@@ -5,6 +5,14 @@ NC='\033[0m'
 
 traceback_path='logs/traceback.log'
 program_path='src/ThreadedWindow.py'
+status_log_path='logs/status.log'
+log_test='src/ReadLog.py'
+
+if [[ $1 == "-t" ]]; then
+    printf "Testing Program Logs\n"
+    python3 ${log_test}
+    exit 99
+fi
 
 ascii="                              
                               
@@ -57,7 +65,7 @@ printf "Python check passed\n"
 
 printf "Attempting to run ${program_path}\n\n"
 
-python3 ${program_path} 2> ${traceback_path}
+sudo python3 ${program_path} 2> ${traceback_path}
 if [[ $? == '1' ]]; then
 	traceback=$( tail -1 ${traceback_path} )
 	printf "${traceback}\n"

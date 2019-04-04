@@ -1,18 +1,25 @@
 import datetime
 import time
 import os
+import queue
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 import RPi.GPIO as GPIO
 
-from Status import *
+from Status import Status
 from Timer import Timer
 from Data import Data
 from Control import Control
+from Comms import Comm
+from QualityCheck import QualityCheck
+from AltitudeGraph import AltitudeGraph
+from AccelerometerGyroGraphs import AccelerometerGyroGraphs
+
+
 
 """
-ROCKET GUI Version 0.2
+ROCKET GUI Version 0.2ss
 Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch
 Since: 10/31/2018
 Created for Purdue Orbital Ground Stations Sub-Team
@@ -23,8 +30,14 @@ data (data that cannot be changed).
 
 
 class DataWindow:
+
     def __init__(self, name, queue):
         self.queue = queue
+        bgColor = "#484949"
+        framesBg = "#969694"
+        self.framesBg = framesBg
+        timeBg = "#1e1e1e"
+        yellow = "#f8fc16"
 
         # Base file writing from program's execution directory
         program_path = os.path.dirname(os.path.realpath(__file__))
@@ -39,6 +52,7 @@ class DataWindow:
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
         self.name.geometry('1000x600')
+        self.name.configure(bg=bgColor)
 
         # Set up GPIO pins for use, see documentation for pin layout
         # orange wire
@@ -62,16 +76,80 @@ class DataWindow:
 
         self.make_grid()
 
-        self.start_timer = Timer(name, 0, 3, 0, 7)
-        self.timer = Timer(name, 3, 3, 0, 7)
-        self.data = Data(name, 8, 10)
-        self.control = Control(name, 7, 3)
+        # Make timer sections
+        self.start_timer = Timer(name, 0, 2, 0, 5, timeBg)
+        self.timer = Timer(name, 2, 2, 0, 5, timeBg)
+
+        # Make data sections
+        self.dataRocket = Data(name, "Rocket Data", 6, 8, framesBg)
+        self.dataBalloon = Data(name, "Balloon Data", 9, 11, framesBg)
+
+        # Config button styles
+        ttk.Style().configure("yellow.TButton", background=yellow)
+
+        # Place Graph buttons TODO: Move these to data class
+        self.init_graph_queues()
+        self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
+        self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
+        self.altGraph.grid(column=6, columnspan=3, row=11, rowspan=1, sticky=N + S + E + W)
+        self.sixGraph.grid(column=9, columnspan=3, row=11, rowspan=1, sticky=N + S + E + W)
+
+        # Adds our logo
+        logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
+        logoLabel = Label(name, image=logo)
+        logoLabel.image = logo
+        logoLabel.grid(row=12, column=6, rowspan=5, columnspan=6)
+
+        self.control = Control(name, 5, 2, 1, framesBg)
+
+        # Place Quality Indicators and Labels
+        self.QDM_check = QualityCheck(name, "QDM", 1, 10, framesBg)
+        self.CDM_check = QualityCheck(name, "CDM", 3, 10, framesBg)
+
+        self.drogue_check = QualityCheck(name, "Drogue Chute", 1, 12, framesBg)
+        self.ignition_check = QualityCheck(name, "Ignition", 2, 12, framesBg)
+        self.main_check = QualityCheck(name, "Main Chute", 3, 12, framesBg)
+
+        self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14, framesBg)
+        self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14, framesBg)
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
 
         # Running variable to see if program was terminated
         self.running = 1
+
+    def init_graph_queues(self):
+        # Create several queue that holds the number for each line in every graph
+        self.baloon_acc_xQ = queue.Queue()
+        self.baloon_acc_yQ = queue.Queue()
+        self.baloon_acc_zQ = queue.Queue()
+        self.baloon_gyro_xQ = queue.Queue()
+        self.baloon_gyro_yQ = queue.Queue()
+        self.baloon_gyro_zQ = queue.Queue()
+        self.rocket_acc_xQ = queue.Queue()
+        self.rocket_acc_yQ = queue.Queue()
+        self.rocket_acc_zQ = queue.Queue()
+        self.rocket_gyro_xQ = queue.Queue()
+        self.rocket_gyro_yQ = queue.Queue()
+        self.rocket_gyro_zQ = queue.Queue()
+        self.alititudeQ = queue.Queue()
+
+        amount_of_point_to_graph = 20
+        for i in range(0, amount_of_point_to_graph):
+            self.baloon_acc_xQ.put(0)
+            self.baloon_acc_yQ.put(0)
+            self.baloon_acc_zQ.put(0)
+            self.baloon_gyro_xQ.put(0)
+            self.baloon_gyro_yQ.put(0)
+            self.baloon_gyro_zQ.put(0)
+            self.rocket_acc_xQ.put(0)
+            self.rocket_acc_yQ.put(0)
+            self.rocket_acc_zQ.put(0)
+            self.rocket_gyro_xQ.put(0)
+            self.rocket_gyro_yQ.put(0)
+            self.rocket_gyro_zQ.put(0)            
+            self.alititudeQ.put(0)
 
     def make_tool_bar(self):
         menu_bar = Menu(self.name)
@@ -99,7 +177,7 @@ class DataWindow:
         self.name.config(menu=menu_bar)
 
     def make_grid(self):
-        total_rows = 12
+        total_rows = 18
         total_columns = 12
 
         my_rows = range(0, total_rows)
@@ -111,13 +189,22 @@ class DataWindow:
         for row in my_rows:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
+        for col in range(1, 4):
+            for row in range(5, 16):
+                colorFrame = Label(self.name, bg=self.framesBg)
+                colorFrame.grid(row=row, column=col, sticky=N + S + E + W)
+
     def start_mission(self):
-        self.start_timer.start = time.time()
-        self.start_timer.clock_run = True
-        self.start_timer.tick()
+        if not self.start_timer.clock_run:
+            self.start_timer.start = time.time()
+            self.start_timer.clock_run = True
+            self.start_timer.tick()
 
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])
+
+        Comm.get_instance().testing()
+        Comm.get_instance().send("Starting")
 
     def reset_variables_window(self):
         # Creates a pop up window that asks if you are sure that you want to rest the variables.
@@ -125,7 +212,8 @@ class DataWindow:
         reset_window = messagebox.askokcancel("Reset All Variables?", "Are you sure you want to reset all variables?")
         if reset_window:
             self.log(Status.RESET)
-            self.data.reset_variables()
+            self.dataBalloon.reset_variables()
+            self.dataRocket.reset_variables()
 
     def log(self, status):
         fo = open(self.status_log_path, "a")
@@ -149,13 +237,28 @@ class DataWindow:
         fo.write("VERIFY START TIMESTAMP:" + repr(self.timer.current_time) + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
-        fo.write("temperature = " + repr(self.data.temperature_data) + "\n")
-        fo.write("pressure = " + repr(self.data.pressure_data) + "\n")
-        fo.write("humidity = " + repr(self.data.humidity_data) + "\n")
-        fo.write("altitude = " + repr(self.data.altitude_data) + "\n")
-        fo.write("direction = " + repr(self.data.direction_data) + "\n")
-        fo.write("acceleration = " + repr(self.data.acceleration_data) + "\n")
-        fo.write("velocity = " + repr(self.data.velocity_data) + "\n")
+        fo.write("----------ROCKET DATA--------\n")
+        fo.write("Longitude = " + repr(self.dataRocket.longitude_data) + "\n")
+        fo.write("Latitude = " + repr(self.dataRocket.latitude_data) + "\n")
+        fo.write("Gyro(X) = " + repr(self.dataRocket.gyroX_data) + "\n")
+        fo.write("Gyro(Y) = " + repr(self.dataRocket.gyroY_data) + "\n")
+        fo.write("Gyro(Z) = " + repr(self.dataRocket.gyroZ_data) + "\n")
+        fo.write("Cardinal Direction = " + repr(self.dataRocket.cardinalDirection_data) + "\n")
+        fo.write("Temperature = " + repr(self.dataRocket.temperature_data) + "\n")
+        fo.write("Acceleration(X) = " + repr(self.dataRocket.accelX_data) + "\n")
+        fo.write("Acceleration(Y) = " + repr(self.dataRocket.accelY_data) + "\n")
+        fo.write("Acceleration(Z) = " + repr(self.dataRocket.accelZ_data) + "\n")
+        fo.write("----------BALLOON DATA-------\n")
+        fo.write("Longitude = " + repr(self.dataBalloon.longitude_data) + "\n")
+        fo.write("Latitude = " + repr(self.dataBalloon.latitude_data) + "\n")
+        fo.write("Gyro(X) = " + repr(self.dataBalloon.gyroX_data) + "\n")
+        fo.write("Gyro(Y) = " + repr(self.dataBalloon.gyroY_data) + "\n")
+        fo.write("Gyro(Z) = " + repr(self.dataBalloon.gyroZ_data) + "\n")
+        fo.write("Cardinal Direction = " + repr(self.dataBalloon.cardinalDirection_data) + "\n")
+        fo.write("Temperature = " + repr(self.dataBalloon.temperature_data) + "\n")
+        fo.write("Acceleration(X) = " + repr(self.dataBalloon.accelX_data) + "\n")
+        fo.write("Acceleration(Y) = " + repr(self.dataBalloon.accelY_data) + "\n")
+        fo.write("Acceleration(Z) = " + repr(self.dataBalloon.accelZ_data) + "\n")
         fo.write("----------LOGS END-----------\n")
         fo.write("-----------------------------\n\n")
         fo.close()
@@ -258,8 +361,13 @@ class DataWindow:
         cmd_button.pack()
         qdm_button.pack()
         exit_button.pack()
+        send_button.pack()
 
     def select_cdm(self, close_window):
+        c = Comm.get_instance(self)
+        c.flight()
+        c.send("cdm")
+
         self.abort_method = "CDM"
         self.control.mission_status = Status.ABORT
         self.log(self.control.mission_status)
@@ -270,6 +378,11 @@ class DataWindow:
         close_window.destroy()
 
     def select_qdm(self, close_window):
+        # TODO Make Comms Global
+        c = Comm.get_instance(self)
+        c.flight()
+        c.send("qdm")
+
         self.abort_method = "QDM"
         self.control.mission_status = Status.ABORT
         self.timer.clock_run = False
@@ -283,20 +396,103 @@ class DataWindow:
         # Process data in queue
         while self.queue.qsize():
             try:
-                data_json = self.queue.get(0)
+                data_json = self.queue.get()
+
+                print(data_json)
+                origin = data_json["origin"]
+
+                if origin == "rocket":
+                    data = self.dataRocket
+                elif origin == "balloon":
+                    data = self.dataBalloon
+                else:
+                    print("JSON ORIGIN INCORRECT")
+
+
+                alt = data_json["alt"]
+
+                data.altitude_data = data_json["alt"]
+
+                gps_json = data_json["GPS"]
+                data.longitude_data = gps_json["long"]
+                data.latitude_data = gps_json["lat"]
+                gyro_json = data_json["gyro"]
+                data.gyroX_data = gyro_json["x"]
+                data.gyroY_data = gyro_json["y"]
+                data.gyroZ_data = gyro_json["z"]
+                data.cardinalDirection_data = data_json["mag"]
+                data.temperature_data = data_json["temp"]
+                acc_json = data_json["acc"]
+                data.accelX_data = acc_json["x"]
+                data.accelY_data = acc_json["y"]
+                data.accelZ_data = acc_json["z"]
+
+                data.display_variables()
+                # self.altitude_graph.update_altitude(alt)
+
+                # insert it into the queues
+                self.alititudeQ.get()
+                self.alititudeQ.put(alt)
+                self.altitude_graph.update_altitude(self.alititudeQ)
+                if origin == "rocket":
+                    self.rocket_acc_xQ.get()
+                    self.rocket_acc_yQ.get()
+                    self.rocket_acc_zQ.get()
+                    self.rocket_gyro_xQ.get()
+                    self.rocket_gyro_yQ.get()
+                    self.rocket_gyro_zQ.get()  
+                    self.rocket_acc_xQ.put(data.accelX_data)
+                    self.rocket_acc_yQ.put(data.accelY_data)
+                    self.rocket_acc_zQ.put(data.accelZ_data)
+                    self.rocket_gyro_xQ.put(data.gyroX_data)
+                    self.rocket_gyro_yQ.put(data.gyroY_data)
+                    self.rocket_gyro_zQ.put(data.gyroZ_data)
+                    self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
+                    self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)        
+                elif origin == "baloon":
+                    self.baloon_acc_xQ.get()
+                    self.baloon_acc_yQ.get()
+                    self.baloon_acc_zQ.get()
+                    self.baloon_gyro_xQ.get()
+                    self.baloon_gyro_yQ.get()
+                    self.baloon_gyro_zQ.get()
+                    self.baloon_acc_xQ.put(data.accelX_data)
+                    self.baloon_acc_yQ.put(data.accelY_data)
+                    self.baloon_acc_zQ.put(data.accelZ_data)
+                    self.baloon_gyro_xQ.put(data.gyroX_data)
+                    self.baloon_gyro_yQ.put(data.gyroY_data)
+                    self.baloon_gyro_zQ.put(data.gyroZ_data)
+                    self.acc_gyro_graphs.update_baloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
+                    self.acc_gyro_graphs.update_baloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)        
+
+
+
+                print("l")
+
                 # Set the data variables equal to the corresponding json entries
-                self.data.temperature_data = data_json["temperature"]
-                self.data.pressure_data = data_json["pressure"]
-                self.data.humidity_data = data_json["humidity"]
-                self.data.altitude_data = data_json["altitude"]
-                self.data.direction_data = data_json["direction"]
-                self.data.acceleration_data = data_json["acceleration"]
-                self.data.velocity_data = data_json["velocity"]
-                self.data.user_angle_data = data_json["user_angle"]
+                # self.data.temperature_data = data_json["temperature"]
+                # self.data.pressure_data = data_json["pressure"]
+                # self.data.humidity_data = data_json["humidity"]
+                # self.data.altitude_data = data_json["altitude"]
+                # self.data.direction_data = data_json["direction"]
+                # self.data.acceleration_data = data_json["acceleration"]
+                # self.data.velocity_data = data_json["velocity"]
+                # self.data.user_angle_data = data_json["user_angle"]
                 # Reload variables
-                self.data.display_variables()
+
             except self.queue.Empty:
                 pass
 
     def close(self):
         self.running = 0
+
+    def open_altitude_graph(self):
+        self.altitude_graph = AltitudeGraph()
+        self.altitude_graph.update_altitude(self.alititudeQ)
+
+    def open_acc_gyro_graphs(self):
+        self.acc_gyro_graphs = AccelerometerGyroGraphs()
+        self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
+        self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)  
+        self.acc_gyro_graphs.update_baloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
+        self.acc_gyro_graphs.update_baloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
