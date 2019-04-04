@@ -4,37 +4,38 @@ import queue
 import random
 import time
 
+
 class AccelerometerGyroGraphs:
     # def open_graphs(self):
-    #     self.update_baloon_acc(-8,-9,-10)
-    #     self.update_baloon_gyro(-3,-4,-5)
+    #     self.update_balloon_acc(-8,-9,-10)
+    #     self.update_balloon_gyro(-3,-4,-5)
     #     self.update_rocket_acc(3,4,5)
     #     self.update_rocket_gyro(8,9,10)
 
-    def update_baloon_acc(self, x_queue, y_queue, z_queue):
+    def update_balloon_acc(self, x_queue, y_queue, z_queue):
         self.ax_ba.cla()
         self.ax_ba.set_ylabel("Acceleration (m/s^2)")
         self.ax_ba.set_title("Balloon")
-        # self.baloon_acc_xQ.get()
-        # self.baloon_acc_xQ.put(x)
-        # self.baloon_acc_yQ.get()
-        # self.baloon_acc_yQ.put(y)
-        # self.baloon_acc_zQ.get()
-        # self.baloon_acc_zQ.put(z)
+        # self.balloon_acc_xQ.get()
+        # self.balloon_acc_xQ.put(x)
+        # self.balloon_acc_yQ.get()
+        # self.balloon_acc_yQ.put(y)
+        # self.balloon_acc_zQ.get()
+        # self.balloon_acc_zQ.put(z)
         self.ax_ba.plot(list(x_queue.queue), 'xkcd:yellow')
         self.ax_ba.plot(list(y_queue.queue), 'xkcd:cyan')
         self.ax_ba.plot(list(z_queue.queue), 'xkcd:fuchsia')
         plt.pause(0.001)
 
-    def update_baloon_gyro(self, x_queue, y_queue, z_queue):
+    def update_balloon_gyro(self, x_queue, y_queue, z_queue):
         self.ax_bg.cla()
         self.ax_bg.set_ylabel("Gyro (degrees/s)")
-        # self.baloon_gyro_xQ.get()
-        # self.baloon_gyro_xQ.put(x)
-        # self.baloon_gyro_yQ.get()
-        # self.baloon_gyro_yQ.put(y)
-        # self.baloon_gyro_zQ.get()
-        # self.baloon_gyro_zQ.put(z)
+        # self.balloon_gyro_xQ.get()
+        # self.balloon_gyro_xQ.put(x)
+        # self.balloon_gyro_yQ.get()
+        # self.balloon_gyro_yQ.put(y)
+        # self.balloon_gyro_zQ.get()
+        # self.balloon_gyro_zQ.put(z)
         self.ax_bg.plot(list(x_queue.queue), 'xkcd:yellow')
         self.ax_bg.plot(list(y_queue.queue), 'xkcd:cyan')
         self.ax_bg.plot(list(z_queue.queue), 'xkcd:fuchsia')
@@ -74,10 +75,11 @@ class AccelerometerGyroGraphs:
         plt.style.use('dark_background')
 
         # Graph 6 plots in a 2x3 fashion
-        self.fig, [[self.ax_ba, self.ax_ra], [self.ax_bg, self.ax_rg]] = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True)
+        self.fig, [[self.ax_ba, self.ax_ra], [self.ax_bg, self.ax_rg]] = plt.subplots(nrows=2, ncols=2, sharex=True,
+                                                                                      sharey=True)
 
         # Crappy code so it can close properly
-        # fig.canvas.mpl_connect('close_event', handle_close)
+        # self.fig.canvas.mpl_connect('close_event', handle_close)
         # shouldClose = False
 
         # Adjust the space so there is more space  
@@ -88,18 +90,17 @@ class AccelerometerGyroGraphs:
         plt.ion()
 
         # Fill the queue with 0s so that we can graph something if the user opens the graph early
-        
 
-        #Setup titles, axis labels, and plot the initial 0s
-        # self.ax_ba.plot(list(self.baloon_acc_xQ.queue))
-        # self.ax_ba.plot(list(self.baloon_acc_yQ.queue))
-        # self.ax_ba.plot(list(self.baloon_acc_zQ.queue))
+        # Setup titles, axis labels, and plot the initial 0s
+        # self.ax_ba.plot(list(self.balloon_acc_xQ.queue))
+        # self.ax_ba.plot(list(self.balloon_acc_yQ.queue))
+        # self.ax_ba.plot(list(self.balloon_acc_zQ.queue))
         self.ax_ba.set_ylabel("Acceleration (m/s^2)")
         self.ax_ba.set_title("Balloon")
 
-        # self.ax_bg.plot(list(self.baloon_gyro_xQ.queue))
-        # self.ax_bg.plot(list(self.baloon_gyro_yQ.queue))
-        # self.ax_bg.plot(list(self.baloon_gyro_zQ.queue))
+        # self.ax_bg.plot(list(self.balloon_gyro_xQ.queue))
+        # self.ax_bg.plot(list(self.balloon_gyro_yQ.queue))
+        # self.ax_bg.plot(list(self.balloon_gyro_zQ.queue))
         self.ax_bg.set_ylabel("Gyro (degrees/s)")
 
         self.ax_ra.set_xlabel("Time (s)")
@@ -120,8 +121,8 @@ class AccelerometerGyroGraphs:
         #     y = random.randint(-50,50)
         #     z = random.randint(-50,50)
         #     # Call methods for each graph to update x,y,z
-        #     update_baloon_acc(x, y, z)
-        #     update_baloon_gyro(x, y, z)
+        #     update_balloon_acc(x, y, z)
+        #     update_baboon_gyro(x, y, z)
         #     update_rocket_acc(x, y, z)
         #     update_rocket_gyro(x, y, z)
         #     # Sleep for a second, will probably be replaced with a callback or something

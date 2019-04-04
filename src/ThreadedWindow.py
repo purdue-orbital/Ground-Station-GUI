@@ -17,6 +17,16 @@ import random
 import queue
 import json
 
+"""
+ROCKET GUI Version 0.2
+Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch
+Since: 10/31/2018
+Created for Purdue Orbital Ground Stations Sub-Team
+Parses and displays data from the a Raspberry Pi 3 to verbosely
+display all pertinent system data (data that can be changed) and environmental
+data (data that cannot be changed).
+"""
+
 
 class ThreadedClient:
     def __init__(self, master):
@@ -37,8 +47,8 @@ class ThreadedClient:
 
         # Create thread to spoof data in queue
         self.running = 1
-        #self.thread1 = threading.Thread(target=self.test_queue)
-        #self.thread1.start()
+        # self.thread1 = threading.Thread(target=self.test_queue)
+        # self.thread1.start()
 
         # Create thread to receive data
         self.threadReceive = threading.Thread(target=self.receive_data)
@@ -93,23 +103,23 @@ class ThreadedClient:
 
             preload = (
                 '{ "origin" : "rocket",' +
-                    '"alt": ' + str(rand.random())[0:5] + ',' +
-                    '"GPS": {' +
-                        '"long": ' + str(rand.random())[0:5] + ',' +
-                        '"lat": ' + str(rand.random())[0:5] +
-                    '},' +
-                    '"gyro": {' +
-                        '"x": ' + str(rand.random())[0:5] + ',' +
-                        '"y": ' + str(rand.random())[0:5] + ',' +
-                        '"z": ' + str(rand.random())[0:5] +
-                    '},' +
-                    '"mag": ' + str(rand.random())[0:5] + ',' +
-                    '"temp": ' + str(rand.random())[0:5] + ',' +
-                    '"acc": {' +
-                        '"x": ' + str(rand.random())[0:5] + ',' +
-                        '"y": ' + str(rand.random())[0:5] + ',' +
-                        '"z": ' + str(rand.random())[0:5] +
-                    '}' +
+                '"alt": ' + str(rand.random())[0:5] + ',' +
+                '"GPS": {' +
+                '"long": ' + str(rand.random())[0:5] + ',' +
+                '"lat": ' + str(rand.random())[0:5] +
+                '},' +
+                '"gyro": {' +
+                '"x": ' + str(rand.random())[0:5] + ',' +
+                '"y": ' + str(rand.random())[0:5] + ',' +
+                '"z": ' + str(rand.random())[0:5] +
+                '},' +
+                '"mag": ' + str(rand.random())[0:5] + ',' +
+                '"temp": ' + str(rand.random())[0:5] + ',' +
+                '"acc": {' +
+                '"x": ' + str(rand.random())[0:5] + ',' +
+                '"y": ' + str(rand.random())[0:5] + ',' +
+                '"z": ' + str(rand.random())[0:5] +
+                '}' +
                 '}'
             )
 

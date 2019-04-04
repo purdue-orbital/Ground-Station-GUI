@@ -17,26 +17,13 @@ from AltitudeGraph import AltitudeGraph
 from AccelerometerGyroGraphs import AccelerometerGyroGraphs
 
 
-
-"""
-ROCKET GUI Version 0.2ss
-Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch
-Since: 10/31/2018
-Created for Purdue Orbital Ground Stations Sub-Team
-Parses and displays data from the a Raspberry Pi 3 to verbosely
-display all pertinent system data (data that can be changed) and environmental
-data (data that cannot be changed).
-"""
-
-
 class DataWindow:
-
-    def __init__(self, name, queue):
-        self.queue = queue
-        bgColor = "#484949"
-        framesBg = "#969694"
-        self.framesBg = framesBg
-        timeBg = "#1e1e1e"
+    def __init__(self, name, data_queue):
+        self.queue = data_queue
+        bg_color = "#484949"
+        frames_bg = "#969694"
+        self.framesBg = frames_bg
+        time_bg = "#1e1e1e"
         yellow = "#f8fc16"
 
         # Base file writing from program's execution directory
@@ -52,7 +39,7 @@ class DataWindow:
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
         self.name.geometry('1000x600')
-        self.name.configure(bg=bgColor)
+        self.name.configure(bg=bg_color)
 
         # Set up GPIO pins for use, see documentation for pin layout
         # orange wire
@@ -77,12 +64,12 @@ class DataWindow:
         self.make_grid()
 
         # Make timer sections
-        self.start_timer = Timer(name, 0, 2, 0, 5, timeBg)
-        self.timer = Timer(name, 2, 2, 0, 5, timeBg)
+        self.start_timer = Timer(name, 0, 2, 0, 5, time_bg)
+        self.timer = Timer(name, 2, 2, 0, 5, time_bg)
 
         # Make data sections
-        self.dataRocket = Data(name, "Rocket Data", 6, 8, framesBg)
-        self.dataBalloon = Data(name, "Balloon Data", 9, 11, framesBg)
+        self.dataRocket = Data(name, "Rocket Data", 6, 8, frames_bg)
+        self.dataBalloon = Data(name, "Balloon Data", 9, 11, frames_bg)
 
         # Config button styles
         ttk.Style().configure("yellow.TButton", background=yellow)
@@ -96,22 +83,22 @@ class DataWindow:
 
         # Adds our logo
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
-        logoLabel = Label(name, image=logo)
-        logoLabel.image = logo
-        logoLabel.grid(row=12, column=6, rowspan=5, columnspan=6)
+        logo_label = Label(name, image=logo)
+        logo_label.image = logo
+        logo_label.grid(row=12, column=6, rowspan=5, columnspan=6)
 
-        self.control = Control(name, 5, 2, 1, framesBg)
+        self.control = Control(name, 5, 2, 1, frames_bg)
 
         # Place Quality Indicators and Labels
-        self.QDM_check = QualityCheck(name, "QDM", 1, 10, framesBg)
-        self.CDM_check = QualityCheck(name, "CDM", 3, 10, framesBg)
+        self.QDM_check = QualityCheck(name, "QDM", 1, 10, frames_bg)
+        self.CDM_check = QualityCheck(name, "CDM", 3, 10, frames_bg)
 
-        self.drogue_check = QualityCheck(name, "Drogue Chute", 1, 12, framesBg)
-        self.ignition_check = QualityCheck(name, "Ignition", 2, 12, framesBg)
-        self.main_check = QualityCheck(name, "Main Chute", 3, 12, framesBg)
+        self.drogue_check = QualityCheck(name, "Drogue Chute", 1, 12, frames_bg)
+        self.ignition_check = QualityCheck(name, "Ignition", 2, 12, frames_bg)
+        self.main_check = QualityCheck(name, "Main Chute", 3, 12, frames_bg)
 
-        self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14, framesBg)
-        self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14, framesBg)
+        self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14, frames_bg)
+        self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14, frames_bg)
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
@@ -148,7 +135,7 @@ class DataWindow:
             self.rocket_acc_zQ.put(0)
             self.rocket_gyro_xQ.put(0)
             self.rocket_gyro_yQ.put(0)
-            self.rocket_gyro_zQ.put(0)            
+            self.rocket_gyro_zQ.put(0)
             self.alititudeQ.put(0)
 
     def make_tool_bar(self):
@@ -191,8 +178,8 @@ class DataWindow:
 
         for col in range(1, 4):
             for row in range(5, 16):
-                colorFrame = Label(self.name, bg=self.framesBg)
-                colorFrame.grid(row=row, column=col, sticky=N + S + E + W)
+                color_frame = Label(self.name, bg=self.framesBg)
+                color_frame.grid(row=row, column=col, sticky=N + S + E + W)
 
     def start_mission(self):
         if not self.start_timer.clock_run:
@@ -275,7 +262,7 @@ class DataWindow:
     def about_menu(self):
 
         about_text = "Ground Station Graphical User Interface Version 0.2\n\n" \
-                     "Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch\n" \
+                     "Author: Ken Sodetz, Matt Drozt, Jay Rixie, Emanuel Pituch\n" \
                      "Since: 11/27/2018\n\n" \
                      "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
                      "Parses and displays data from the a Raspberry Pi 3 to verbosely display all\n" \
@@ -361,7 +348,7 @@ class DataWindow:
         cmd_button.pack()
         qdm_button.pack()
         exit_button.pack()
-        send_button.pack()
+        # send_button.pack()
 
     def select_cdm(self, close_window):
         c = Comm.get_instance(self)
@@ -408,7 +395,6 @@ class DataWindow:
                 else:
                     print("JSON ORIGIN INCORRECT")
 
-
                 alt = data_json["alt"]
 
                 data.altitude_data = data_json["alt"]
@@ -440,7 +426,7 @@ class DataWindow:
                     self.rocket_acc_zQ.get()
                     self.rocket_gyro_xQ.get()
                     self.rocket_gyro_yQ.get()
-                    self.rocket_gyro_zQ.get()  
+                    self.rocket_gyro_zQ.get()
                     self.rocket_acc_xQ.put(data.accelX_data)
                     self.rocket_acc_yQ.put(data.accelY_data)
                     self.rocket_acc_zQ.put(data.accelZ_data)
@@ -448,7 +434,8 @@ class DataWindow:
                     self.rocket_gyro_yQ.put(data.gyroY_data)
                     self.rocket_gyro_zQ.put(data.gyroZ_data)
                     self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
-                    self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)        
+                    self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ,
+                                                            self.rocket_gyro_zQ)
                 elif origin == "baloon":
                     self.baloon_acc_xQ.get()
                     self.baloon_acc_yQ.get()
@@ -462,10 +449,9 @@ class DataWindow:
                     self.baloon_gyro_xQ.put(data.gyroX_data)
                     self.baloon_gyro_yQ.put(data.gyroY_data)
                     self.baloon_gyro_zQ.put(data.gyroZ_data)
-                    self.acc_gyro_graphs.update_baloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
-                    self.acc_gyro_graphs.update_baloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)        
-
-
+                    self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
+                    self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ,
+                                                             self.baloon_gyro_zQ)
 
                 print("l")
 
@@ -493,6 +479,6 @@ class DataWindow:
     def open_acc_gyro_graphs(self):
         self.acc_gyro_graphs = AccelerometerGyroGraphs()
         self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
-        self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)  
-        self.acc_gyro_graphs.update_baloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
-        self.acc_gyro_graphs.update_baloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
+        self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
+        self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
+        self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
