@@ -14,8 +14,6 @@ LOCAL_PORT = "/dev/ttyS7"
 # Baud rate of the local device
 BAUD_RATE = 9600
 
-DATA_TO_SEND = "Hello XBee!"
-
 # Remote node MAC address in hexadecimal format
 REMOTE_NODE_ADDRESS = "0013A2004148887C"
 
@@ -39,8 +37,12 @@ class Module:
 
 class ModuleSingleton:
     def __init__(self):
-        self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
-        self.device.open()
+
+        try:
+            self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
+            self.device.open()
+        except Exception as e:
+            print(e)
 
         def data_receive_callback(msg):
             data = msg.data.decode("utf8")
@@ -48,8 +50,10 @@ class ModuleSingleton:
             json_data = json.loads(data)
 
             self.queue.put(json_data)
-
-        self.device.add_data_received_callback(data_receive_callback)
+        try:
+            self.device.add_data_received_callback(data_receive_callback)
+        except Exception as e:
+            print(e)
 
         self.remote_device = None
         self.queue = None
@@ -64,8 +68,6 @@ class ModuleSingleton:
     def send(self, data):
         print("Testing data: " + data)
         try:
-            print("Sending data to %s >> %s..." % (self.remote_device.get_64bit_addr(), DATA_TO_SEND))
-
             logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="[root] %(levelname)s - %(message)s")
 
             logger = logging.getLogger(self.device.get_node_id())
