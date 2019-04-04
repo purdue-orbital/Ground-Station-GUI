@@ -10,6 +10,7 @@ from DataWindow import DataWindow
 from GraphNotebook import GraphNotebook
 from Mode import Mode
 from communications.RadioModule import Module
+from Comms import Comm
 
 import threading
 import random
@@ -36,8 +37,8 @@ class ThreadedClient:
 
         # Create thread to spoof data in queue
         self.running = 1
-        self.thread1 = threading.Thread(target=self.test_queue)
-        self.thread1.start()
+        #self.thread1 = threading.Thread(target=self.test_queue)
+        #self.thread1.start()
 
         # Create thread to receive data
         self.threadReceive = threading.Thread(target=self.receive_data)
@@ -68,7 +69,7 @@ class ThreadedClient:
         self.gui.set_testing(isTesting)
 
     def receive_data(self):
-        while(1):
+        while (1):
             self.radio.receive()
 
     def handle_radio(self):
@@ -90,13 +91,37 @@ class ThreadedClient:
                        '"velocity":' + str(rand.random())[0:5] + ',' +
                        '"user_angle":' + str(rand.random())[0:5] + ' }')
 
-            # print(preload)
+            preload = (
+                '{ "origin" : "rocket",' +
+                    '"alt": ' + str(rand.random())[0:5] + ',' +
+                    '"GPS": {' +
+                        '"long": ' + str(rand.random())[0:5] + ',' +
+                        '"lat": ' + str(rand.random())[0:5] +
+                    '},' +
+                    '"gyro": {' +
+                        '"x": ' + str(rand.random())[0:5] + ',' +
+                        '"y": ' + str(rand.random())[0:5] + ',' +
+                        '"z": ' + str(rand.random())[0:5] +
+                    '},' +
+                    '"mag": ' + str(rand.random())[0:5] + ',' +
+                    '"temp": ' + str(rand.random())[0:5] + ',' +
+                    '"acc": {' +
+                        '"x": ' + str(rand.random())[0:5] + ',' +
+                        '"y": ' + str(rand.random())[0:5] + ',' +
+                        '"z": ' + str(rand.random())[0:5] +
+                    '}' +
+                '}'
+            )
 
             data_json = json.loads(preload)
             self.queue.put(data_json)
 
     def launch(self):
-        print("Lauching")
+        print("LAUNCHING")
+        # TODO
+        c = Comm.get_instance(self)
+        c.flight()
+        c.send("launch")
         # TODO send launch
 
     def end_application(self):

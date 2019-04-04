@@ -11,12 +11,12 @@ from Status import Status
 from Timer import Timer
 from Data import Data
 from Control import Control
-from GraphNotebook import GraphNotebook
+from Comms import Comm
 from QualityCheck import QualityCheck
 from AltitudeGraph import AltitudeGraph
 from AccelerometerGyroGraphs import AccelerometerGyroGraphs
 
-from Comms import Comm
+
 
 """
 ROCKET GUI Version 0.2ss
@@ -361,8 +361,13 @@ class DataWindow:
         cmd_button.pack()
         qdm_button.pack()
         exit_button.pack()
+        send_button.pack()
 
     def select_cdm(self, close_window):
+        c = Comm.get_instance(self)
+        c.flight()
+        c.send("cdm")
+
         self.abort_method = "CDM"
         self.control.mission_status = Status.ABORT
         self.log(self.control.mission_status)
@@ -373,6 +378,11 @@ class DataWindow:
         close_window.destroy()
 
     def select_qdm(self, close_window):
+        # TODO Make Comms Global
+        c = Comm.get_instance(self)
+        c.flight()
+        c.send("qdm")
+
         self.abort_method = "QDM"
         self.control.mission_status = Status.ABORT
         self.timer.clock_run = False
@@ -398,7 +408,11 @@ class DataWindow:
                 else:
                     print("JSON ORIGIN INCORRECT")
 
+
                 alt = data_json["alt"]
+
+                data.altitude_data = data_json["alt"]
+
                 gps_json = data_json["GPS"]
                 data.longitude_data = gps_json["long"]
                 data.latitude_data = gps_json["lat"]
@@ -465,6 +479,7 @@ class DataWindow:
                 # self.data.velocity_data = data_json["velocity"]
                 # self.data.user_angle_data = data_json["user_angle"]
                 # Reload variables
+
             except self.queue.Empty:
                 pass
 

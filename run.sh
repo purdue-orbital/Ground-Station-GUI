@@ -65,7 +65,7 @@ printf "Python check passed\n"
 
 printf "Attempting to run ${program_path}\n\n"
 
-python3 ${program_path} 2> ${traceback_path}
+sudo python3 ${program_path} 2> ${traceback_path}
 if [[ $? == '1' ]]; then
 	traceback=$( tail -1 ${traceback_path} )
 	printf "${traceback}\n"
