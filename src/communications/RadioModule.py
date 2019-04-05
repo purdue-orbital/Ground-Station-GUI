@@ -69,16 +69,7 @@ class ModuleSingleton:
             print("Exception has occurred")
 
     def send(self, data):
-        print("Testing data: " + data)
-        try:
-            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="[root] %(levelname)s - %(message)s")
-
-            logger = logging.getLogger(self.device.get_node_id())
-
-        logger = logging.getLogger(self.device.get_node_id())
-
         self.device.send_data(self.remote_device, data)
-
 
     def bind_queue(self, queue):
         self.queue = queue
