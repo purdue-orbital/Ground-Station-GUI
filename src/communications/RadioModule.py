@@ -72,14 +72,10 @@ class ModuleSingleton:
 
             logger = logging.getLogger(self.device.get_node_id())
 
-            self.device.send_data(self.remote_device, data)
+        logger = logging.getLogger(self.device.get_node_id())
 
-            print("Success")
+        self.device.send_data(self.remote_device, data)
 
-        finally:
-            if self.device is not None and self.device.is_open():
-                # self.device.close()
-                print("Commented out close")
 
     def bind_queue(self, queue):
         self.queue = queue
