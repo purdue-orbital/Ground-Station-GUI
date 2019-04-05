@@ -436,7 +436,7 @@ class DataWindow:
                     self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
                     self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ,
                                                             self.rocket_gyro_zQ)
-                elif origin == "baloon":
+                elif origin == "balloon":
                     self.baloon_acc_xQ.get()
                     self.baloon_acc_yQ.get()
                     self.baloon_acc_zQ.get()
@@ -453,7 +453,6 @@ class DataWindow:
                     self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ,
                                                              self.baloon_gyro_zQ)
 
-                print("l")
 
                 # Set the data variables equal to the corresponding json entries
                 # self.data.temperature_data = data_json["temperature"]

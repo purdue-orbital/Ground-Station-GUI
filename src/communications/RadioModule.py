@@ -49,7 +49,10 @@ class ModuleSingleton:
 
             json_data = json.loads(data)
 
+            print(json_data)
+
             self.queue.put(json_data)
+
         try:
             self.device.add_data_received_callback(data_receive_callback)
         except Exception as e:
