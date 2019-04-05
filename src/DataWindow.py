@@ -337,7 +337,7 @@ class DataWindow:
         method_window.geometry("250x200")
         method_window.resizable(width=False, height=False)
 
-        cmd_button = ttk.Button(method_window, text="CMD", width=20, command=lambda: self.select_cdm(method_window))
+        cmd_button = ttk.Button(method_window, text="CDM", width=20, command=lambda: self.select_cdm(method_window))
         qdm_button = ttk.Button(method_window, text="QDM", width=20, command=lambda: self.select_qdm(method_window))
         exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: self.name.destroy())
 
