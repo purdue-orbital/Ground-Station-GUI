@@ -37,8 +37,12 @@ class Module:
 
 class ModuleSingleton:
     def __init__(self):
-        self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
-        self.device.open()
+
+        try:
+            self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
+            self.device.open()
+        except Exception as e:
+            print(e)
 
         def data_receive_callback(msg):
             data = msg.data.decode("utf8")
@@ -46,8 +50,10 @@ class ModuleSingleton:
             json_data = json.loads(data)
 
             self.queue.put(json_data)
-
-        self.device.add_data_received_callback(data_receive_callback)
+        try:
+            self.device.add_data_received_callback(data_receive_callback)
+        except Exception as e:
+            print(e)
 
         self.remote_device = None
         self.queue = None
@@ -60,7 +66,11 @@ class ModuleSingleton:
             print("Exception has occurred")
 
     def send(self, data):
-        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="[root] %(levelname)s - %(message)s")
+        print("Testing data: " + data)
+        try:
+            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="[root] %(levelname)s - %(message)s")
+
+            logger = logging.getLogger(self.device.get_node_id())
 
         logger = logging.getLogger(self.device.get_node_id())
 

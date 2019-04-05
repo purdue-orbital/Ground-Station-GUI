@@ -36,6 +36,16 @@ class GraphNotebook(ttk.Notebook):
 #     notebook.add_tab("Test Tab", Label(text="Test"))
 #
 #     example.mainloop()
+#     custom_style = ttk.Style()
+#     custom_style.configure('Custom.TNotebook.Tab', width=20, padding=[0, 40], font=('System', 8))
+#     custom_style.configure('Custom.TNotebook', tabposition='wn')
+#
+#         # Initialize Notebook with Custom Style
+#     self.graphs = ttk.Notebook(master, style='Custom.TNotebook')
+#         # self.bind("<<NotebookTabChanged>>", self._on_tab_changed)
+#
+#         # Based on input, configuring and place
+#     self.graphs.config(height=height)
 #         custom_style = ttk.Style()
 #         custom_style.configure('Custom.TNotebook.Tab', width=20, padding=[0, 40], font=('System', 8))
 #         custom_style.configure('Custom.TNotebook', tabposition='wn')

@@ -3,7 +3,7 @@ from tkinter import *
 
 
 class Timer:
-    def __init__(self, place_window, row_start, row_span, column_start, column_span):
+    def __init__(self, place_window, row_start, row_span, column_start, column_span, bg):
         self.milliseconds = 0
         self.seconds = 0
         self.minutes = 0
@@ -13,7 +13,7 @@ class Timer:
 
         self.current_time = "00:00:00:00"
 
-        self.clock_frame = Label(place_window, font=('times', 50, 'bold'), bg='black', fg='white', text="00:00:00:00")
+        self.clock_frame = Label(place_window, font=('times', 50, 'bold'), bg=bg, fg='white', text="00:00:00:00")
         self.clock_frame.grid(row=row_start, rowspan=row_span, column=column_start, columnspan=column_span,
                               sticky=N + S + E + W)
 
