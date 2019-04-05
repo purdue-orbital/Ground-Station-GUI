@@ -40,10 +40,6 @@ class ThreadedClient:
         #self.thread1 = threading.Thread(target=self.test_queue)
         #self.thread1.start()
 
-        # Create thread to receive data
-        self.threadReceive = threading.Thread(target=self.receive_data)
-        self.threadReceive.start()
-
         # Create testing variables
         self.testing = 0
 
@@ -67,13 +63,6 @@ class ThreadedClient:
         # Getter for testing bool
         self.testing = isTesting
         self.gui.set_testing(isTesting)
-
-    def receive_data(self):
-        while (1):
-            self.radio.receive()
-
-    def handle_radio(self):
-        print("test")
 
     def error(self, message):
         messagebox.showinfo("Error", message)

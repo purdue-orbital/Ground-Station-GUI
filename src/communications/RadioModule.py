@@ -14,8 +14,6 @@ LOCAL_PORT = "/dev/ttyS7"
 # Baud rate of the local device
 BAUD_RATE = 9600
 
-DATA_TO_SEND = "Hello XBee!"
-
 # Remote node MAC address in hexadecimal format
 REMOTE_NODE_ADDRESS = "0013A2004148887C"
 
@@ -62,22 +60,12 @@ class ModuleSingleton:
             print("Exception has occurred")
 
     def send(self, data):
-        print("Testing data: " + data)
-        try:
-            print("Sending data to %s >> %s..." % (self.remote_device.get_64bit_addr(), DATA_TO_SEND))
+        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="[root] %(levelname)s - %(message)s")
 
-            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="[root] %(levelname)s - %(message)s")
+        logger = logging.getLogger(self.device.get_node_id())
 
-            logger = logging.getLogger(self.device.get_node_id())
+        self.device.send_data(self.remote_device, data)
 
-            self.device.send_data(self.remote_device, data)
-
-            print("Success")
-
-        finally:
-            if self.device is not None and self.device.is_open():
-                # self.device.close()
-                print("Commented out close")
 
     def bind_queue(self, queue):
         self.queue = queue
