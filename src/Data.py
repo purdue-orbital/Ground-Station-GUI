@@ -9,7 +9,7 @@ class Data:
         self.gyroX_data = 0
         self.gyroY_data = 0
         self.gyroZ_data = 0
-        self.cardinalDirection_data = 0 # NOT IN JSON
+        self.cardinalDirection_data = 0  # NOT IN JSON
         self.temperature_data = 0
         self.accelX_data = 0
         self.accelY_data = 0
@@ -35,8 +35,7 @@ class Data:
         data_label = Label(place_window, text=data_name, font=('times', 15, 'underline'), bg=bg)
         data_label.grid(row=0, column=labels_column, columnspan=3, sticky=N + S + E + W)
 
-
-        labelFrames = [
+        label_frames = [
             Label(place_window, text="Longitude:", bg=bg),
             Label(place_window, text="Latitude:", bg=bg),
             Label(place_window, text="Gyro X:", bg=bg),
@@ -49,7 +48,7 @@ class Data:
             Label(place_window, text="Acceleration Z:", bg=bg)
         ]
 
-        dataFrames = [
+        data_frames = [
             Label(place_window, textvariable=self.longitude, bg=bg),
             Label(place_window, textvariable=self.latitude, bg=bg),
             Label(place_window, textvariable=self.gyroX, bg=bg),
@@ -63,69 +62,19 @@ class Data:
         ]
 
         row = 1
-        for frame in labelFrames:
+        for frame in label_frames:
             frame.grid(row=row, column=labels_column, sticky=N + S + E + W)
             row += 1
 
         row = 1
-        for frame in dataFrames:
+        for frame in data_frames:
             frame.grid(row=row, column=data_column, sticky=N + S + E + W)
             row += 1
 
         for i in range(1, data_column - labels_column):
             for j in range(1, 11):
-                colorFrame = Label(place_window, bg=bg)
-                colorFrame.grid(row=j, column=labels_column + i, sticky=N + S + E + W)
-
-        # Create and Place Labels for Data
-        longitude_label = Label(place_window, text="Longitude:")
-        latitude_label = Label(place_window, text="Latitude:")
-        gyroX_label = Label(place_window, text="Gyro X:")
-        gyroY_label = Label(place_window, text="Gyro Y:")
-        gyroZ_label = Label(place_window, text="Gyro Z:")
-        cardinalDirection_label = Label(place_window, text="Direction:")
-        temperature_label = Label(place_window, text="Temperature (Celsius):")
-        accelX_label = Label(place_window, text="Acceleration X:")
-        accelY_label = Label(place_window, text="Acceleration Y:")
-        accelZ_label = Label(place_window, text="Acceleration Z:")
-        altitude_label = Label(place_window, text="Altitude: ")
-
-        longitude_data_label = Label(place_window, textvariable=self.longitude)
-        latitude_data_label = Label(place_window, textvariable=self.latitude)
-        gyroX_data_label = Label(place_window, textvariable=self.gyroX)
-        gyroY_data_label = Label(place_window, textvariable=self.gyroY)
-        gyroZ_data_label = Label(place_window, textvariable=self.gyroZ)
-        cardinalDirection_data_label = Label(place_window, textvariable=self.cardinalDirection)
-        temperature_data_label = Label(place_window, textvariable=self.temperature)
-        accelX_data_label = Label(place_window, textvariable=self.accelX)
-        accelY_data_label = Label(place_window, textvariable=self.accelY)
-        accelZ_data_label = Label(place_window, textvariable=self.accelZ)
-        altitude_data_label = Label(place_window, textvariable=self.altitude)
-
-        longitude_label.grid(row=1, column=labels_column)
-        latitude_label.grid(row=2, column=labels_column)
-        gyroX_label.grid(row=3, column=labels_column)
-        gyroY_label.grid(row=4, column=labels_column)
-        gyroZ_label.grid(row=5, column=labels_column)
-        cardinalDirection_label.grid(row=6, column=labels_column)
-        temperature_label.grid(row=7, column=labels_column)
-        accelX_label.grid(row=8, column=labels_column)
-        accelY_label.grid(row=9, column=labels_column)
-        accelZ_label.grid(row=10, column=labels_column)
-        altitude_label.grid(row=11, column=labels_column)
-
-        longitude_data_label.grid(row=1, column=data_column)
-        latitude_data_label.grid(row=2, column=data_column)
-        gyroX_data_label.grid(row=3, column=data_column)
-        gyroY_data_label.grid(row=4, column=data_column)
-        gyroZ_data_label.grid(row=5, column=data_column)
-        cardinalDirection_data_label.grid(row=6, column=data_column)
-        temperature_data_label.grid(row=7, column=data_column)
-        accelX_data_label.grid(row=8, column=data_column)
-        accelY_data_label.grid(row=9, column=data_column)
-        accelZ_data_label.grid(row=10, column=data_column)
-        altitude_data_label.grid(row=11, column=data_column)
-
+                color_frame = Label(place_window, bg=bg)
+                color_frame.grid(row=j, column=labels_column + i, sticky=N + S + E + W)
 
     def display_variables(self):
         self.longitude.set(self.longitude_data)
