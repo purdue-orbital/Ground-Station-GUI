@@ -480,3 +480,10 @@ class DataWindow:
         self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
         self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
         self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
+
+
+if __name__ == "__main__":
+    print("Starting Window")
+    root = Tk()
+    my_gui = DataWindow(root, None)
+    root.mainloop()
