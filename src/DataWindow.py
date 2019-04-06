@@ -89,6 +89,9 @@ class DataWindow:
 
         self.control = Control(name, 5, 2, 1, frames_bg)
 
+        # Graph Initialization
+        self.altitude_graph = AltitudeGraph()
+
         # Place Quality Indicators and Labels
         self.QDM_check = QualityCheck(name, "QDM", 1, 10, frames_bg)
         self.CDM_check = QualityCheck(name, "CDM", 3, 10, frames_bg)
@@ -414,17 +417,17 @@ class DataWindow:
                 data.accelZ_data = acc_json["z"]
 
                 data.display_variables()
-                # self.altitude_graph.update_altitude(alt)
+                self.altitude_graph.update_altitude(alt)
 
-                # # insert it into the queues
-                # self.alititudeQ.get()
-                # self.alititudeQ.put(alt)
-                # # altitude_graph.update_altitude(self.alititudeQ)
+                # insert it into the queues
+                self.alititudeQ.get()
+                self.alititudeQ.put(alt)
+                # altitude_graph.update_altitude(self.alititudeQ)
                 # if origin == "rocket":
                 #     self.rocket_acc_xQ.get()
                 #     self.rocket_acc_yQ.get()
                 #     self.rocket_acc_zQ.get()
-                #     self.rocket_gyro_xQ.get() 
+                #     self.rocket_gyro_xQ.get()
                 #     self.rocket_gyro_yQ.get()
                 #     self.rocket_gyro_zQ.get()
                 #     self.rocket_acc_xQ.put(data.accelX_data)
@@ -437,21 +440,22 @@ class DataWindow:
                 #     self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ,
                 #                                             self.rocket_gyro_zQ)
                 # elif origin == "balloon":
-                #     self.baloon_acc_xQ.get()
-                #     self.baloon_acc_yQ.get()
-                #     self.baloon_acc_zQ.get()
-                #     self.baloon_gyro_xQ.get()
-                #     self.baloon_gyro_yQ.get()
-                #     self.baloon_gyro_zQ.get()
-                #     self.baloon_acc_xQ.put(data.accelX_data)
-                #     self.baloon_acc_yQ.put(data.accelY_data)
-                #     self.baloon_acc_zQ.put(data.accelZ_data)
-                #     self.baloon_gyro_xQ.put(data.gyroX_data)
-                #     self.baloon_gyro_yQ.put(data.gyroY_data)
-                #     self.baloon_gyro_zQ.put(data.gyroZ_data)
+                #     # TODO None of these are initialized
+                #     self.balloon_acc_xQ.get()
+                #     self.balloon_acc_yQ.get()
+                #     self.balloon_acc_zQ.get()
+                #     self.balloon_gyro_xQ.get()
+                #     self.balloon_gyro_yQ.get()
+                #     self.balloon_gyro_zQ.get()
+                #     self.balloon_acc_xQ.put(data.accelX_data)
+                #     self.balloon_acc_yQ.put(data.accelY_data)
+                #     self.balloon_acc_zQ.put(data.accelZ_data)
+                #     self.balloon_gyro_xQ.put(data.gyroX_data)
+                #     self.balloon_gyro_yQ.put(data.gyroY_data)
+                #     self.balloon_gyro_zQ.put(data.gyroZ_data)
                 #     self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
                 #     self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ,
-                #                                              self.baloon_gyro_zQ)
+                #                                             self.baloon_gyro_zQ)
 
 
                 # Set the data variables equal to the corresponding json entries
@@ -472,7 +476,6 @@ class DataWindow:
         self.running = 0
 
     def open_altitude_graph(self):
-        self.altitude_graph = AltitudeGraph()
         self.altitude_graph.update_altitude(self.alititudeQ)
 
     def open_acc_gyro_graphs(self):
