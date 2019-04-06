@@ -74,7 +74,7 @@ class DataWindow:
         # Config button styles
         ttk.Style().configure("yellow.TButton", background=yellow)
 
-        # Place Graph buttons TODO: Move these to data class
+        # Place Graph buttons
         self.init_graph_queues()
         self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
         self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
@@ -339,7 +339,7 @@ class DataWindow:
 
         cmd_button = ttk.Button(method_window, text="CDM", width=20, command=lambda: self.select_cdm(method_window))
         qdm_button = ttk.Button(method_window, text="QDM", width=20, command=lambda: self.select_qdm(method_window))
-        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: self.name.destroy())
+        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: method_window.destroy())
 
         msg = Message(method_window, text="Please select a mission abort method", font=('times', 12, 'bold'), width=200,
                       justify=CENTER, pady=15)
@@ -348,7 +348,6 @@ class DataWindow:
         cmd_button.pack()
         qdm_button.pack()
         exit_button.pack()
-        # send_button.pack()
 
     def select_cdm(self, close_window):
         c = Comm.get_instance(self)
