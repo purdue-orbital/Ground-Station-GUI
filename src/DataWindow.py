@@ -190,8 +190,8 @@ class DataWindow:
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])
 
-        Comm.get_instance().testing()
-        Comm.get_instance().send("Starting")
+        Comm.get_instance(self).testing()
+        Comm.get_instance(self).send("Starting")
 
     def reset_variables_window(self):
         # Creates a pop up window that asks if you are sure that you want to rest the variables.

@@ -30,9 +30,9 @@ if __name__ == "__main__":
     for row in range(10):
         example.rowconfigure(row, weight=1)
 
-    example_QDM_check = QualityCheck(example, "QDM", 0, 0)
-    example_CDM_check = QualityCheck(example, "CDM", 1, 0)
-    example_other_check = QualityCheck(example, "Other", 2, 0)
+    example_QDM_check = QualityCheck(example, "QDM", 0, 0, "")
+    example_CDM_check = QualityCheck(example, "CDM", 1, 0, "")
+    example_other_check = QualityCheck(example, "Other", 2, 0, "")
     example_other_check.quality_indicator.config(bg="green")
 
     example.mainloop()
