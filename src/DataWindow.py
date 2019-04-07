@@ -74,7 +74,7 @@ class DataWindow:
         # Config button styles
         ttk.Style().configure("yellow.TButton", background=yellow)
 
-        # Place Graph buttons TODO: Move these to data class
+        # Place Graph buttons
         self.init_graph_queues()
         self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
         self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
@@ -90,15 +90,15 @@ class DataWindow:
         self.control = Control(name, 5, 2, 1, frames_bg)
 
         # Place Quality Indicators and Labels
-        self.QDM_check = QualityCheck(name, "QDM", 1, 10, frames_bg)
-        self.CDM_check = QualityCheck(name, "CDM", 3, 10, frames_bg)
-
-        self.drogue_check = QualityCheck(name, "Drogue Chute", 1, 12, frames_bg)
-        self.ignition_check = QualityCheck(name, "Ignition", 2, 12, frames_bg)
-        self.main_check = QualityCheck(name, "Main Chute", 3, 12, frames_bg)
-
-        self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14, frames_bg)
-        self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14, frames_bg)
+        self.quality_checks = [QualityCheck(name, "QDM", 1, 10, frames_bg),
+                               QualityCheck(name, "CDM", 3, 10, frames_bg),
+                               QualityCheck(name, "Radio Connection", 2, 10, frames_bg),
+                               QualityCheck(name, "Drogue Chute", 1, 12, frames_bg),
+                               QualityCheck(name, "Ignition", 2, 12, frames_bg),
+                               QualityCheck(name, "Main Chute", 3, 12, frames_bg),
+                               QualityCheck(name, "Platform Stability", 1, 14, frames_bg),
+                               QualityCheck(name, "CRASH System", 3, 14, frames_bg),
+                               ]
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
@@ -339,7 +339,7 @@ class DataWindow:
 
         cmd_button = ttk.Button(method_window, text="CDM", width=20, command=lambda: self.select_cdm(method_window))
         qdm_button = ttk.Button(method_window, text="QDM", width=20, command=lambda: self.select_qdm(method_window))
-        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: self.name.destroy())
+        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: method_window.destroy())
 
         msg = Message(method_window, text="Please select a mission abort method", font=('times', 12, 'bold'), width=200,
                       justify=CENTER, pady=15)
@@ -348,7 +348,6 @@ class DataWindow:
         cmd_button.pack()
         qdm_button.pack()
         exit_button.pack()
-        # send_button.pack()
 
     def select_cdm(self, close_window):
         c = Comm.get_instance(self)
@@ -392,28 +391,39 @@ class DataWindow:
                     data = self.dataRocket
                 elif origin == "balloon":
                     data = self.dataBalloon
+                elif origin == "status":
+                    self.quality_checks[0].ready = data_json["QDM"]
+                    self.quality_checks[1].ready = data_json["CDM"]
+                    self.quality_checks[3].ready = data_json["Drogue"]
+                    self.quality_checks[4].ready = data_json["Ignition"]
+                    self.quality_checks[5].ready = data_json["Main_Chute"]
+                    self.quality_checks[6].ready = data_json["Stabilization"]
+                    self.quality_checks[7].ready = data_json["Crash"]
+
+                    for check in self.quality_checks:
+                        check.display_quality()
                 else:
                     print("JSON ORIGIN INCORRECT")
 
-                alt = data_json["alt"]
+                if origin == "rocket" or origin == "balloon":
+                    data.altitude_data = data_json["alt"]
 
-                data.altitude_data = data_json["alt"]
+                    gps_json = data_json["GPS"]
+                    data.longitude_data = gps_json["long"]
+                    data.latitude_data = gps_json["lat"]
+                    gyro_json = data_json["gyro"]
+                    data.gyroX_data = gyro_json["x"]
+                    data.gyroY_data = gyro_json["y"]
+                    data.gyroZ_data = gyro_json["z"]
+                    data.cardinalDirection_data = data_json["mag"]
+                    data.temperature_data = data_json["temp"]
+                    acc_json = data_json["acc"]
+                    data.accelX_data = acc_json["x"]
+                    data.accelY_data = acc_json["y"]
+                    data.accelZ_data = acc_json["z"]
 
-                gps_json = data_json["GPS"]
-                data.longitude_data = gps_json["long"]
-                data.latitude_data = gps_json["lat"]
-                gyro_json = data_json["gyro"]
-                data.gyroX_data = gyro_json["x"]
-                data.gyroY_data = gyro_json["y"]
-                data.gyroZ_data = gyro_json["z"]
-                data.cardinalDirection_data = data_json["mag"]
-                data.temperature_data = data_json["temp"]
-                acc_json = data_json["acc"]
-                data.accelX_data = acc_json["x"]
-                data.accelY_data = acc_json["y"]
-                data.accelZ_data = acc_json["z"]
+                    data.display_variables()
 
-                data.display_variables()
                 # self.altitude_graph.update_altitude(alt)
 
                 # # insert it into the queues
@@ -453,7 +463,6 @@ class DataWindow:
                 #     self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ,
                 #                                              self.baloon_gyro_zQ)
 
-
                 # Set the data variables equal to the corresponding json entries
                 # self.data.temperature_data = data_json["temperature"]
                 # self.data.pressure_data = data_json["pressure"]
@@ -481,3 +490,10 @@ class DataWindow:
         self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
         self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
         self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
+
+
+if __name__ == "__main__":
+    print("Starting Window")
+    root = Tk()
+    my_gui = DataWindow(root, None)
+    root.mainloop()
