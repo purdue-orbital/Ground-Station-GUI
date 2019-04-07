@@ -61,7 +61,7 @@ class ModuleSingleton:
         except Exception as e:
             print("Callback Failure")
             print(e)
-            self.err()
+            # self.err()
 
         self.remote_device = None
         self.queue = None
