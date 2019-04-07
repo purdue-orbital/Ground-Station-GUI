@@ -108,12 +108,12 @@ class DataWindow:
 
     def init_graph_queues(self):
         # Create several queue that holds the number for each line in every graph
-        self.baloon_acc_xQ = queue.Queue()
-        self.baloon_acc_yQ = queue.Queue()
-        self.baloon_acc_zQ = queue.Queue()
-        self.baloon_gyro_xQ = queue.Queue()
-        self.baloon_gyro_yQ = queue.Queue()
-        self.baloon_gyro_zQ = queue.Queue()
+        self.balloon_acc_xQ = queue.Queue()
+        self.balloon_acc_yQ = queue.Queue()
+        self.balloon_acc_zQ = queue.Queue()
+        self.balloon_gyro_xQ = queue.Queue()
+        self.balloon_gyro_yQ = queue.Queue()
+        self.balloon_gyro_zQ = queue.Queue()
         self.rocket_acc_xQ = queue.Queue()
         self.rocket_acc_yQ = queue.Queue()
         self.rocket_acc_zQ = queue.Queue()
@@ -124,12 +124,12 @@ class DataWindow:
 
         amount_of_point_to_graph = 20
         for i in range(0, amount_of_point_to_graph):
-            self.baloon_acc_xQ.put(0)
-            self.baloon_acc_yQ.put(0)
-            self.baloon_acc_zQ.put(0)
-            self.baloon_gyro_xQ.put(0)
-            self.baloon_gyro_yQ.put(0)
-            self.baloon_gyro_zQ.put(0)
+            self.balloon_acc_xQ.put(0)
+            self.balloon_acc_yQ.put(0)
+            self.balloon_acc_zQ.put(0)
+            self.balloon_gyro_xQ.put(0)
+            self.balloon_gyro_yQ.put(0)
+            self.balloon_gyro_zQ.put(0)
             self.rocket_acc_xQ.put(0)
             self.rocket_acc_yQ.put(0)
             self.rocket_acc_zQ.put(0)
@@ -437,21 +437,21 @@ class DataWindow:
                 #     self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ,
                 #                                             self.rocket_gyro_zQ)
                 # elif origin == "balloon":
-                #     self.baloon_acc_xQ.get()
-                #     self.baloon_acc_yQ.get()
-                #     self.baloon_acc_zQ.get()
-                #     self.baloon_gyro_xQ.get()
-                #     self.baloon_gyro_yQ.get()
-                #     self.baloon_gyro_zQ.get()
-                #     self.baloon_acc_xQ.put(data.accelX_data)
-                #     self.baloon_acc_yQ.put(data.accelY_data)
-                #     self.baloon_acc_zQ.put(data.accelZ_data)
-                #     self.baloon_gyro_xQ.put(data.gyroX_data)
-                #     self.baloon_gyro_yQ.put(data.gyroY_data)
-                #     self.baloon_gyro_zQ.put(data.gyroZ_data)
-                #     self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
-                #     self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ,
-                #                                              self.baloon_gyro_zQ)
+                #     self.balloon_acc_xQ.get()
+                #     self.balloon_acc_yQ.get()
+                #     self.balloon_acc_zQ.get()
+                #     self.balloon_gyro_xQ.get()
+                #     self.balloon_gyro_yQ.get()
+                #     self.balloon_gyro_zQ.get()
+                #     self.balloon_acc_xQ.put(data.accelX_data)
+                #     self.balloon_acc_yQ.put(data.accelY_data)
+                #     self.balloon_acc_zQ.put(data.accelZ_data)
+                #     self.balloon_gyro_xQ.put(data.gyroX_data)
+                #     self.balloon_gyro_yQ.put(data.gyroY_data)
+                #     self.balloon_gyro_zQ.put(data.gyroZ_data)
+                #     self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ, self.balloon_acc_zQ)
+                #     self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ,
+                #                                              self.balloon_gyro_zQ)
 
 
                 # Set the data variables equal to the corresponding json entries
@@ -479,5 +479,5 @@ class DataWindow:
         self.acc_gyro_graphs = AccelerometerGyroGraphs()
         self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
         self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
-        self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
-        self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
+        self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ, self.balloon_acc_zQ)
+        self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ, self.balloon_gyro_zQ)
