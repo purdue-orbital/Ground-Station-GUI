@@ -125,11 +125,12 @@ class ThreadedClient:
 
     def end_application(self):
         if messagebox.askyesno("Quit", "Do you want to quit?"):
+            self.radio.close()
             self.running = 0
             self.gui.close()
             GPIO.cleanup()
             root.destroy()
-            return 1
+            return 0
 
         else:
             self.gui.running = 1

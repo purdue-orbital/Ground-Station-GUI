@@ -15,6 +15,7 @@ from CommunicationDriver import Comm
 from QualityCheck import QualityCheck
 from AltitudeGraph import AltitudeGraph
 from AccelerometerGyroGraphs import AccelerometerGyroGraphs
+from communications.RadioModule import Module
 
 
 class DataWindow:
@@ -34,6 +35,8 @@ class DataWindow:
         self.name = name
 
         self.abort_method = None
+
+        self.radio = Module.get_instance(self)
 
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
@@ -76,6 +79,10 @@ class DataWindow:
 
         # Place Graph buttons TODO: Move these to data class
         self.init_graph_stuff()
+
+        # Place Graph buttons
+        self.init_graph_queues()
+
         self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
         self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
         self.altGraph.grid(column=6, columnspan=3, row=11, rowspan=1, sticky=N + S + E + W)
@@ -90,15 +97,15 @@ class DataWindow:
         self.control = Control(name, 5, 2, 1, frames_bg)
 
         # Place Quality Indicators and Labels
-        self.QDM_check = QualityCheck(name, "QDM", 1, 10, frames_bg)
-        self.CDM_check = QualityCheck(name, "CDM", 3, 10, frames_bg)
-
-        self.drogue_check = QualityCheck(name, "Drogue Chute", 1, 12, frames_bg)
-        self.ignition_check = QualityCheck(name, "Ignition", 2, 12, frames_bg)
-        self.main_check = QualityCheck(name, "Main Chute", 3, 12, frames_bg)
-
-        self.platform_stability_check = QualityCheck(name, "Platform Stability", 1, 14, frames_bg)
-        self.CRASH_check = QualityCheck(name, "CRASH System", 3, 14, frames_bg)
+        self.quality_checks = [QualityCheck(name, "QDM", 1, 10, frames_bg),
+                               QualityCheck(name, "CDM", 3, 10, frames_bg),
+                               QualityCheck(name, "Radio Connection", 2, 10, frames_bg),
+                               QualityCheck(name, "Drogue Chute", 1, 12, frames_bg),
+                               QualityCheck(name, "Ignition", 2, 12, frames_bg),
+                               QualityCheck(name, "Main Chute", 3, 12, frames_bg),
+                               QualityCheck(name, "Platform Stability", 1, 14, frames_bg),
+                               QualityCheck(name, "CRASH System", 3, 14, frames_bg),
+                               ]
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
@@ -157,8 +164,10 @@ class DataWindow:
         file_menu.add_command(label="Exit", command=self.close)
 
         program_menu.add_command(label="Start Mission", command=self.start_mission)
-        program_menu.add_command(label="Reset", command=self.reset_variables_window)
+        program_menu.add_separator()
         program_menu.add_command(label="Log", command=self.log_menu)
+        program_menu.add_command(label="Reset Data", command=self.reset_variables_window)
+        program_menu.add_command(label="Reset Radio", command=self.reset_radio)
 
         help_menu.add_command(label="Help Index", command=self.do_nothing)
         help_menu.add_separator()
@@ -342,7 +351,7 @@ class DataWindow:
 
         cmd_button = ttk.Button(method_window, text="CDM", width=20, command=lambda: self.select_cdm(method_window))
         qdm_button = ttk.Button(method_window, text="QDM", width=20, command=lambda: self.select_qdm(method_window))
-        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: self.name.destroy())
+        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: method_window.destroy())
 
         msg = Message(method_window, text="Please select a mission abort method", font=('times', 12, 'bold'), width=200,
                       justify=CENTER, pady=15)
@@ -351,7 +360,6 @@ class DataWindow:
         cmd_button.pack()
         qdm_button.pack()
         exit_button.pack()
-        # send_button.pack()
 
     def select_cdm(self, close_window):
         c = Comm.get_instance(self)
@@ -395,6 +403,17 @@ class DataWindow:
                     data = self.dataRocket
                 elif origin == "balloon":
                     data = self.dataBalloon
+                elif origin == "status":
+                    self.quality_checks[0].ready = data_json["QDM"]
+                    self.quality_checks[1].ready = data_json["CDM"]
+                    self.quality_checks[3].ready = data_json["Drogue"]
+                    self.quality_checks[4].ready = data_json["Ignition"]
+                    self.quality_checks[5].ready = data_json["Main_Chute"]
+                    self.quality_checks[6].ready = data_json["Stabilization"]
+                    self.quality_checks[7].ready = data_json["Crash"]
+
+                    for check in self.quality_checks:
+                        check.display_quality()
                 else:
                     print("JSON ORIGIN INCORRECT")
 
@@ -470,6 +489,7 @@ class DataWindow:
                 # self.data.user_angle_data = data_json["user_angle"]
                 # Reload variables
 
+
             except queue.Empty:
                 pass
 
@@ -486,3 +506,10 @@ class DataWindow:
         self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
         self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ, self.balloon_acc_zQ)
         self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ, self.balloon_gyro_zQ)
+
+        self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
+        self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
+
+    def reset_radio(self):
+        self.radio.reset_radio()
+

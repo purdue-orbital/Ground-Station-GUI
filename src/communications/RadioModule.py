@@ -81,14 +81,15 @@ class ModuleSingleton:
             print(repr(e))
             traceback.print_exc()
             print("Sending Error")
-            self.err()
+            self.reset_radio()
 
         print("Sent")
 
     def bind_queue(self, queue):
         self.queue = queue
 
-    def err(self):
+    def reset_radio(self):
+        print("Resetting Radio Connection")
         self.device.reset()
         self.device.close()
         self.device.open()
