@@ -36,6 +36,7 @@ class Data:
         data_label.grid(row=0, column=labels_column, columnspan=3, sticky=N + S + E + W)
 
         label_frames = [
+            Label(place_window, text="Altitude:", bg=bg),
             Label(place_window, text="Longitude:", bg=bg),
             Label(place_window, text="Latitude:", bg=bg),
             Label(place_window, text="Gyro X:", bg=bg),
@@ -49,6 +50,7 @@ class Data:
         ]
 
         data_frames = [
+            Label(place_window, textvariable=self.altitude, bg=bg),
             Label(place_window, textvariable=self.longitude, bg=bg),
             Label(place_window, textvariable=self.latitude, bg=bg),
             Label(place_window, textvariable=self.gyroX, bg=bg),
