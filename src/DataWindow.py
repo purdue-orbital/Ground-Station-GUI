@@ -15,6 +15,7 @@ from CommunicationDriver import Comm
 from QualityCheck import QualityCheck
 from AltitudeGraph import AltitudeGraph
 from AccelerometerGyroGraphs import AccelerometerGyroGraphs
+from communications.RadioModule import Module
 
 
 class DataWindow:
@@ -34,6 +35,8 @@ class DataWindow:
         self.name = name
 
         self.abort_method = None
+
+        self.radio = Module.get_instance(self)
 
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
@@ -154,8 +157,10 @@ class DataWindow:
         file_menu.add_command(label="Exit", command=self.close)
 
         program_menu.add_command(label="Start Mission", command=self.start_mission)
-        program_menu.add_command(label="Reset", command=self.reset_variables_window)
+        program_menu.add_separator()
         program_menu.add_command(label="Log", command=self.log_menu)
+        program_menu.add_command(label="Reset Data", command=self.reset_variables_window)
+        program_menu.add_command(label="Reset Radio", command=self.reset_radio)
 
         help_menu.add_command(label="Help Index", command=self.do_nothing)
         help_menu.add_separator()
@@ -424,55 +429,55 @@ class DataWindow:
 
                     data.display_variables()
 
-                # self.altitude_graph.update_altitude(alt)
+                    # self.altitude_graph.update_altitude(alt)
 
-                # # insert it into the queues
-                # self.alititudeQ.get()
-                # self.alititudeQ.put(alt)
-                # # altitude_graph.update_altitude(self.alititudeQ)
-                # if origin == "rocket":
-                #     self.rocket_acc_xQ.get()
-                #     self.rocket_acc_yQ.get()
-                #     self.rocket_acc_zQ.get()
-                #     self.rocket_gyro_xQ.get() 
-                #     self.rocket_gyro_yQ.get()
-                #     self.rocket_gyro_zQ.get()
-                #     self.rocket_acc_xQ.put(data.accelX_data)
-                #     self.rocket_acc_yQ.put(data.accelY_data)
-                #     self.rocket_acc_zQ.put(data.accelZ_data)
-                #     self.rocket_gyro_xQ.put(data.gyroX_data)
-                #     self.rocket_gyro_yQ.put(data.gyroY_data)
-                #     self.rocket_gyro_zQ.put(data.gyroZ_data)
-                #     self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
-                #     self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ,
-                #                                             self.rocket_gyro_zQ)
-                # elif origin == "balloon":
-                #     self.baloon_acc_xQ.get()
-                #     self.baloon_acc_yQ.get()
-                #     self.baloon_acc_zQ.get()
-                #     self.baloon_gyro_xQ.get()
-                #     self.baloon_gyro_yQ.get()
-                #     self.baloon_gyro_zQ.get()
-                #     self.baloon_acc_xQ.put(data.accelX_data)
-                #     self.baloon_acc_yQ.put(data.accelY_data)
-                #     self.baloon_acc_zQ.put(data.accelZ_data)
-                #     self.baloon_gyro_xQ.put(data.gyroX_data)
-                #     self.baloon_gyro_yQ.put(data.gyroY_data)
-                #     self.baloon_gyro_zQ.put(data.gyroZ_data)
-                #     self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
-                #     self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ,
-                #                                              self.baloon_gyro_zQ)
+                    # # insert it into the queues
+                    # self.alititudeQ.get()
+                    # self.alititudeQ.put(alt)
+                    # # altitude_graph.update_altitude(self.alititudeQ)
+                    # if origin == "rocket":
+                    #     self.rocket_acc_xQ.get()
+                    #     self.rocket_acc_yQ.get()
+                    #     self.rocket_acc_zQ.get()
+                    #     self.rocket_gyro_xQ.get()
+                    #     self.rocket_gyro_yQ.get()
+                    #     self.rocket_gyro_zQ.get()
+                    #     self.rocket_acc_xQ.put(data.accelX_data)
+                    #     self.rocket_acc_yQ.put(data.accelY_data)
+                    #     self.rocket_acc_zQ.put(data.accelZ_data)
+                    #     self.rocket_gyro_xQ.put(data.gyroX_data)
+                    #     self.rocket_gyro_yQ.put(data.gyroY_data)
+                    #     self.rocket_gyro_zQ.put(data.gyroZ_data)
+                    #     self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
+                    #     self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ,
+                    #                                             self.rocket_gyro_zQ)
+                    # elif origin == "balloon":
+                    #     self.baloon_acc_xQ.get()
+                    #     self.baloon_acc_yQ.get()
+                    #     self.baloon_acc_zQ.get()
+                    #     self.baloon_gyro_xQ.get()
+                    #     self.baloon_gyro_yQ.get()
+                    #     self.baloon_gyro_zQ.get()
+                    #     self.baloon_acc_xQ.put(data.accelX_data)
+                    #     self.baloon_acc_yQ.put(data.accelY_data)
+                    #     self.baloon_acc_zQ.put(data.accelZ_data)
+                    #     self.baloon_gyro_xQ.put(data.gyroX_data)
+                    #     self.baloon_gyro_yQ.put(data.gyroY_data)
+                    #     self.baloon_gyro_zQ.put(data.gyroZ_data)
+                    #     self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
+                    #     self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ,
+                    #                                              self.baloon_gyro_zQ)
 
-                # Set the data variables equal to the corresponding json entries
-                # self.data.temperature_data = data_json["temperature"]
-                # self.data.pressure_data = data_json["pressure"]
-                # self.data.humidity_data = data_json["humidity"]
-                # self.data.altitude_data = data_json["altitude"]
-                # self.data.direction_data = data_json["direction"]
-                # self.data.acceleration_data = data_json["acceleration"]
-                # self.data.velocity_data = data_json["velocity"]
-                # self.data.user_angle_data = data_json["user_angle"]
-                # Reload variables
+                    # Set the data variables equal to the corresponding json entries
+                    # self.data.temperature_data = data_json["temperature"]
+                    # self.data.pressure_data = data_json["pressure"]
+                    # self.data.humidity_data = data_json["humidity"]
+                    # self.data.altitude_data = data_json["altitude"]
+                    # self.data.direction_data = data_json["direction"]
+                    # self.data.acceleration_data = data_json["acceleration"]
+                    # self.data.velocity_data = data_json["velocity"]
+                    # self.data.user_angle_data = data_json["user_angle"]
+                    # Reload variables
 
             except queue.Empty:
                 pass
@@ -490,6 +495,9 @@ class DataWindow:
         self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
         self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
         self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
+
+    def reset_radio(self):
+        self.radio.reset_radio()
 
 
 if __name__ == "__main__":
