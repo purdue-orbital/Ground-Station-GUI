@@ -61,7 +61,7 @@ class ModuleSingleton:
         except Exception as e:
             print("Callback Failure")
             print(e)
-            # self.err()
+            self.reset_radio()
 
         self.remote_device = None
         self.queue = None
@@ -91,8 +91,6 @@ class ModuleSingleton:
     def reset_radio(self):
         print("Resetting Radio Connection")
         self.device.reset()
-        self.device.close()
-        self.device.open()
 
     def close(self):
         try:

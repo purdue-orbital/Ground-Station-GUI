@@ -98,10 +98,9 @@ class DataWindow:
 
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(name, "QDM", 1, 10, frames_bg),
-                               QualityCheck(name, "CDM", 3, 10, frames_bg),
-                               QualityCheck(name, "Radio Connection", 2, 10, frames_bg),
+                               QualityCheck(name, "Ignition", 3, 10, frames_bg),
+                               QualityCheck(name, "GS Radio", 2, 10, frames_bg),
                                QualityCheck(name, "Drogue Chute", 1, 12, frames_bg),
-                               QualityCheck(name, "Ignition", 2, 12, frames_bg),
                                QualityCheck(name, "Main Chute", 3, 12, frames_bg),
                                QualityCheck(name, "Platform Stability", 1, 14, frames_bg),
                                QualityCheck(name, "CRASH System", 3, 14, frames_bg),
@@ -144,7 +143,7 @@ class DataWindow:
             self.rocket_gyro_yQ.put(0)
             self.rocket_gyro_zQ.put(0)
             self.alititudeQ.put(0)
-        
+
         self.altitude_graph = None
         self.acc_gyro_graphs = None
 
@@ -414,6 +413,8 @@ class DataWindow:
 
                     for check in self.quality_checks:
                         check.display_quality()
+
+                    return
                 else:
                     print("JSON ORIGIN INCORRECT")
 
@@ -442,12 +443,12 @@ class DataWindow:
                 self.alititudeQ.put(alt)
                 if self.altitude_graph is not None:
                     self.altitude_graph.update_altitude(self.alititudeQ)
-                    
+
                 if origin == "rocket":
                     self.rocket_acc_xQ.get()
                     self.rocket_acc_yQ.get()
                     self.rocket_acc_zQ.get()
-                    self.rocket_gyro_xQ.get() 
+                    self.rocket_gyro_xQ.get()
                     self.rocket_gyro_yQ.get()
                     self.rocket_gyro_zQ.get()
                     self.rocket_acc_xQ.put(data.accelX_data)
@@ -457,8 +458,10 @@ class DataWindow:
                     self.rocket_gyro_yQ.put(data.gyroY_data)
                     self.rocket_gyro_zQ.put(data.gyroZ_data)
                     if self.acc_gyro_graphs is not None:
-                        self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
-                        self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
+                        self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ,
+                                                               self.rocket_acc_zQ)
+                        self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ,
+                                                                self.rocket_gyro_zQ)
 
                 elif origin == "balloon":
                     self.balloon_acc_xQ.get()
@@ -474,20 +477,22 @@ class DataWindow:
                     self.balloon_gyro_yQ.put(data.gyroY_data)
                     self.balloon_gyro_zQ.put(data.gyroZ_data)
                     if self.acc_gyro_graphs is not None:
-                        self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ, self.balloon_acc_zQ)
-                        self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ, self.balloon_gyro_zQ)
+                        self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ,
+                                                                self.balloon_acc_zQ)
+                        self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ,
+                                                                 self.balloon_gyro_zQ)
 
 
-                # Set the data variables equal to the corresponding json entries
-                # self.data.temperature_data = data_json["temperature"]
-                # self.data.pressure_data = data_json["pressure"]
-                # self.data.humidity_data = data_json["humidity"]
-                # self.data.altitude_data = data_json["altitude"]
-                # self.data.direction_data = data_json["direction"]
-                # self.data.acceleration_data = data_json["acceleration"]
-                # self.data.velocity_data = data_json["velocity"]
-                # self.data.user_angle_data = data_json["user_angle"]
-                # Reload variables
+                        # Set the data variables equal to the corresponding json entries
+                        # self.data.temperature_data = data_json["temperature"]
+                        # self.data.pressure_data = data_json["pressure"]
+                        # self.data.humidity_data = data_json["humidity"]
+                        # self.data.altitude_data = data_json["altitude"]
+                        # self.data.direction_data = data_json["direction"]
+                        # self.data.acceleration_data = data_json["acceleration"]
+                        # self.data.velocity_data = data_json["velocity"]
+                        # self.data.user_angle_data = data_json["user_angle"]
+                        # Reload variables
 
 
             except queue.Empty:
@@ -507,9 +512,8 @@ class DataWindow:
         self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ, self.balloon_acc_zQ)
         self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ, self.balloon_gyro_zQ)
 
-        self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
-        self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
+        self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ, self.balloon_acc_zQ)
+        self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ, self.balloon_gyro_zQ)
 
     def reset_radio(self):
         self.radio.reset_radio()
-
