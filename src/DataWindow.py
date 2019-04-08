@@ -81,7 +81,7 @@ class DataWindow:
         self.init_graph_stuff()
 
         # Place Graph buttons
-        self.init_graph_queues()
+        # self.init_graph_queues()
 
         self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
         self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
