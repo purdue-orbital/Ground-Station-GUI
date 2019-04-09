@@ -17,6 +17,11 @@ import random
 import queue
 import json
 
+OK = "\u001b[32m"
+WARN = "\u001b[33m"
+ERR = "\u001b[31m"
+NORM = "\u001b[0m"
+
 """
 ROCKET GUI Version 0.2
 Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch
@@ -45,8 +50,9 @@ class ThreadedClient:
         # Window to display all data
         self.gui = DataWindow(master, self.queue)
 
-        # Create thread to spoof data in queue
         self.running = 1
+
+        # Create thread to spoof data in queue
         # self.thread1 = threading.Thread(target=self.test_queue)
         # self.thread1.start()
 
@@ -78,20 +84,28 @@ class ThreadedClient:
         messagebox.showinfo("Error", message)
 
     def test_queue(self):
+        i = 0
         while self.running:
             time.sleep(1)
 
-            preload = ('{"temperature":' + str(rand.random())[0:5] + ',' +
-                       '"pressure":' + str(rand.random())[0:5] + ',' +
-                       '"humidity":' + str(rand.random())[0:5] + ',' +
-                       '"altitude":' + str(rand.random())[0:5] + ',' +
-                       '"direction":' + str(rand.random())[0:5] + ',' +
-                       '"acceleration":' + str(rand.random())[0:5] + ',' +
-                       '"velocity":' + str(rand.random())[0:5] + ',' +
-                       '"user_angle":' + str(rand.random())[0:5] + ' }')
+            if i % 2 == 0:
+                origin = "balloon"
+            else:
+                origin = "rocket"
+
+            i += 1
+
+            # preload = ('{"temperature":' + str(rand.random())[0:5] + ',' +
+            #            '"pressure":' + str(rand.random())[0:5] + ',' +
+            #            '"humidity":' + str(rand.random())[0:5] + ',' +
+            #            '"altitude":' + str(rand.random())[0:5] + ',' +
+            #            '"direction":' + str(rand.random())[0:5] + ',' +
+            #            '"acceleration":' + str(rand.random())[0:5] + ',' +
+            #            '"velocity":' + str(rand.random())[0:5] + ',' +
+            #            '"user_angle":' + str(rand.random())[0:5] + ' }')
 
             preload = (
-                '{ "origin" : "rocket",' +
+                '{ "origin" : "' + origin + '",' +
                 '"alt": ' + str(rand.random())[0:5] + ',' +
                 '"GPS": {' +
                 '"long": ' + str(rand.random())[0:5] + ',' +
@@ -112,11 +126,24 @@ class ThreadedClient:
                 '}'
             )
 
+            preload2 = (
+                '{ "origin" : "status",' +
+                '"QDM" : 1,' +
+                '"Drogue" : 1,' +
+                '"Ignition" : 1,' +
+                '"Main_Chute" : 1,' +
+                '"Stabilization" : 1,' +
+                '"Crash" : 1' +
+                '}'
+            )
+
             data_json = json.loads(preload)
+            data_json2 = json.loads(preload2)
             self.queue.put(data_json)
+            self.queue.put(data_json2)
 
     def launch(self):
-        print("LAUNCHING")
+        print(OK + "LAUNCHING" + NORM)
         # TODO
         c = Comm.get_instance(self)
         c.flight()
