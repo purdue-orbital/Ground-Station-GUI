@@ -147,10 +147,12 @@ class DataWindow:
         file_menu = Menu(menu_bar, tearoff=0)
         program_menu = Menu(menu_bar, tearoff=0)
         help_menu = Menu(menu_bar, tearoff=0)
+        test_menu = Menu(menu_bar, tearoff=0)
 
         menu_bar.add_cascade(label="File", menu=file_menu)
         menu_bar.add_cascade(label="Program", menu=program_menu)
         menu_bar.add_cascade(label="Help", menu=help_menu)
+        menu_bar.add_cascade(label="Test", menu=test_menu)
 
         file_menu.add_command(label="Restart", command=self.restart_program)
         file_menu.add_separator()
@@ -164,11 +166,15 @@ class DataWindow:
         help_menu.add_separator()
         help_menu.add_command(label="About", command=self.about_menu)
 
+        test_menu.add_command(label="Launch", command=lambda: print("Do the Launch Test Function"))
+        test_menu.add_command(label="Abort", command=lambda: print("Do the Abort Test Function"))
+        test_menu.add_command(label="Stability On", command=lambda: print("Do the Stability On Test Function"))
+
         self.name.config(menu=menu_bar)
 
     def make_grid(self):
         total_rows = 18
-        total_columns = 12
+        total_columns = 13
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
@@ -484,3 +490,11 @@ class DataWindow:
         self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
         self.acc_gyro_graphs.update_balloon_acc(self.baloon_acc_xQ, self.baloon_acc_yQ, self.baloon_acc_zQ)
         self.acc_gyro_graphs.update_balloon_gyro(self.baloon_gyro_xQ, self.baloon_gyro_yQ, self.baloon_gyro_zQ)
+
+
+if __name__ == "__main__":
+    # Made this for debugging without radio
+    root = Tk()
+    DataWindow(root, None)
+    root.mainloop()
+    sys.exit()
