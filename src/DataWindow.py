@@ -10,6 +10,7 @@ import RPi.GPIO as GPIO
 from Status import Status
 from Timer import Timer
 from Data import Data
+from Mode import Mode
 from Control import Control
 from CommunicationDriver import Comm
 from QualityCheck import QualityCheck
@@ -352,6 +353,30 @@ class DataWindow:
         qdm_button.pack()
         exit_button.pack()
         # send_button.pack()
+
+    def test_launch(self):
+        c = Comm.get_instance(self)
+        m = c.get_mode()
+
+        c.testing()
+        c.send("launch")
+        c.set_mode(m)
+
+    def test_launch(self):
+        c = Comm.get_instance(self)
+        m = c.get_mode()
+
+        c.testing()
+        c.send("abort")
+        c.set_mode(m)
+
+    def test_launch(self):
+        c = Comm.get_instance(self)
+        m = c.get_mode()
+
+        c.testing()
+        c.send("stability")
+        c.set_mode(m)
 
     def select_cdm(self, close_window):
         c = Comm.get_instance(self)
