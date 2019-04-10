@@ -34,21 +34,29 @@ class CommSingleton:
     def flight(self):
         self.__mode = Mode.FLIGHT
 
+    def get_mode(self):
+        return self.__mode;
+
     def send(self, command):
         if self.__mode == Mode.STANDBY:
             # discard command
-            print("Standby")
+            print("\nStandby, command discarded.\n")
 
+        command_json = {}
         if self.__mode == Mode.TESTING:
-            print(command)
+            command_json["mode"] = "testing"
+            command_json["command"] = command
 
         if self.__mode == Mode.FLIGHT:
-            command_json = {'command': command}
-            try:
+            command_json["mode"] = "testing"
+            command_json["command"] = command
+
+        try:
+            if not command_json:
                 print(command_json)
                 self.__radio.send(json.dumps(command_json))
-            except Exception as e:
-                print(e)
+        except Exception as e:
+            print(e)
 
 
             # TODO Send command
