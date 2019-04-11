@@ -1,6 +1,7 @@
 #!/bin/bash
 FAIL='\033[0;31m'
 INFO='\033[0;33m'
+OK='\033[0;32m'
 NC='\033[0m'
 
 traceback_path='logs/traceback.log'
@@ -61,7 +62,7 @@ if [[ ${version} -lt '5' ]]; then
 	exit 99
 fi
 
-printf "Python check passed\n"
+printf "Python Check: ${OK}[PASS]${NC}\n"
 
 printf "Attempting to run ${program_path}\n\n"
 
