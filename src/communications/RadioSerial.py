@@ -1,6 +1,24 @@
 import serial
+import traceback
+from xbee import XBee
 
-ser = serial.Serial('/dev/ttyS10', 9600)
+ser = serial.Serial('/dev/ttyAMA0', 9600)
+
+# xbee = XBee(ser)
+
 while True:
-    data = ser.readline()
-    print(data)
+
+    try:
+        # response = xbee.wait_read_frame()
+        response = ser.readline().strip()
+        print(response)
+
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
+        break
+
+ser.close()
+
+
+        
