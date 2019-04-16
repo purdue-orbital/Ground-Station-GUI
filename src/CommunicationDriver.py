@@ -68,6 +68,3 @@ class CommSingleton:
                 self.__radio.send(json.dumps(command_json))
         except Exception as e:
             print(e)
-
-
-            # TODO Send command
