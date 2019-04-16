@@ -20,6 +20,12 @@ from communications.RadioModule import Module
 
 class DataWindow:
     def __init__(self, name, data_queue):
+        """
+        Init functions that sets up the general shape and feel of the window
+
+        :param name: Name of the main window
+        :param data_queue: queue used to communicate with the radio
+        """
         self.queue = data_queue
         bg_color = "#484949"
         frames_bg = "#969694"
@@ -67,8 +73,13 @@ class DataWindow:
         self.make_grid()
 
         # Make timer sections
-        self.start_timer = Timer(name, 0, 2, 0, 5, time_bg)
-        self.timer = Timer(name, 2, 2, 0, 5, time_bg)
+        Label(name, text="Mission Clock:", font=('times', 16, 'bold'), bg=frames_bg).grid(row=0, column=0, rowspan=2,
+                                                                                          columnspan=2, sticky=N+S+E+W)
+        Label(name, text="Flight Clock:", font=('times', 16, 'bold'), bg=frames_bg).grid(row=2, column=0, rowspan=2,
+                                                                                         columnspan=2, sticky=N+S+E+W)
+        self.start_timer = Timer(name, 0, 2, 2, 3, time_bg)
+        self.timer = Timer(name, 2, 2, 2, 3, time_bg)
+        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
 
         # Make data sections
         self.dataRocket = Data(name, "Rocket Data", 6, 8, frames_bg)
@@ -77,7 +88,7 @@ class DataWindow:
         # Config button styles
         ttk.Style().configure("yellow.TButton", background=yellow)
 
-        # Place Graph buttons TODO: Move these to data class
+        # Place Graph buttons
         self.init_graph_stuff()
 
         # Place Graph buttons
@@ -85,14 +96,14 @@ class DataWindow:
 
         self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
         self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
-        self.altGraph.grid(column=6, columnspan=3, row=11, rowspan=1, sticky=N + S + E + W)
-        self.sixGraph.grid(column=9, columnspan=3, row=11, rowspan=1, sticky=N + S + E + W)
+        self.altGraph.grid(column=6, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
+        self.sixGraph.grid(column=9, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
 
         # Adds our logo
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
         logo_label = Label(name, image=logo)
         logo_label.image = logo
-        logo_label.grid(row=12, column=6, rowspan=5, columnspan=6)
+        logo_label.grid(row=13, column=6, rowspan=5, columnspan=6)
 
         self.control = Control(name, 5, 2, 1, frames_bg)
 
@@ -113,6 +124,10 @@ class DataWindow:
         self.running = 1
 
     def init_graph_stuff(self):
+        """
+        Sets up the graphs
+        :return: None
+        """
         # Create several queue that holds the number for each line in every graph
         self.balloon_acc_xQ = queue.Queue()
         self.balloon_acc_yQ = queue.Queue()
@@ -148,6 +163,10 @@ class DataWindow:
         self.acc_gyro_graphs = None
 
     def make_tool_bar(self):
+        """
+        Sets up the labels and buttons in the tool bar and binds them to respective functions
+        :return: None
+        """
         menu_bar = Menu(self.name)
 
         file_menu = Menu(menu_bar, tearoff=0)
@@ -175,8 +194,13 @@ class DataWindow:
         self.name.config(menu=menu_bar)
 
     def make_grid(self):
+        """
+        Sets the grid for the window, sets the background color for cells and determins which cells will resize
+         to fill the window space
+        :return: None
+        """
         total_rows = 18
-        total_columns = 12
+        total_columns = 13
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
@@ -193,6 +217,13 @@ class DataWindow:
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
 
     def start_mission(self):
+        """
+        Method is called when start mission in tool bar is selected.
+        Starts the mission clock, and enables verify and abort buttons
+        Sends test command
+
+        :return: None
+        """
         if not self.start_timer.clock_run:
             self.start_timer.start = time.time()
             self.start_timer.clock_run = True
@@ -204,7 +235,22 @@ class DataWindow:
         Comm.get_instance(self).testing()
         Comm.get_instance(self).send("Starting")
 
+    def launch(self):
+        """
+        Method is called when GPIO Pin 11 gets a rising edge. Starts the flight clock
+        :return: None
+        """
+        if not self.timer.clock_run:
+            self.timer.start = time.time()
+            self.timer.clock_run = True
+            self.timer.tick()
+
     def reset_variables_window(self):
+        """
+        Callback window asking the user if they really want to reset the data.
+        If yes, logs a reset, and resets both balloon and rocket data
+        :return: None
+        """
         # Creates a pop up window that asks if you are sure that you want to rest the variables.
         # If yes then all the variables are reset
         reset_window = messagebox.askokcancel("Reset All Variables?", "Are you sure you want to reset all variables?")
@@ -214,6 +260,11 @@ class DataWindow:
             self.dataRocket.reset_variables()
 
     def log(self, status):
+        """
+        Records the data in status.log
+        :param status: reason why the data was logged
+        :return: None
+        """
         fo = open(self.status_log_path, "a")
 
         current_date = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
@@ -262,6 +313,10 @@ class DataWindow:
         fo.close()
 
     def log_menu(self):
+        """
+        Logs data manually and a Pop up window informing user that data has been logged manually
+        :return: None
+        """
         log_window = Toplevel(self.name)
         log_window.title("Manual Log")
         logged_label = Label(log_window, text="The current variables have been logged in 'logs/status.log'")
@@ -271,6 +326,10 @@ class DataWindow:
         self.log(Status.MANUAL)
 
     def about_menu(self):
+        """
+        Pop up window with about information
+        :return: None
+        """
 
         about_text = "Ground Station Graphical User Interface Version 0.2\n\n" \
                      "Author: Ken Sodetz, Matt Drozt, Jay Rixie, Emanuel Pituch\n" \
@@ -294,11 +353,20 @@ class DataWindow:
         button.pack()
 
     def do_nothing(self):
+        """
+        Opens a window with a single button to close it. Used as a place holder for help index.
+        Needs to be fleshed out or gotten rid of
+        :return: None
+        """
         file_window = Toplevel(self.name)
         button = Button(file_window, text="Close", command=lambda: file_window.destroy())
         button.pack()
 
     def restart_program(self):
+        """
+        Closes and restarts the program
+        :return: None
+        """
         python = sys.executable
         GPIO.output(self.gui_switch, GPIO.LOW)
         GPIO.cleanup()
@@ -306,6 +374,10 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def verify_message_callback(self):
+        """
+        Call back for verifying and un-verifying the mission. Changes mission status and buttons as necessary
+        :return: None
+        """
         if self.control.mission_status == Status.NOT_VERIFIED:
             verify_response = messagebox.askyesno("Verify Mission?", "Do you want to verify the mission")
             if verify_response:
@@ -313,9 +385,9 @@ class DataWindow:
                 self.control.change_status_display(self.control.mission_status)
                 self.log(self.control.mission_status)
                 GPIO.output(self.gui_switch, GPIO.HIGH)
-                self.timer.start = time.time()
-                self.timer.clock_run = True
-                self.timer.tick()
+                # self.timer.start = time.time()
+                # self.timer.clock_run = True
+                # self.timer.tick()
                 self.control.verify_button.config(text="UNVERIFY")
 
         elif self.control.mission_status == Status.VERIFIED:
@@ -324,7 +396,7 @@ class DataWindow:
                 self.control.mission_status = Status.NOT_VERIFIED
                 self.control.change_status_display(self.control.mission_status)
                 self.log(self.control.mission_status)
-                self.timer.clock_run = False
+                # self.timer.clock_run = False
                 self.control.verify_button.config(text="VERIFY")
 
         elif self.control.mission_status == Status.ABORT:
@@ -333,17 +405,25 @@ class DataWindow:
                 self.control.mission_status = Status.VERIFIED
                 self.control.change_status_display(self.control.mission_status)
                 self.log(self.control.mission_status)
-                self.timer.start = time.time()
-                self.timer.clock_run = True
-                self.timer.tick()
+                # self.timer.start = time.time()
+                # self.timer.clock_run = True
+                # self.timer.tick()
                 self.control.verify_button.config(text="UNVERIFY")
 
     def abort_message_callback(self):
+        """
+        Callback if the user decides to abort the mission
+        :return: None
+        """
         abort_response = messagebox.askyesno("Abort Mission?", "Do you really want to abort the mission?")
         if abort_response:
             self.abort_method_window()
 
     def abort_method_window(self):
+        """
+        If abort callback returns true, opens this window for selecting method of abort
+        :return: None
+        """
         method_window = Toplevel(self.name)
         method_window.geometry("250x200")
         method_window.resizable(width=False, height=False)
@@ -361,6 +441,11 @@ class DataWindow:
         exit_button.pack()
 
     def select_cdm(self, close_window):
+        """
+        Method called sending a cdm command and logging the incident
+        :param close_window: the abort option window to be closed after selecting this option
+        :return: None
+        """
         c = Comm.get_instance(self)
         c.flight()
         c.send("cdm")
@@ -368,13 +453,18 @@ class DataWindow:
         self.abort_method = "CDM"
         self.control.mission_status = Status.ABORT
         self.log(self.control.mission_status)
-        self.timer.clock_run = False
+        # self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
         self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
         close_window.destroy()
 
     def select_qdm(self, close_window):
+        """
+        Method called sending a qdm command and logging the incident
+        :param close_window: the abort option window to be closed after selecting this option
+        :return: None
+        """
         # TODO Make Comms Global
         c = Comm.get_instance(self)
         c.flight()
@@ -382,7 +472,7 @@ class DataWindow:
 
         self.abort_method = "QDM"
         self.control.mission_status = Status.ABORT
-        self.timer.clock_run = False
+        # self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
         self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
@@ -390,6 +480,10 @@ class DataWindow:
         close_window.destroy()
 
     def process_incoming(self):
+        """
+        Updates data
+        :return: None
+        """
         # Process data in queue
         while self.queue.qsize():
             try:
@@ -493,18 +587,29 @@ class DataWindow:
                         # self.data.user_angle_data = data_json["user_angle"]
                         # Reload variables
 
-
             except queue.Empty:
                 pass
 
     def close(self):
+        """
+        Closes the window
+        :return: None
+        """
         self.running = 0
 
     def open_altitude_graph(self):
+        """
+        Opens and instance of the altitude graph
+        :return:None
+        """
         self.altitude_graph = AltitudeGraph()
         self.altitude_graph.update_altitude(self.alititudeQ)
 
     def open_acc_gyro_graphs(self):
+        """
+        Opens an instance of the acceleration and gyro graphs
+        :return: None
+        """
         self.acc_gyro_graphs = AccelerometerGyroGraphs()
         self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
         self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
@@ -515,4 +620,8 @@ class DataWindow:
         self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ, self.balloon_gyro_zQ)
 
     def reset_radio(self):
+        """
+        Resets Radio
+        :return: None
+        """
         self.radio.reset_radio()
