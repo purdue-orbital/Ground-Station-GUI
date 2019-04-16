@@ -167,9 +167,9 @@ class DataWindow:
         help_menu.add_separator()
         help_menu.add_command(label="About", command=self.about_menu)
 
-        test_menu.add_command(label="Launch", command=lambda: print("Do the Launch Test Function"))
-        test_menu.add_command(label="Abort", command=lambda: print("Do the Abort Test Function"))
-        test_menu.add_command(label="Stability On", command=lambda: print("Do the Stability On Test Function"))
+        test_menu.add_command(label="Launch", command=self.test_launch)
+        test_menu.add_command(label="Abort", command=self.test_abort)
+        test_menu.add_command(label="Stability On", command=self.test_stability)
 
         self.name.config(menu=menu_bar)
 
@@ -368,7 +368,7 @@ class DataWindow:
         c.send("launch")
         c.set_mode(m)
 
-    def test_launch(self):
+    def test_abort(self):
         c = Comm.get_instance(self)
         m = c.get_mode()
 
@@ -376,7 +376,7 @@ class DataWindow:
         c.send("abort")
         c.set_mode(m)
 
-    def test_launch(self):
+    def test_stability(self):
         c = Comm.get_instance(self)
         m = c.get_mode()
 

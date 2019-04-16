@@ -63,7 +63,7 @@ class CommSingleton:
             command_json["command"] = command
 
         try:
-            if not command_json:
+            if not len(command_json) == 0:
                 print(command_json)
                 self.__radio.send(json.dumps(command_json))
         except Exception as e:
