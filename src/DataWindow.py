@@ -47,8 +47,11 @@ class DataWindow:
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
-        self.name.geometry('1000x600')
+        # self.name.geometry('1000x600')
         self.name.configure(bg=bg_color)
+        # name.attributes('-zoomed', True)  # TODO: Make this work
+        # name.state('zoomed')
+        # name.update_idletasks()
 
         # Set up GPIO pins for use, see documentation for pin layout
         # orange wire
@@ -110,12 +113,16 @@ class DataWindow:
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(name, "QDM", 1, 10, frames_bg),
                                QualityCheck(name, "Ignition", 2, 10, frames_bg),
-                               QualityCheck(name, "Drogue Chute", 1, 12, frames_bg),
-                               QualityCheck(name, "Main Chute", 3, 12, frames_bg),
-                               QualityCheck(name, "Platform Stability", 1, 14, frames_bg),
-                               QualityCheck(name, "CRASH System", 3, 10, frames_bg),
-                               QualityCheck(name, "GS Radio", 3, 14, frames_bg),
+                               QualityCheck(name, "Drogue Chute", 3, 10, frames_bg),
+                               QualityCheck(name, "Main Chute", 1, 12, frames_bg),
+                               QualityCheck(name, "Platform Stability", 2, 14, frames_bg),
+                               QualityCheck(name, "CRASH System", 3, 12, frames_bg),
+                               QualityCheck(name, "GS Radio", 2, 12, frames_bg),
                                ]
+
+        stability_button = ttk.Button(text="Stability", style="yellow.TButton",
+                                      command=lambda: print("Stability Function Here"))
+        stability_button.grid(column=1, columnspan=3, row=16, sticky=N+S+E+W)
 
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
