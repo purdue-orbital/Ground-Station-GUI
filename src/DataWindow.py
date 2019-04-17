@@ -449,53 +449,11 @@ class DataWindow:
         """
         abort_response = messagebox.askyesno("Abort Mission?", "Do you really want to abort the mission?")
         if abort_response:
-            self.abort_method_window()
+            self.select_qdm()
 
-    def abort_method_window(self):
-        """
-        If abort callback returns true, opens this window for selecting method of abort
-        :return: None
-        """
-        method_window = Toplevel(self.name)
-        method_window.geometry("250x200")
-        method_window.resizable(width=False, height=False)
-
-        cmd_button = ttk.Button(method_window, text="CDM", width=20, command=lambda: self.select_cdm(method_window))
-        qdm_button = ttk.Button(method_window, text="QDM", width=20, command=lambda: self.select_qdm(method_window))
-        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: method_window.destroy())
-
-        msg = Message(method_window, text="Please select a mission abort method", font=('times', 12, 'bold'), width=200,
-                      justify=CENTER, pady=15)
-
-        msg.pack()
-        cmd_button.pack()
-        qdm_button.pack()
-        exit_button.pack()
-
-    # TODO: CDM No longer exists. Get rid of this
-    def select_cdm(self, close_window):
-        """
-        Method called sending a cdm command and logging the incident
-        :param close_window: the abort option window to be closed after selecting this option
-        :return: None
-        """
-        c = Comm.get_instance(self)
-        c.flight()
-        c.send("cdm")
-
-        self.abort_method = "CDM"
-        self.control.mission_status = Status.ABORT
-        self.log(self.control.mission_status)
-        # self.timer.clock_run = False
-        self.control.verify_button.config(text="VERIFY")
-        self.control.change_status_display(self.control.mission_status)
-        GPIO.output(self.gui_switch, GPIO.LOW)
-        close_window.destroy()
-
-    def select_qdm(self, close_window):
+    def select_qdm(self):
         """
         Method called sending a qdm command and logging the incident
-        :param close_window: the abort option window to be closed after selecting this option
         :return: None
         """
         # TODO Make Comms Global
@@ -510,7 +468,6 @@ class DataWindow:
         self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
-        close_window.destroy()
 
     def process_incoming(self):
         """
