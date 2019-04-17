@@ -47,8 +47,11 @@ class DataWindow:
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
-        self.name.geometry('1000x600')
+        # self.name.geometry('1000x600')
         self.name.configure(bg=bg_color)
+        # name.attributes('-zoomed', True)  # TODO: Make this work
+        # name.state('zoomed')
+        # name.update_idletasks()
 
         # Set up GPIO pins for use, see documentation for pin layout
         # orange wire
@@ -110,13 +113,20 @@ class DataWindow:
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(name, "QDM", 1, 10, frames_bg),
                                QualityCheck(name, "Ignition", 2, 10, frames_bg),
-                               QualityCheck(name, "Drogue Chute", 1, 12, frames_bg),
-                               QualityCheck(name, "Main Chute", 3, 12, frames_bg),
-                               QualityCheck(name, "Platform Stability", 1, 14, frames_bg),
-                               QualityCheck(name, "CRASH System", 3, 10, frames_bg),
-                               QualityCheck(name, "GS Radio", 3, 14, frames_bg),
+                               QualityCheck(name, "Drogue Chute", 3, 10, frames_bg),
+                               QualityCheck(name, "Main Chute", 1, 12, frames_bg),
+                               QualityCheck(name, "Platform Stability", 2, 14, frames_bg),
+                               QualityCheck(name, "CRASH System", 3, 12, frames_bg),
+                               QualityCheck(name, "GS Radio", 2, 12, frames_bg),
                                ]
 
+        # Create Button for Stability Control
+        self.stability = False
+        self.stability_button = ttk.Button(text="Turn On Stabilization", style="yellow.TButton",
+                                           command=self.stability_message_callback)
+        self.stability_button.grid(column=1, columnspan=3, row=16, sticky=N+S+E+W)
+
+        # Binds verify and control buttons
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
 
@@ -410,6 +420,28 @@ class DataWindow:
                 # self.timer.tick()
                 self.control.verify_button.config(text="UNVERIFY")
 
+    def stability_message_callback(self):
+        """
+        Makes sure user wants to turn on/off stabilization
+        :return: None
+        """
+        if self.stability:
+            if messagebox.askyesno("Turn off Stabilization", "Do you want to turn off stabilization"):
+                self.stability_button.config(text="Turn On Stabilization")
+                self.stability = not self.stability
+
+                c = Comm.get_instance(self)
+                c.flight()
+                c.send("Stabilization")
+        else:
+            if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
+                self.stability_button.config(text="Turn Off Stabilization")
+                self.stability = not self.stability
+
+                c = Comm.get_instance(self)
+                c.flight()
+                c.send("Stabilization")
+
     def abort_message_callback(self):
         """
         Callback if the user decides to abort the mission
@@ -417,52 +449,11 @@ class DataWindow:
         """
         abort_response = messagebox.askyesno("Abort Mission?", "Do you really want to abort the mission?")
         if abort_response:
-            self.abort_method_window()
+            self.select_qdm()
 
-    def abort_method_window(self):
-        """
-        If abort callback returns true, opens this window for selecting method of abort
-        :return: None
-        """
-        method_window = Toplevel(self.name)
-        method_window.geometry("250x200")
-        method_window.resizable(width=False, height=False)
-
-        cmd_button = ttk.Button(method_window, text="CDM", width=20, command=lambda: self.select_cdm(method_window))
-        qdm_button = ttk.Button(method_window, text="QDM", width=20, command=lambda: self.select_qdm(method_window))
-        exit_button = ttk.Button(method_window, text="Close", width=20, command=lambda: method_window.destroy())
-
-        msg = Message(method_window, text="Please select a mission abort method", font=('times', 12, 'bold'), width=200,
-                      justify=CENTER, pady=15)
-
-        msg.pack()
-        cmd_button.pack()
-        qdm_button.pack()
-        exit_button.pack()
-
-    def select_cdm(self, close_window):
-        """
-        Method called sending a cdm command and logging the incident
-        :param close_window: the abort option window to be closed after selecting this option
-        :return: None
-        """
-        c = Comm.get_instance(self)
-        c.flight()
-        c.send("cdm")
-
-        self.abort_method = "CDM"
-        self.control.mission_status = Status.ABORT
-        self.log(self.control.mission_status)
-        # self.timer.clock_run = False
-        self.control.verify_button.config(text="VERIFY")
-        self.control.change_status_display(self.control.mission_status)
-        GPIO.output(self.gui_switch, GPIO.LOW)
-        close_window.destroy()
-
-    def select_qdm(self, close_window):
+    def select_qdm(self):
         """
         Method called sending a qdm command and logging the incident
-        :param close_window: the abort option window to be closed after selecting this option
         :return: None
         """
         # TODO Make Comms Global
@@ -477,7 +468,6 @@ class DataWindow:
         self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
-        close_window.destroy()
 
     def process_incoming(self):
         """
@@ -574,7 +564,6 @@ class DataWindow:
                                                                 self.balloon_acc_zQ)
                         self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ,
                                                                  self.balloon_gyro_zQ)
-
 
                         # Set the data variables equal to the corresponding json entries
                         # self.data.temperature_data = data_json["temperature"]
