@@ -52,6 +52,7 @@ The program interacts with the following GPIO pins, which are connected to the f
 
 Board  <--->  Raspberry Pi
 
+
 * Pin 01 <---> Pin 12 
 * Pin 11 <---> Pin 06
 * Pin 15 <---> Pin 11
