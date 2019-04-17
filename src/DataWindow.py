@@ -120,10 +120,13 @@ class DataWindow:
                                QualityCheck(name, "GS Radio", 2, 12, frames_bg),
                                ]
 
-        stability_button = ttk.Button(text="Stability", style="yellow.TButton",
-                                      command=lambda: print("Stability Function Here"))
-        stability_button.grid(column=1, columnspan=3, row=16, sticky=N+S+E+W)
+        # Create Button for Stability Control
+        self.stability = False
+        self.stability_button = ttk.Button(text="Turn On Stabilization", style="yellow.TButton",
+                                           command=self.stability_message_callback)
+        self.stability_button.grid(column=1, columnspan=3, row=16, sticky=N+S+E+W)
 
+        # Binds verify and control buttons
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
 
@@ -417,6 +420,28 @@ class DataWindow:
                 # self.timer.tick()
                 self.control.verify_button.config(text="UNVERIFY")
 
+    def stability_message_callback(self):
+        """
+        Makes sure user wants to turn on/off stabilization
+        :return: None
+        """
+        if self.stability:
+            if messagebox.askyesno("Turn off Stabilization", "Do you want to turn off stabilization"):
+                self.stability_button.config(text="Turn On Stabilization")
+                self.stability = not self.stability
+
+                c = Comm.get_instance(self)
+                c.flight()
+                c.send("Stabilization")
+        else:
+            if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
+                self.stability_button.config(text="Turn Off Stabilization")
+                self.stability = not self.stability
+
+                c = Comm.get_instance(self)
+                c.flight()
+                c.send("Stabilization")
+
     def abort_message_callback(self):
         """
         Callback if the user decides to abort the mission
@@ -447,6 +472,7 @@ class DataWindow:
         qdm_button.pack()
         exit_button.pack()
 
+    # TODO: CDM No longer exists. Get rid of this
     def select_cdm(self, close_window):
         """
         Method called sending a cdm command and logging the incident
@@ -581,7 +607,6 @@ class DataWindow:
                                                                 self.balloon_acc_zQ)
                         self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ,
                                                                  self.balloon_gyro_zQ)
-
 
                         # Set the data variables equal to the corresponding json entries
                         # self.data.temperature_data = data_json["temperature"]
