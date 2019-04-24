@@ -18,6 +18,11 @@ BAUD_RATE = 9600
 # Remote node MAC address in hexadecimal format
 REMOTE_NODE_ADDRESS = "0013A2004148887C"
 
+OK = "\u001b[32m"
+WARN = "\u001b[33m"
+ERR = "\u001b[31m"
+NORM = "\u001b[0m"
+
 
 class Module:
     __instance = None
@@ -44,7 +49,7 @@ class ModuleSingleton:
             self.device.set_sync_ops_timeout(10)
             self.device.open()
         except Exception as e:
-            print("Local Device Failure")
+            print(ERR + "Local Device Instantiation Error" + NORM)
             print(e)
 
         def data_receive_callback(msg):
@@ -59,42 +64,41 @@ class ModuleSingleton:
         try:
             self.device.add_data_received_callback(data_receive_callback)
         except Exception as e:
-            print("Callback Failure")
+            print(ERR + "Callback Failure" + NORM)
             print(e)
-            self.err()
+            # self.reset_radio()
 
         self.remote_device = None
         self.queue = None
 
         try:
             self.remote_device = RemoteXBeeDevice(self.device, XBee64BitAddress.from_hex_string(REMOTE_NODE_ADDRESS))
-            print(self.remote_device)
+            print("Remote Device Address: " + str(self.remote_device))
             if self.remote_device is None:
-                print("Could not find the remote device")
+                print(ERR + "Could not find the remote device" + NORM)
         except XBeeException:
-            print("Exception has occurred")
+            print(ERR + "Remote Device Instantiation Error" + NORM)
 
     def send(self, data):
         try:
             self.device.send_data(self.remote_device, data)
+            print(OK + "Sent" + NORM)
         except XBeeException as e:
+            print(ERR + "Sending Error" + NORM)
             print(repr(e))
             traceback.print_exc()
-            print("Sending Error")
-            self.err()
-
-        print("Sent")
+            self.reset_radio()
 
     def bind_queue(self, queue):
         self.queue = queue
 
-    def err(self):
+    def reset_radio(self):
+        print(WARN + "Resetting Radio Connection" + NORM)
         self.device.reset()
-        self.device.close()
-        self.device.open()
 
     def close(self):
         try:
             self.device.close()
         except Exception as e:
+            print(ERR + "Closing Error" + NORM)
             print(e)
