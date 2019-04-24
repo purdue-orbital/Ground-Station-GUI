@@ -214,6 +214,7 @@ class DataWindow:
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
+        control_col = range(1, 4)
 
         for column in my_columns:
             self.name.columnconfigure(column, weight=1)
@@ -221,7 +222,8 @@ class DataWindow:
         for row in my_rows:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
-        for col in range(1, 4):
+        for col in control_col:
+            self.name.columnconfigure(col, minsize=190)
             for row in range(5, 16):
                 color_frame = Label(self.name, bg=self.framesBg)
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
