@@ -13,6 +13,7 @@ from communications.RadioModule import Module
 from CommunicationDriver import Comm
 
 import threading
+import sys
 import random
 import queue
 import json
@@ -53,8 +54,6 @@ class ThreadedClient:
         self.running = 1
 
         # Create thread to spoof data in queue
-        # self.thread1 = threading.Thread(target=self.test_queue)
-        # self.thread1.start()
 
         # Create testing variables
         self.testing = 0
@@ -67,13 +66,12 @@ class ThreadedClient:
 
     def update(self):
         # Loop function and handle data from interrupts
-        self.gui.process_incoming()
-        if not self.running or not self.gui.running:
-            if self.end_application():
-                import sys
-                sys.exit(1)
-        # Call again
-        self.master.after(200, self.update)
+        try:
+            self.gui.process_incoming()
+            # Call again
+            self.master.after(200, self.update)
+        except Exception as e:
+            print(e)
 
     def set_testing(self, isTesting):
         # Getter for testing bool
@@ -156,11 +154,12 @@ class ThreadedClient:
             self.running = 0
             self.gui.close()
             GPIO.cleanup()
+            sys.exit
             root.destroy()
+
             return 0
 
         else:
-            self.gui.running = 1
             return 0
 
 
