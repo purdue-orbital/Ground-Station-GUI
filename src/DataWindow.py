@@ -10,6 +10,7 @@ import RPi.GPIO as GPIO
 from Status import Status
 from Timer import Timer
 from Data import Data
+from Mode import Mode
 from Control import Control
 from CommunicationDriver import Comm
 from QualityCheck import QualityCheck
@@ -110,6 +111,9 @@ class DataWindow:
 
         self.control = Control(name, 5, 2, 1, frames_bg)
 
+        # Graph Initialization
+        self.altitude_graph = AltitudeGraph()
+
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(name, "QDM", 1, 10, frames_bg),
                                QualityCheck(name, "Ignition", 2, 10, frames_bg),
@@ -182,10 +186,12 @@ class DataWindow:
         file_menu = Menu(menu_bar, tearoff=0)
         program_menu = Menu(menu_bar, tearoff=0)
         help_menu = Menu(menu_bar, tearoff=0)
+        test_menu = Menu(menu_bar, tearoff=0)
 
         menu_bar.add_cascade(label="File", menu=file_menu)
         menu_bar.add_cascade(label="Program", menu=program_menu)
         menu_bar.add_cascade(label="Help", menu=help_menu)
+        menu_bar.add_cascade(label="Test", menu=test_menu)
 
         file_menu.add_command(label="Restart", command=self.restart_program)
         file_menu.add_separator()
@@ -200,6 +206,10 @@ class DataWindow:
         help_menu.add_command(label="Help Index", command=self.do_nothing)
         help_menu.add_separator()
         help_menu.add_command(label="About", command=self.about_menu)
+
+        test_menu.add_command(label="Launch", command=self.test_launch)
+        test_menu.add_command(label="Abort", command=self.test_abort)
+        test_menu.add_command(label="Stability On", command=self.test_stability)
 
         self.name.config(menu=menu_bar)
 
@@ -453,11 +463,49 @@ class DataWindow:
         if abort_response:
             self.select_qdm()
 
+    def test_launch(self):
+        c = Comm.get_instance(self)
+        m = c.get_mode()
+
+        c.testing()
+        c.send("launch")
+        c.set_mode(m)
+
+    def test_abort(self):
+        c = Comm.get_instance(self)
+        m = c.get_mode()
+
+        c.testing()
+        c.send("abort")
+        c.set_mode(m)
+
+    def test_stability(self):
+        c = Comm.get_instance(self)
+        m = c.get_mode()
+
+        c.testing()
+        c.send("stability")
+        c.set_mode(m)
+
+    def select_cdm(self):
+        c = Comm.get_instance(self)
+        c.flight()
+        c.send("cdm")
+
+        self.abort_method = "CDM"
+        self.control.mission_status = Status.ABORT
+        self.log(self.control.mission_status)
+        self.timer.clock_run = False
+        self.control.verify_button.config(text="VERIFY")
+        self.control.change_status_display(self.control.mission_status)
+        GPIO.output(self.gui_switch, GPIO.LOW)
+
     def select_qdm(self):
         """
         Method called sending a qdm command and logging the incident
         :return: None
         """
+
         # TODO Make Comms Global
         c = Comm.get_instance(self)
         c.flight()
@@ -522,10 +570,12 @@ class DataWindow:
                 data.accelZ_data = acc_json["z"]
 
                 data.display_variables()
+                self.altitude_graph.update_altitude(alt)
 
                 # insert it into the queues
                 self.alititudeQ.get()
                 self.alititudeQ.put(alt)
+                
                 if self.altitude_graph is not None:
                     self.altitude_graph.update_altitude(self.alititudeQ)
 
@@ -604,8 +654,6 @@ class DataWindow:
         self.acc_gyro_graphs = AccelerometerGyroGraphs()
         self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
         self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
-        self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ, self.balloon_acc_zQ)
-        self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ, self.balloon_gyro_zQ)
 
         self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ, self.balloon_acc_zQ)
         self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ, self.balloon_gyro_zQ)
