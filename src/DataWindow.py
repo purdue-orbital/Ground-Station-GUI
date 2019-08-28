@@ -95,9 +95,6 @@ class DataWindow:
         # Place Graph buttons
         self.init_graph_stuff()
 
-        # Place Graph buttons
-        # self.init_graph_queues()
-
         self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
         self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
         self.altGraph.grid(column=6, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
@@ -112,7 +109,7 @@ class DataWindow:
         self.control = Control(name, 5, 2, 1, frames_bg)
 
         # Graph Initialization
-        self.altitude_graph = AltitudeGraph()
+        # self.altitude_graph = AltitudeGraph()
 
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(name, "QDM", 1, 10, frames_bg),
