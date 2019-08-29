@@ -194,6 +194,7 @@ class DataWindow:
         menu_bar.add_cascade(label="Test", menu=test_menu)
 
         file_menu.add_command(label="Restart", command=self.restart_program)
+        file_menu.add_command(label="Test Mode", command=self.enter_test_mode)
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.close)
 
@@ -394,6 +395,9 @@ class DataWindow:
         GPIO.cleanup()
         self.log(Status.RESTART)
         os.execl(python, python, *sys.argv)
+
+    def enter_test_mode(self):
+        pass
 
     def verify_message_callback(self):
         """
