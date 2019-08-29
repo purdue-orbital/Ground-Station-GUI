@@ -40,9 +40,8 @@ class DataWindow:
         self.image_folder_path = os.path.join(program_path, "../res/img")
 
         self.name = name
-
+        self.test_mode = False
         self.abort_method = None
-
         self.radio = Module.get_instance(self)
 
         name.title("Ground Station Graphical User Interface v0.2")
@@ -194,7 +193,12 @@ class DataWindow:
         menu_bar.add_cascade(label="Test", menu=test_menu)
 
         file_menu.add_command(label="Restart", command=self.restart_program)
-        file_menu.add_command(label="Test Mode", command=self.enter_test_mode)
+
+        if self.test_mode:
+            file_menu.add_command(label="Launch Mode", command=self.alter_test_mode)
+        else:
+            file_menu.add_command(label="Test Mode", command=self.alter_test_mode)
+
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.close)
 
@@ -234,10 +238,15 @@ class DataWindow:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
         for col in control_col:
-            self.name.columnconfigure(col, minsize=190)
+            self.name.columnconfigure(col, minsize=50)
             for row in range(5, 16):
                 color_frame = Label(self.name, bg=self.framesBg)
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
+
+        if self.test_mode:
+            self.name.rowconfigure(total_rows, weight=4)
+            Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED, font=("Times", 50, "bold")).\
+                grid(row=total_rows, column=0, columnspan=total_columns, sticky=N + S + E + W)
 
     def start_mission(self):
         """
@@ -396,7 +405,7 @@ class DataWindow:
         self.log(Status.RESTART)
         os.execl(python, python, *sys.argv)
 
-    def enter_test_mode(self):
+    def alter_test_mode(self):
         pass
 
     def verify_message_callback(self):
