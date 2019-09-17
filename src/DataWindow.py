@@ -28,11 +28,12 @@ class DataWindow:
         :param data_queue: queue used to communicate with the radio
         """
         self.queue = data_queue
-        bg_color = "#484949"
+        self.bg_color = "#484949"
         frames_bg = "#969694"
         self.framesBg = frames_bg
-        time_bg = "#1e1e1e"
-        yellow = "#f8fc16"
+        self.frames_bg = frames_bg
+        self.time_bg = "#1e1e1e"
+        self.yellow = "#f8fc16"
 
         # Base file writing from program's execution directory
         program_path = os.path.dirname(os.path.realpath(__file__))
@@ -48,7 +49,7 @@ class DataWindow:
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
         # self.name.geometry('1000x600')
-        self.name.configure(bg=bg_color)
+        self.name.configure(bg=self.bg_color)
         # name.attributes('-zoomed', True)  # TODO: Make this work
         # name.state('zoomed')
         # name.update_idletasks()
@@ -71,25 +72,33 @@ class DataWindow:
         GPIO.output(self.on_signal, GPIO.LOW)
         GPIO.output(self.gui_switch, GPIO.LOW)
 
+        self.draw()
+
+        # Running variable to see if program was terminated
+        self.running = 1
+
+    def draw(self):
         self.make_tool_bar()
 
         self.make_grid()
 
         # Make timer sections
-        Label(name, text="Mission Clock:", font=('times', 16, 'bold'), bg=frames_bg).grid(row=0, column=0, rowspan=2,
-                                                                                          columnspan=2, sticky=N+S+E+W)
-        Label(name, text="Flight Clock:", font=('times', 16, 'bold'), bg=frames_bg).grid(row=2, column=0, rowspan=2,
-                                                                                         columnspan=2, sticky=N+S+E+W)
-        self.start_timer = Timer(name, 0, 2, 2, 3, time_bg)
-        self.timer = Timer(name, 2, 2, 2, 3, time_bg)
+        Label(self.name, text="Mission Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).grid(row=0, column=0, rowspan=2,
+                                                                                          columnspan=2,
+                                                                                          sticky=N + S + E + W)
+        Label(self.name, text="Flight Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).grid(row=2, column=0, rowspan=2,
+                                                                                         columnspan=2,
+                                                                                         sticky=N + S + E + W)
+        self.start_timer = Timer(self.name, 0, 2, 2, 3, self.time_bg)
+        self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
         GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
 
         # Make data sections
-        self.dataRocket = Data(name, "Rocket Data", 6, 8, frames_bg)
-        self.dataBalloon = Data(name, "Balloon Data", 9, 11, frames_bg)
+        self.dataRocket = Data(self.name, "Rocket Data", 6, 8, self.frames_bg)
+        self.dataBalloon = Data(self.name, "Balloon Data", 9, 11, self.frames_bg)
 
         # Config button styles
-        ttk.Style().configure("yellow.TButton", background=yellow)
+        ttk.Style().configure("yellow.TButton", background=self.yellow)
 
         # Place Graph buttons
         self.init_graph_stuff()
@@ -97,44 +106,41 @@ class DataWindow:
         # Place Graph buttons
         # self.init_graph_queues()
 
-        self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
-        self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
+        self.altGraph = ttk.Button(self.name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
+        self.sixGraph = ttk.Button(self.name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
         self.altGraph.grid(column=6, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
         self.sixGraph.grid(column=9, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
 
         # Adds our logo
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
-        logo_label = Label(name, image=logo)
+        logo_label = Label(self.name, image=logo)
         logo_label.image = logo
         logo_label.grid(row=13, column=6, rowspan=5, columnspan=6)
 
-        self.control = Control(name, 5, 2, 1, frames_bg)
+        self.control = Control(self.name, 5, 2, 1, self.frames_bg)
 
         # Graph Initialization
         self.altitude_graph = AltitudeGraph()
 
         # Place Quality Indicators and Labels
-        self.quality_checks = [QualityCheck(name, "QDM", 1, 10, frames_bg),
-                               QualityCheck(name, "Ignition", 2, 10, frames_bg),
-                               QualityCheck(name, "Drogue Chute", 3, 10, frames_bg),
-                               QualityCheck(name, "Main Chute", 1, 12, frames_bg),
-                               QualityCheck(name, "Platform Stability", 2, 14, frames_bg),
-                               QualityCheck(name, "CRASH System", 3, 12, frames_bg),
-                               QualityCheck(name, "GS Radio", 2, 12, frames_bg),
+        self.quality_checks = [QualityCheck(self.name, "QDM", 1, 10, self.frames_bg),
+                               QualityCheck(self.name, "Ignition", 2, 10, self.frames_bg),
+                               QualityCheck(self.name, "Drogue Chute", 3, 10, self.frames_bg),
+                               QualityCheck(self.name, "Main Chute", 1, 12, self.frames_bg),
+                               QualityCheck(self.name, "Platform Stability", 2, 14, self.frames_bg),
+                               QualityCheck(self.name, "CRASH System", 3, 12, self.frames_bg),
+                               QualityCheck(self.name, "GS Radio", 2, 12, self.frames_bg),
                                ]
 
         # Create Button for Stability Control
         self.stability = False
         self.stability_button = ttk.Button(text="Turn On Stabilization", style="yellow.TButton",
                                            command=self.stability_message_callback)
-        self.stability_button.grid(column=1, columnspan=3, row=16, sticky=N+S+E+W)
+        self.stability_button.grid(column=1, columnspan=3, row=16, sticky=N + S + E + W)
 
         # Binds verify and control buttons
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
-
-        # Running variable to see if program was terminated
-        self.running = 1
 
     def init_graph_stuff(self):
         """
@@ -244,8 +250,8 @@ class DataWindow:
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
 
         if self.test_mode:
-            self.name.rowconfigure(total_rows, weight=4)
-            Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED, font=("Times", 50, "bold")).\
+            self.name.rowconfigure(total_rows, weight=2)
+            Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED, font=("Times", 30, "bold")).\
                 grid(row=total_rows, column=0, columnspan=total_columns, sticky=N + S + E + W)
 
     def start_mission(self):
@@ -406,7 +412,12 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def alter_test_mode(self):
-        pass
+        self.test_mode = not self.test_mode
+
+        for widget in self.name.winfo_children():
+            widget.destroy()
+
+        self.draw()
 
     def verify_message_callback(self):
         """
