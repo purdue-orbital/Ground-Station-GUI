@@ -419,6 +419,9 @@ class DataWindow:
 
         self.draw()
 
+    def is_test_mode(self):
+        return self.test_mode
+
     def verify_message_callback(self):
         """
         Call back for verifying and un-verifying the mission. Changes mission status and buttons as necessary
