@@ -215,7 +215,7 @@ class DataWindow:
         program_menu.add_command(label="Reset Data", command=self.reset_variables_window)
         program_menu.add_command(label="Reset Radio", command=self.reset_radio)
 
-        help_menu.add_command(label="Help Index", command=self.do_nothing)
+        help_menu.add_command(label="Help Index", command=self.help_window)
         help_menu.add_separator()
         help_menu.add_command(label="About", command=self.about_menu)
 
@@ -391,7 +391,7 @@ class DataWindow:
         button = Button(about_window, text="Close", command=lambda: about_window.destroy())
         button.pack()
 
-    def do_nothing(self):
+    def help_window(self):
         """
         Opens a window with a single button to close it. Used as a place holder for help index.
         Needs to be fleshed out or gotten rid of
@@ -559,7 +559,6 @@ class DataWindow:
             try:
                 data_json = self.queue.get()
 
-                print(data_json)
                 origin = data_json["origin"]
 
                 if origin == "rocket":
