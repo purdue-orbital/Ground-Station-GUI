@@ -72,6 +72,9 @@ class DataWindow:
         GPIO.output(self.on_signal, GPIO.LOW)
         GPIO.output(self.gui_switch, GPIO.LOW)
 
+        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
+
+        self.init_graph_stuff()
         self.draw()
 
         # Running variable to see if program was terminated
@@ -91,7 +94,6 @@ class DataWindow:
                                                                                          sticky=N + S + E + W)
         self.start_timer = Timer(self.name, 0, 2, 2, 3, self.time_bg)
         self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
-        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
 
         # Make data sections
         self.dataRocket = Data(self.name, "Rocket Data", 6, 8, self.frames_bg)
@@ -101,7 +103,6 @@ class DataWindow:
         ttk.Style().configure("yellow.TButton", background=self.yellow)
 
         # Place Graph buttons
-        self.init_graph_stuff()
 
         # Place Graph buttons
         # self.init_graph_queues()
@@ -417,6 +418,8 @@ class DataWindow:
         for widget in self.name.winfo_children():
             widget.destroy()
 
+        time.sleep(1)
+        self.init_graph_stuff()
         self.draw()
 
     def is_test_mode(self):
