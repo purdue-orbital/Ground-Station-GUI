@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import random
 import queue
 
+
 class AltitudeGraph:
     def __init__(self):
         # DARK THEME!!!!!
@@ -39,5 +40,6 @@ class AltitudeGraph:
         self.axs.set_xlabel("Time (s)")
         self.axs.set_ylabel("Altitude (m)")
         self.axs.set_title("Altitude vs Time")
+        
         # FIXME You pass in an int, not an object with a queue attribute......
         # self.axs.plot(list(alt_queue.queue), 'xkcd:cyan')
