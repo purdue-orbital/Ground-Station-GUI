@@ -35,6 +35,36 @@ class DataWindow:
         self.time_bg = "#1e1e1e"
         self.yellow = "#f8fc16"
 
+        # Random Vars to init for draw()
+        self.start_timer = None
+        self.timer = None
+        self.dataRocket = None
+        self.dataRocket = None
+        self.altGraph = None
+        self.dataBalloon = None
+        self.sixGraph = None
+        self.control = None
+        self.altitude_graph = None
+        self.quality_checks = None
+        self.stability = None
+        self.stability_button = None
+
+        # Random Vars for init_graph_stuff()
+        self.balloon_acc_xQ = None
+        self.balloon_acc_yQ = None
+        self.balloon_acc_zQ = None
+        self.balloon_gyro_xQ = None
+        self.balloon_gyro_yQ = None
+        self.balloon_gyro_zQ = None
+        self.rocket_acc_xQ = None
+        self.rocket_acc_yQ = None
+        self.rocket_acc_zQ = None
+        self.rocket_gyro_xQ = None
+        self.rocket_gyro_yQ = None
+        self.rocket_gyro_zQ = None
+        self.alititudeQ = None
+        self.acc_gyro_graphs = None
+
         # Base file writing from program's execution directory
         program_path = os.path.dirname(os.path.realpath(__file__))
         self.status_log_path = os.path.join(program_path, "../logs/status.log")
@@ -86,12 +116,10 @@ class DataWindow:
         self.make_grid()
 
         # Make timer sections
-        Label(self.name, text="Mission Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).grid(row=0, column=0, rowspan=2,
-                                                                                          columnspan=2,
-                                                                                          sticky=N + S + E + W)
-        Label(self.name, text="Flight Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).grid(row=2, column=0, rowspan=2,
-                                                                                         columnspan=2,
-                                                                                         sticky=N + S + E + W)
+        Label(self.name, text="Mission Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).\
+            grid(row=0, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
+        Label(self.name, text="Flight Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).\
+            grid(row=2, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
         self.start_timer = Timer(self.name, 0, 2, 2, 3, self.time_bg)
         self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
 
@@ -103,12 +131,11 @@ class DataWindow:
         ttk.Style().configure("yellow.TButton", background=self.yellow)
 
         # Place Graph buttons
-
-        # Place Graph buttons
         # self.init_graph_queues()
 
         self.altGraph = ttk.Button(self.name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
-        self.sixGraph = ttk.Button(self.name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
+        self.sixGraph = ttk.Button(self.name, text="Direction", style="yellow.TButton",
+                                   command=self.open_acc_gyro_graphs)
         self.altGraph.grid(column=6, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
         self.sixGraph.grid(column=9, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
 
