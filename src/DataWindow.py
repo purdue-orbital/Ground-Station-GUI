@@ -626,7 +626,6 @@ class DataWindow:
                 data.accelZ_data = acc_json["z"]
 
                 data.display_variables()
-                self.altitude_graph.update_altitude(alt)
 
                 # insert it into the queues
                 self.alititudeQ.get()
