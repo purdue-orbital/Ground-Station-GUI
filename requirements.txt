@@ -1,3 +1,3 @@
-matplotlib>=2.2.2
+matplotlib==3.0.3
 digi-xbee>=1.1.1
 
