@@ -71,6 +71,11 @@ class DataWindow:
         self.image_folder_path = os.path.join(program_path, "../res/img")
 
         self.name = name
+
+        # Prevents the user from resizing the window too small
+        self.name.minsize(round(self.name.winfo_screenwidth() / 2), round(self.name.winfo_screenheight() / 2))
+
+        # Set up
         self.test_mode = False
         self.abort_method = None
         self.radio = Module.get_instance(self)
