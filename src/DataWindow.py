@@ -28,11 +28,42 @@ class DataWindow:
         :param data_queue: queue used to communicate with the radio
         """
         self.queue = data_queue
-        bg_color = "#484949"
+        self.bg_color = "#484949"
         frames_bg = "#969694"
         self.framesBg = frames_bg
-        time_bg = "#1e1e1e"
-        yellow = "#f8fc16"
+        self.frames_bg = frames_bg
+        self.time_bg = "#1e1e1e"
+        self.yellow = "#f8fc16"
+
+        # Random Vars to init for draw()
+        self.start_timer = None
+        self.timer = None
+        self.dataRocket = None
+        self.dataRocket = None
+        self.altGraph = None
+        self.dataBalloon = None
+        self.sixGraph = None
+        self.control = None
+        self.altitude_graph = None
+        self.quality_checks = None
+        self.stability = None
+        self.stability_button = None
+
+        # Random Vars for init_graph_stuff()
+        self.balloon_acc_xQ = None
+        self.balloon_acc_yQ = None
+        self.balloon_acc_zQ = None
+        self.balloon_gyro_xQ = None
+        self.balloon_gyro_yQ = None
+        self.balloon_gyro_zQ = None
+        self.rocket_acc_xQ = None
+        self.rocket_acc_yQ = None
+        self.rocket_acc_zQ = None
+        self.rocket_gyro_xQ = None
+        self.rocket_gyro_yQ = None
+        self.rocket_gyro_zQ = None
+        self.alititudeQ = None
+        self.acc_gyro_graphs = None
 
         # Base file writing from program's execution directory
         program_path = os.path.dirname(os.path.realpath(__file__))
@@ -41,15 +72,19 @@ class DataWindow:
 
         self.name = name
 
-        self.abort_method = None
+        # Prevents the user from resizing the window too small
+        self.name.minsize(round(self.name.winfo_screenwidth() / 2), round(self.name.winfo_screenheight() / 2))
 
+        # Set up
+        self.test_mode = False
+        self.abort_method = None
         self.radio = Module.get_instance(self)
 
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
         # self.name.geometry('1000x600')
-        self.name.configure(bg=bg_color)
+        self.name.configure(bg=self.bg_color)
         # name.attributes('-zoomed', True)  # TODO: Make this work
         # name.state('zoomed')
         # name.update_idletasks()
@@ -72,67 +107,74 @@ class DataWindow:
         GPIO.output(self.on_signal, GPIO.LOW)
         GPIO.output(self.gui_switch, GPIO.LOW)
 
+        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
+
+        self.init_graph_stuff()
+        self.draw()
+
+        # Running variable to see if program was terminated
+        self.running = 1
+
+    def draw(self):
         self.make_tool_bar()
 
         self.make_grid()
 
         # Make timer sections
-        Label(name, text="Mission Clock:", font=('times', 16, 'bold'), bg=frames_bg).grid(row=0, column=0, rowspan=2,
-                                                                                          columnspan=2, sticky=N+S+E+W)
-        Label(name, text="Flight Clock:", font=('times', 16, 'bold'), bg=frames_bg).grid(row=2, column=0, rowspan=2,
-                                                                                         columnspan=2, sticky=N+S+E+W)
-        self.start_timer = Timer(name, 0, 2, 2, 3, time_bg)
-        self.timer = Timer(name, 2, 2, 2, 3, time_bg)
-        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
+        Label(self.name, text="Mission Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).\
+            grid(row=0, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
+        Label(self.name, text="Flight Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).\
+            grid(row=2, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
+        self.start_timer = Timer(self.name, 0, 2, 2, 3, self.time_bg)
+        self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
 
         # Make data sections
-        self.dataRocket = Data(name, "Rocket Data", 6, 8, frames_bg)
-        self.dataBalloon = Data(name, "Balloon Data", 9, 11, frames_bg)
+        self.dataRocket = Data(self.name, "Rocket Data", 6, 8, self.frames_bg)
+        self.dataBalloon = Data(self.name, "Balloon Data", 9, 11, self.frames_bg)
 
         # Config button styles
-        ttk.Style().configure("yellow.TButton", background=yellow)
+        ttk.Style().configure("yellow.TButton", background=self.yellow)
 
         # Place Graph buttons
-        self.init_graph_stuff()
+        # self.init_graph_queues()
 
-        self.altGraph = ttk.Button(name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
-        self.sixGraph = ttk.Button(name, text="Direction", style="yellow.TButton", command=self.open_acc_gyro_graphs)
+        self.altGraph = ttk.Button(self.name, text="Altitude", style="yellow.TButton", command=self.open_altitude_graph)
+        self.sixGraph = ttk.Button(self.name, text="Direction", style="yellow.TButton",
+                                   command=self.open_acc_gyro_graphs)
+
         self.altGraph.grid(column=6, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
         self.sixGraph.grid(column=9, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
 
         # Adds our logo
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
-        logo_label = Label(name, image=logo)
+        logo_label = Label(self.name, image=logo)
         logo_label.image = logo
         logo_label.grid(row=13, column=6, rowspan=5, columnspan=6)
 
-        self.control = Control(name, 5, 2, 1, frames_bg)
+        self.control = Control(self.name, 5, 2, 1, self.frames_bg)
 
         # Graph Initialization
         # self.altitude_graph = AltitudeGraph()
 
         # Place Quality Indicators and Labels
-        self.quality_checks = [QualityCheck(name, "QDM", 1, 10, frames_bg),
-                               QualityCheck(name, "Ignition", 2, 10, frames_bg),
-                               QualityCheck(name, "Drogue Chute", 3, 10, frames_bg),
-                               QualityCheck(name, "Main Chute", 1, 12, frames_bg),
-                               QualityCheck(name, "Platform Stability", 2, 14, frames_bg),
-                               QualityCheck(name, "CRASH System", 3, 12, frames_bg),
-                               QualityCheck(name, "GS Radio", 2, 12, frames_bg),
+        self.quality_checks = [QualityCheck(self.name, "QDM", 1, 10, self.frames_bg),
+                               QualityCheck(self.name, "Ignition", 2, 10, self.frames_bg),
+                               QualityCheck(self.name, "Drogue Chute", 3, 10, self.frames_bg),
+                               QualityCheck(self.name, "Main Chute", 1, 12, self.frames_bg),
+                               QualityCheck(self.name, "Platform Stability", 2, 14, self.frames_bg),
+                               QualityCheck(self.name, "CRASH System", 3, 12, self.frames_bg),
+                               QualityCheck(self.name, "GS Radio", 2, 12, self.frames_bg),
                                ]
 
         # Create Button for Stability Control
         self.stability = False
         self.stability_button = ttk.Button(text="Turn On Stabilization", style="yellow.TButton",
                                            command=self.stability_message_callback)
-        self.stability_button.grid(column=1, columnspan=3, row=16, sticky=N+S+E+W)
+        self.stability_button.grid(column=1, columnspan=3, row=16, sticky=N + S + E + W)
 
         # Binds verify and control buttons
         self.control.verify_button.config(command=self.verify_message_callback)
         self.control.abort_button.config(command=self.abort_message_callback)
-
-        # Running variable to see if program was terminated
-        self.running = 1
 
     def init_graph_stuff(self):
         """
@@ -191,6 +233,12 @@ class DataWindow:
         menu_bar.add_cascade(label="Test", menu=test_menu)
 
         file_menu.add_command(label="Restart", command=self.restart_program)
+
+        if self.test_mode:
+            file_menu.add_command(label="Launch Mode", command=self.alter_test_mode)
+        else:
+            file_menu.add_command(label="Test Mode", command=self.alter_test_mode)
+
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.close)
 
@@ -200,7 +248,7 @@ class DataWindow:
         program_menu.add_command(label="Reset Data", command=self.reset_variables_window)
         program_menu.add_command(label="Reset Radio", command=self.reset_radio)
 
-        help_menu.add_command(label="Help Index", command=self.do_nothing)
+        help_menu.add_command(label="Help Index", command=self.help_window)
         help_menu.add_separator()
         help_menu.add_command(label="About", command=self.about_menu)
 
@@ -221,6 +269,7 @@ class DataWindow:
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
+        control_col = range(1, 4)
 
         for column in my_columns:
             self.name.columnconfigure(column, weight=1)
@@ -228,10 +277,16 @@ class DataWindow:
         for row in my_rows:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
-        for col in range(1, 4):
+        for col in control_col:
+            self.name.columnconfigure(col, minsize=50)
             for row in range(5, 16):
                 color_frame = Label(self.name, bg=self.framesBg)
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
+
+        if self.test_mode:
+            self.name.rowconfigure(total_rows, weight=2)
+            Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED, font=("Times", 30, "bold")).\
+                grid(row=total_rows, column=0, columnspan=total_columns, sticky=N + S + E + W)
 
     def start_mission(self):
         """
@@ -241,6 +296,10 @@ class DataWindow:
 
         :return: None
         """
+        if self.is_test_mode():
+            messagebox.showerror("Error", "Please exit test mode")
+            return
+
         if not self.start_timer.clock_run:
             self.start_timer.start = time.time()
             self.start_timer.clock_run = True
@@ -369,7 +428,7 @@ class DataWindow:
         button = Button(about_window, text="Close", command=lambda: about_window.destroy())
         button.pack()
 
-    def do_nothing(self):
+    def help_window(self):
         """
         Opens a window with a single button to close it. Used as a place holder for help index.
         Needs to be fleshed out or gotten rid of
@@ -389,6 +448,19 @@ class DataWindow:
         GPIO.cleanup()
         self.log(Status.RESTART)
         os.execl(python, python, *sys.argv)
+
+    def alter_test_mode(self):
+        self.test_mode = not self.test_mode
+
+        for widget in self.name.winfo_children():
+            widget.destroy()
+
+        time.sleep(1)
+        self.init_graph_stuff()
+        self.draw()
+
+    def is_test_mode(self):
+        return self.test_mode
 
     def verify_message_callback(self):
         """
@@ -524,7 +596,6 @@ class DataWindow:
             try:
                 data_json = self.queue.get()
 
-                print(data_json)
                 origin = data_json["origin"]
 
                 if origin == "rocket":
@@ -565,7 +636,6 @@ class DataWindow:
                 data.accelZ_data = acc_json["z"]
 
                 data.display_variables()
-                self.altitude_graph.update_altitude(alt)
 
                 # insert it into the queues
                 self.alititudeQ.get()
