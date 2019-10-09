@@ -317,6 +317,13 @@ class DataWindow:
             self.timer.clock_run = True
             self.timer.tick()
 
+        self.control.mission_status = Status.LAUNCHED
+        self.control.verify_button.config(text="VERIFY")
+        self.control.verify_button.config(state='disabled')
+
+        self.log(self.control.mission_status)
+        self.control.change_status_display(self.control.mission_status)
+
     def reset_variables_window(self):
         """
         Callback window asking the user if they really want to reset the data.
@@ -352,6 +359,8 @@ class DataWindow:
             fo.write("-------PROGRAM RESTART-------\n")
         elif status == Status.NOT_VERIFIED:
             fo.write("-----STATUS NOT VERIFIED-----\n")
+        elif status == Status.LAUNCHED:
+            fo.write("-------LAUNCHED-------\n")
 
         fo.write("DATE:" + current_date + "\n")
         fo.write("MISSION START TIMESTAMP:" + repr(self.start_timer.current_time) + "\n")
