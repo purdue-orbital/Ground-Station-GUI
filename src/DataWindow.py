@@ -578,6 +578,7 @@ class DataWindow:
         self.control.mission_status = Status.ABORT
         # self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
+        self.control.verify_button.config(state='disabled')
         self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
