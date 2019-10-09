@@ -9,3 +9,4 @@ __pycache__
 src/RPi
 src/tk
 .vscode/
+venv/

@@ -225,25 +225,21 @@ class DataWindow:
         file_menu = Menu(menu_bar, tearoff=0)
         program_menu = Menu(menu_bar, tearoff=0)
         help_menu = Menu(menu_bar, tearoff=0)
-        test_menu = Menu(menu_bar, tearoff=0)
+        # test_menu = Menu(menu_bar, tearoff=0)
 
         menu_bar.add_cascade(label="File", menu=file_menu)
         menu_bar.add_cascade(label="Program", menu=program_menu)
         menu_bar.add_cascade(label="Help", menu=help_menu)
-        menu_bar.add_cascade(label="Test", menu=test_menu)
+        # menu_bar.add_cascade(label="Test", menu=test_menu)
 
         file_menu.add_command(label="Restart", command=self.restart_program)
-
-        if self.test_mode:
-            file_menu.add_command(label="Launch Mode", command=self.alter_test_mode)
-        else:
-            file_menu.add_command(label="Test Mode", command=self.alter_test_mode)
 
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.close)
 
         program_menu.add_command(label="Start Mission", command=self.start_mission)
         program_menu.add_separator()
+        program_menu.add_command(label="Toggle Test Mode", command=self.alter_test_mode)
         program_menu.add_command(label="Log", command=self.log_menu)
         program_menu.add_command(label="Reset Data", command=self.reset_variables_window)
         program_menu.add_command(label="Reset Radio", command=self.reset_radio)
@@ -252,9 +248,9 @@ class DataWindow:
         help_menu.add_separator()
         help_menu.add_command(label="About", command=self.about_menu)
 
-        test_menu.add_command(label="Launch", command=self.test_launch)
-        test_menu.add_command(label="Abort", command=self.test_abort)
-        test_menu.add_command(label="Stability On", command=self.test_stability)
+        # test_menu.add_command(label="Launch", command=self.test_launch)
+        # test_menu.add_command(label="Abort", command=self.test_abort)
+        # test_menu.add_command(label="Stability On", command=self.test_stability)
 
         self.name.config(menu=menu_bar)
 
@@ -582,6 +578,7 @@ class DataWindow:
         self.control.mission_status = Status.ABORT
         # self.timer.clock_run = False
         self.control.verify_button.config(text="VERIFY")
+        self.control.verify_button.config(state='disabled')
         self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
