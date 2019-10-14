@@ -312,17 +312,19 @@ class DataWindow:
         Method is called when GPIO Pin 11 gets a rising edge. Starts the flight clock
         :return: None
         """
+        # Using self.timer.clock_run as a launched bool
+        # Not sure if there is something more proper to use
         if not self.timer.clock_run:
             self.timer.start = time.time()
             self.timer.clock_run = True
             self.timer.tick()
 
-        self.control.mission_status = Status.LAUNCHED
-        self.control.verify_button.config(text="VERIFY")
-        self.control.verify_button.config(state='disabled')
+            self.control.mission_status = Status.LAUNCHED
+            self.control.verify_button.config(text="VERIFY")
+            self.control.verify_button.config(state='disabled')
 
-        self.log(self.control.mission_status)
-        self.control.change_status_display(self.control.mission_status)
+            self.log(self.control.mission_status)
+            self.control.change_status_display(self.control.mission_status)
 
     def reset_variables_window(self):
         """
