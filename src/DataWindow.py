@@ -85,7 +85,7 @@ class DataWindow:
 
         # self.name.geometry('1000x600')
         self.name.configure(bg=self.bg_color)
-        # name.attributes('-zoomed', True)  # TODO: Make this work
+        # name.attributes('-zoomed', True)
         # name.state('zoomed')
         # name.update_idletasks()
 
@@ -309,12 +309,15 @@ class DataWindow:
 
     def launch(self):
         """
-        Method is called when GPIO Pin 11 gets a rising edge. Starts the flight clock
+        Method is called when GPIO Pin 11 gets a rising edge.
+        Checks if that mission has not started and mission is verified
+        Starts the flight clock
+        Changes status to LAUNCHED
         :return: None
         """
         # Using self.timer.clock_run as a launched bool
         # Not sure if there is something more proper to use
-        if not self.timer.clock_run:
+        if not self.timer.clock_run and self.control.mission_status == Status.VERIFIED:
             self.timer.start = time.time()
             self.timer.clock_run = True
             self.timer.tick()

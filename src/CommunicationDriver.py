@@ -23,7 +23,7 @@ class Comm:
 class CommSingleton:
     def __init__(self):
         self.__mode = Mode.STANDBY
-        self.__radio = Module.get_instance(self)
+        self.__radio = Module.get_instance()
 
     def standby(self):
         self.__mode = Mode.STANDBY
