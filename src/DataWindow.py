@@ -121,9 +121,9 @@ class DataWindow:
         self.make_grid()
 
         # Make timer sections
-        Label(self.name, text="Mission Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).\
+        Label(self.name, text="Mission Clock:", font=('times', 16, 'bold'), bg=self.frames_bg). \
             grid(row=0, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
-        Label(self.name, text="Flight Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).\
+        Label(self.name, text="Flight Clock:", font=('times', 16, 'bold'), bg=self.frames_bg). \
             grid(row=2, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
         self.start_timer = Timer(self.name, 0, 2, 2, 3, self.time_bg)
         self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
@@ -281,7 +281,7 @@ class DataWindow:
 
         if self.test_mode:
             self.name.rowconfigure(total_rows, weight=2)
-            Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED, font=("Times", 30, "bold")).\
+            Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED, font=("Times", 30, "bold")). \
                 grid(row=total_rows, column=0, columnspan=total_columns, sticky=N + S + E + W)
 
     def start_mission(self):
@@ -316,6 +316,9 @@ class DataWindow:
             self.timer.start = time.time()
             self.timer.clock_run = True
             self.timer.tick()
+
+
+        # TODO: Send launch data
 
     def reset_variables_window(self):
         """
@@ -525,6 +528,8 @@ class DataWindow:
         abort_response = messagebox.askyesno("Abort Mission?", "Do you really want to abort the mission?")
         if abort_response:
             self.select_qdm()
+            c = Comm.get_instance(self)
+            c.send("ABORT")
 
     def test_launch(self):
         c = Comm.get_instance(self)
@@ -637,7 +642,7 @@ class DataWindow:
                 # insert it into the queues
                 self.alititudeQ.get()
                 self.alititudeQ.put(alt)
-                
+
                 if self.altitude_graph is not None:
                     self.altitude_graph.update_altitude(self.alititudeQ)
 
