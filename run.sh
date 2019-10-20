@@ -14,7 +14,7 @@ truncate -s 0 ${traceback_path}
 if [[ $1 == "-t" ]]; then
     printf "Testing Program Logs\n"
     python3 ${log_test}
-    exit 99
+    exit 0
 fi
 
 ascii="                              

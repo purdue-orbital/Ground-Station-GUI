@@ -1,4 +1,4 @@
-from src.Status import *
+from Status import *
 from tkinter import *
 from tkinter import ttk
 

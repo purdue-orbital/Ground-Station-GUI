@@ -1,6 +1,6 @@
 import time
 import tkinter as tk
-from tkinter import ttk
+import signal
 from tkinter import messagebox
 import RPi.GPIO as GPIO
 
@@ -18,6 +18,7 @@ import random
 import queue
 import json
 
+# Term colors
 OK = "\u001b[32m"
 WARN = "\u001b[33m"
 ERR = "\u001b[31m"
@@ -25,7 +26,7 @@ NORM = "\u001b[0m"
 
 """
 ROCKET GUI Version 0.2
-Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch
+Author: Ken Sodetz, Matt Drozt, Jay Rixie, Emanuel Pituch, Connor Todd
 Since: 10/31/2018
 Created for Purdue Orbital Ground Stations Sub-Team
 Parses and displays data from the a Raspberry Pi 3 to verbosely
@@ -75,10 +76,10 @@ class ThreadedClient:
         except Exception as e:
             print(e)
 
-    def set_testing(self, isTesting):
+    def set_testing(self, is_testing):
         # Getter for testing bool
-        self.testing = isTesting
-        self.gui.set_testing(isTesting)
+        self.testing = is_testing
+        self.gui.set_testing(is_testing)
 
     def error(self, message):
         messagebox.showinfo("Error", message)
@@ -99,36 +100,36 @@ class ThreadedClient:
                     i = 2
 
                 preload = (
-                        '{ "origin" : "' + origin + '",' +
-                        '"alt": ' + str(rand.random())[0:5] + ',' +
-                        '"GPS": {' +
-                        '"long": ' + str(rand.random())[0:5] + ',' +
-                        '"lat": ' + str(rand.random())[0:5] +
-                        '},' +
-                        '"gyro": {' +
-                        '"x": ' + str(rand.random())[0:5] + ',' +
-                        '"y": ' + str(rand.random())[0:5] + ',' +
-                        '"z": ' + str(rand.random())[0:5] +
-                        '},' +
-                        '"mag": ' + str(rand.random())[0:5] + ',' +
-                        '"temp": ' + str(rand.random())[0:5] + ',' +
-                        '"acc": {' +
-                        '"x": ' + str(rand.random())[0:5] + ',' +
-                        '"y": ' + str(rand.random())[0:5] + ',' +
-                        '"z": ' + str(rand.random())[0:5] +
-                        '}' +
-                        '}'
+                    '{ "origin" : "' + origin + '",' +
+                    '"alt": ' + str(rand.random())[0:5] + ',' +
+                    '"GPS": {' +
+                    '"long": ' + str(rand.random())[0:5] + ',' +
+                    '"lat": ' + str(rand.random())[0:5] +
+                    '},' +
+                    '"gyro": {' +
+                    '"x": ' + str(rand.random())[0:5] + ',' +
+                    '"y": ' + str(rand.random())[0:5] + ',' +
+                    '"z": ' + str(rand.random())[0:5] +
+                    '},' +
+                    '"mag": ' + str(rand.random())[0:5] + ',' +
+                    '"temp": ' + str(rand.random())[0:5] + ',' +
+                    '"acc": {' +
+                    '"x": ' + str(rand.random())[0:5] + ',' +
+                    '"y": ' + str(rand.random())[0:5] + ',' +
+                    '"z": ' + str(rand.random())[0:5] +
+                    '}' +
+                    '}'
                 )
 
                 preload2 = (
-                        '{ "origin" : "status",' +
-                        '"QDM" : 1,' +
-                        '"Drogue" : 1,' +
-                        '"Ignition" : 1,' +
-                        '"Main_Chute" : 1,' +
-                        '"Stabilization" : 1,' +
-                        '"Crash" : 1' +
-                        '}'
+                    '{ "origin" : "status",' +
+                    '"QDM" : 1,' +
+                    '"Drogue" : 1,' +
+                    '"Ignition" : 1,' +
+                    '"Main_Chute" : 1,' +
+                    '"Stabilization" : 1,' +
+                    '"Crash" : 1' +
+                    '}'
                 )
 
                 data_json = json.loads(preload)
@@ -138,11 +139,10 @@ class ThreadedClient:
 
     def launch(self):
         print(OK + "LAUNCHING" + NORM)
-        # TODO
+        # TODO may not need, should verify
         c = Comm.get_instance(self)
         c.flight()
         c.send("launch")
-        # TODO send launch
 
     def end_application(self):
         if messagebox.askyesno("Quit", "Do you want to quit?"):
@@ -150,17 +150,20 @@ class ThreadedClient:
             self.running = 0
             self.gui.close()
             GPIO.cleanup()
-            sys.exit
             root.destroy()
-
             return 0
 
-        else:
-            return 0
 
+def signal_handler(*args):
+    client.end_application()
+
+
+signal.signal(signal.SIGINT, signal_handler)
 
 rand = random.Random()
 root = tk.Tk()
 
 client = ThreadedClient(root)
 root.mainloop()
+
+signal.signal(signal.SIGINT, signal_handler)

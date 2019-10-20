@@ -97,6 +97,7 @@ class DataWindow:
         # white wire
         self.gui_switch = 7
 
+        # Set up GPIO pins
         GPIO.setmode(GPIO.BOARD)
         GPIO.setwarnings(False)
         GPIO.setup(self.launch_signal, GPIO.IN)
@@ -107,6 +108,7 @@ class DataWindow:
         GPIO.output(self.on_signal, GPIO.LOW)
         GPIO.output(self.gui_switch, GPIO.LOW)
 
+        # If a rising edge on GPIO 11, call launch
         GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
 
         self.init_graph_stuff()
@@ -174,7 +176,7 @@ class DataWindow:
 
         # Binds verify and control buttons
         self.control.verify_button.config(command=self.verify_message_callback)
-        self.control.abort_button.config(command=self.abort_message_callback)
+        self.control.abort_button.config(command=self.abort_callback)
 
     def init_graph_stuff(self):
         """
@@ -256,8 +258,8 @@ class DataWindow:
 
     def make_grid(self):
         """
-        Sets the grid for the window, sets the background color for cells and determins which cells will resize
-         to fill the window space
+        Sets the grid for the window, sets the background color for cells and determines which cells will resize
+        to fill the window space
         :return: None
         """
         total_rows = 18
@@ -312,13 +314,14 @@ class DataWindow:
         Method is called when GPIO Pin 11 gets a rising edge. Starts the flight clock
         :return: None
         """
+        # TODO: Test if this works
         if not self.timer.clock_run:
             self.timer.start = time.time()
             self.timer.clock_run = True
             self.timer.tick()
 
-
-        # TODO: Send launch data
+        c = Comm.get_instance(self)
+        c.send("Launch")
 
     def reset_variables_window(self):
         """
@@ -407,7 +410,7 @@ class DataWindow:
         """
 
         about_text = "Ground Station Graphical User Interface Version 0.2\n\n" \
-                     "Author: Ken Sodetz, Matt Drozt, Jay Rixie, Emanuel Pituch\n" \
+                     "Author: Ken Sodetz, Matt Drozt, Jay Rixie, Emanuel Pituch, Connor Todd\n" \
                      "Since: 11/27/2018\n\n" \
                      "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
                      "Parses and displays data from the a Raspberry Pi 3 to verbosely display all\n" \
@@ -510,7 +513,7 @@ class DataWindow:
 
                 c = Comm.get_instance(self)
                 c.flight()
-                c.send("Stabilization")
+                c.send("Stabilization_Off")
         else:
             if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
                 self.stability_button.config(text="Turn Off Stabilization")
@@ -518,9 +521,9 @@ class DataWindow:
 
                 c = Comm.get_instance(self)
                 c.flight()
-                c.send("Stabilization")
+                c.send("Stabilization_On")
 
-    def abort_message_callback(self):
+    def abort_callback(self):
         """
         Callback if the user decides to abort the mission
         :return: None
@@ -529,22 +532,22 @@ class DataWindow:
         if abort_response:
             self.select_qdm()
             c = Comm.get_instance(self)
-            c.send("ABORT")
+            c.send("Abort")
 
     def test_launch(self):
         c = Comm.get_instance(self)
         m = c.get_mode()
 
         c.testing()
-        c.send("launch")
         c.set_mode(m)
+        c.send("Launch_TEST")
 
     def test_abort(self):
         c = Comm.get_instance(self)
         m = c.get_mode()
 
         c.testing()
-        c.send("abort")
+        c.send("Abort_TEST")
         c.set_mode(m)
 
     def test_stability(self):
@@ -552,7 +555,7 @@ class DataWindow:
         m = c.get_mode()
 
         c.testing()
-        c.send("stability")
+        c.send("Stability_On_Test")
         c.set_mode(m)
 
     def select_cdm(self):
