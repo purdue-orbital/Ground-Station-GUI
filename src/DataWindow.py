@@ -85,7 +85,7 @@ class DataWindow:
 
         # self.name.geometry('1000x600')
         self.name.configure(bg=self.bg_color)
-        # name.attributes('-zoomed', True)  # TODO: Make this work
+        # name.attributes('-zoomed', True)
         # name.state('zoomed')
         # name.update_idletasks()
 
@@ -309,13 +309,25 @@ class DataWindow:
 
     def launch(self):
         """
-        Method is called when GPIO Pin 11 gets a rising edge. Starts the flight clock
+        Method is called when GPIO Pin 11 gets a rising edge.
+        Checks if that mission has not started and mission is verified
+        Starts the flight clock
+        Changes status to LAUNCHED
         :return: None
         """
-        if not self.timer.clock_run:
+        # Using self.timer.clock_run as a launched bool
+        # Not sure if there is something more proper to use
+        if not self.timer.clock_run and self.control.mission_status == Status.VERIFIED:
             self.timer.start = time.time()
             self.timer.clock_run = True
             self.timer.tick()
+
+            self.control.mission_status = Status.LAUNCHED
+            self.control.verify_button.config(text="VERIFY")
+            self.control.verify_button.config(state='disabled')
+
+            self.log(self.control.mission_status)
+            self.control.change_status_display(self.control.mission_status)
 
     def reset_variables_window(self):
         """
@@ -352,6 +364,8 @@ class DataWindow:
             fo.write("-------PROGRAM RESTART-------\n")
         elif status == Status.NOT_VERIFIED:
             fo.write("-----STATUS NOT VERIFIED-----\n")
+        elif status == Status.LAUNCHED:
+            fo.write("-------LAUNCHED-------\n")
 
         fo.write("DATE:" + current_date + "\n")
         fo.write("MISSION START TIMESTAMP:" + repr(self.start_timer.current_time) + "\n")
