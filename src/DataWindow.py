@@ -129,7 +129,6 @@ class DataWindow:
         self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
 
         # Make data sections
-        # self.dataRocket = Data(self.name, "Rocket Data", 6, 8, self.frames_bg)
         self.dataBalloon = Data(self.name, "Balloon Data", 6, 9, self.frames_bg)
 
         # Config button styles
@@ -142,19 +141,22 @@ class DataWindow:
         self.sixGraph = ttk.Button(self.name, text="Direction", style="yellow.TButton",
                                    command=self.open_acc_gyro_graphs)
 
-        self.altGraph.grid(column=6, columnspan=2, row=12, rowspan=1, sticky=N + S + E + W)
-        self.sixGraph.grid(column=8, columnspan=2, row=12, rowspan=1, sticky=N + S + E + W)
+        self.altGraph.grid(column=6, columnspan=4, row=12, rowspan=1, sticky=N + S + E + W)
+        self.sixGraph.grid(column=6, columnspan=4, row=13, rowspan=1, sticky=N + S + E + W)
 
         # Adds our logo
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
-        logo_label = Label(self.name, image=logo)
+        logo_label = Label(self.name, image=logo, bg=self.bg_color)
         logo_label.image = logo
-        logo_label.grid(row=13, column=6, rowspan=5, columnspan=6)
+        logo_label.grid(row=15, column=0, rowspan=3, columnspan=5, sticky=N+S+E+W)
+
+        # Add another logo
+        # logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
+        logo_label = Label(self.name, bg=self.yellow, text="New\nImage\nHere!!")
+        # logo_label.image = logo
+        logo_label.grid(row=15, column=6, rowspan=2, columnspan=4, sticky=N+S+E+W)
 
         self.control = Control(self.name, 5, 2, 1, self.frames_bg)
-
-        # Graph Initialization
-        # self.altitude_graph = AltitudeGraph()
 
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(self.name, "QDM", 1, 10, self.frames_bg),
@@ -167,7 +169,7 @@ class DataWindow:
         self.stability = False
         self.stability_button = ttk.Button(text="Turn On Stabilization", style="yellow.TButton",
                                            command=self.stability_message_callback)
-        self.stability_button.grid(column=1, columnspan=3, row=16, sticky=N + S + E + W)
+        self.stability_button.grid(column=1, columnspan=3, row=14, sticky=N + S + E + W)
 
         # Binds verify and control buttons
         self.control.verify_button.config(command=self.verify_message_callback)
@@ -258,11 +260,12 @@ class DataWindow:
         :return: None
         """
         total_rows = 18
-        total_columns = 13
+        total_columns = 11
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
         control_col = range(1, 4)
+        data_section_col = range(7, 9)
 
         for column in my_columns:
             self.name.columnconfigure(column, weight=1)
@@ -271,8 +274,8 @@ class DataWindow:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
         for col in control_col:
-            self.name.columnconfigure(col, minsize=50)
-            for row in range(5, 16):
+            self.name.columnconfigure(col, minsize=100)
+            for row in range(5, 14):
                 color_frame = Label(self.name, bg=self.framesBg)
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
 
@@ -602,8 +605,8 @@ class DataWindow:
                 elif origin == "status":
                     self.quality_checks[0].ready = data_json["QDM"]
                     self.quality_checks[1].ready = data_json["Ignition"]
-                    self.quality_checks[3].ready = data_json["Stabilization"]
-                    self.quality_checks[4].ready = data_json["GSRadio"]
+                    self.quality_checks[2].ready = data_json["Stabilization"]
+                    self.quality_checks[3].ready = data_json["GSRadio"]
 
                     for check in self.quality_checks:
                         check.display_quality()

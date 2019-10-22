@@ -91,12 +91,7 @@ class ThreadedClient:
             if self.gui.is_test_mode():
                 end = 1
 
-                if i % 2 == 0:
-                    origin = "balloon"
-                    i = 1
-                else:
-                    origin = "rocket"
-                    i = 2
+                origin = "balloon"
 
                 preload = (
                         '{ "origin" : "' + origin + '",' +
