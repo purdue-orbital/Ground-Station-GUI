@@ -242,8 +242,8 @@ class DataWindow:
         program_menu.add_command(label="Reset Radio", command=self.reset_radio)
 
         help_menu.add_command(label="Help Index", command=self.help_window)
-        help_menu.add_separator()
-        help_menu.add_command(label="About", command=self.about_menu)
+        # help_menu.add_separator()
+        # help_menu.add_command(label="About", command=self.about_menu) TODO: Put this back
 
         # test_menu.add_command(label="Launch", command=self.test_launch)
         # test_menu.add_command(label="Abort", command=self.test_abort)
