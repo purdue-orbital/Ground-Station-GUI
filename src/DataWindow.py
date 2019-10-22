@@ -159,8 +159,8 @@ class DataWindow:
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(self.name, "QDM", 1, 10, self.frames_bg),
                                QualityCheck(self.name, "Ignition", 2, 10, self.frames_bg),
-                               QualityCheck(self.name, "Platform Stability", 2, 14, self.frames_bg),
-                               QualityCheck(self.name, "GS Radio", 2, 12, self.frames_bg),
+                               QualityCheck(self.name, "Platform Stability", 2, 12, self.frames_bg),
+                               QualityCheck(self.name, "GS Radio", 3, 10, self.frames_bg),
                                ]
 
         # Create Button for Stability Control
@@ -369,17 +369,6 @@ class DataWindow:
         fo.write("VERIFY START TIMESTAMP:" + repr(self.timer.current_time) + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
-        fo.write("----------ROCKET DATA--------\n")
-        fo.write("Longitude = " + repr(self.dataRocket.longitude_data) + "\n")
-        fo.write("Latitude = " + repr(self.dataRocket.latitude_data) + "\n")
-        fo.write("Gyro(X) = " + repr(self.dataRocket.gyroX_data) + "\n")
-        fo.write("Gyro(Y) = " + repr(self.dataRocket.gyroY_data) + "\n")
-        fo.write("Gyro(Z) = " + repr(self.dataRocket.gyroZ_data) + "\n")
-        fo.write("Cardinal Direction = " + repr(self.dataRocket.cardinalDirection_data) + "\n")
-        fo.write("Temperature = " + repr(self.dataRocket.temperature_data) + "\n")
-        fo.write("Acceleration(X) = " + repr(self.dataRocket.accelX_data) + "\n")
-        fo.write("Acceleration(Y) = " + repr(self.dataRocket.accelY_data) + "\n")
-        fo.write("Acceleration(Z) = " + repr(self.dataRocket.accelZ_data) + "\n")
         fo.write("----------BALLOON DATA-------\n")
         fo.write("Longitude = " + repr(self.dataBalloon.longitude_data) + "\n")
         fo.write("Latitude = " + repr(self.dataBalloon.latitude_data) + "\n")
