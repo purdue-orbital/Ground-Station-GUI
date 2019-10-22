@@ -123,11 +123,9 @@ class ThreadedClient:
                 preload2 = (
                         '{ "origin" : "status",' +
                         '"QDM" : 1,' +
-                        '"Drogue" : 1,' +
                         '"Ignition" : 1,' +
-                        '"Main_Chute" : 1,' +
                         '"Stabilization" : 1,' +
-                        '"Crash" : 1' +
+                        '"GSRadio" : 1' +
                         '}'
                 )
 

@@ -159,10 +159,7 @@ class DataWindow:
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(self.name, "QDM", 1, 10, self.frames_bg),
                                QualityCheck(self.name, "Ignition", 2, 10, self.frames_bg),
-                               QualityCheck(self.name, "Drogue Chute", 3, 10, self.frames_bg),
-                               QualityCheck(self.name, "Main Chute", 1, 12, self.frames_bg),
                                QualityCheck(self.name, "Platform Stability", 2, 14, self.frames_bg),
-                               QualityCheck(self.name, "CRASH System", 3, 12, self.frames_bg),
                                QualityCheck(self.name, "GS Radio", 2, 12, self.frames_bg),
                                ]
 
@@ -615,11 +612,9 @@ class DataWindow:
                     data = self.dataBalloon
                 elif origin == "status":
                     self.quality_checks[0].ready = data_json["QDM"]
-                    self.quality_checks[1].ready = data_json["Drogue"]
-                    self.quality_checks[2].ready = data_json["Ignition"]
-                    self.quality_checks[3].ready = data_json["Main_Chute"]
-                    self.quality_checks[4].ready = data_json["Stabilization"]
-                    self.quality_checks[5].ready = data_json["Crash"]
+                    self.quality_checks[1].ready = data_json["Ignition"]
+                    self.quality_checks[3].ready = data_json["Stabilization"]
+                    self.quality_checks[4].ready = data_json["GSRadio"]
 
                     for check in self.quality_checks:
                         check.display_quality()
