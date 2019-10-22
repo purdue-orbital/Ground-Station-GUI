@@ -129,8 +129,8 @@ class DataWindow:
         self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
 
         # Make data sections
-        self.dataRocket = Data(self.name, "Rocket Data", 6, 8, self.frames_bg)
-        self.dataBalloon = Data(self.name, "Balloon Data", 9, 11, self.frames_bg)
+        # self.dataRocket = Data(self.name, "Rocket Data", 6, 8, self.frames_bg)
+        self.dataBalloon = Data(self.name, "Balloon Data", 6, 9, self.frames_bg)
 
         # Config button styles
         ttk.Style().configure("yellow.TButton", background=self.yellow)
@@ -142,8 +142,8 @@ class DataWindow:
         self.sixGraph = ttk.Button(self.name, text="Direction", style="yellow.TButton",
                                    command=self.open_acc_gyro_graphs)
 
-        self.altGraph.grid(column=6, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
-        self.sixGraph.grid(column=9, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
+        self.altGraph.grid(column=6, columnspan=2, row=12, rowspan=1, sticky=N + S + E + W)
+        self.sixGraph.grid(column=8, columnspan=2, row=12, rowspan=1, sticky=N + S + E + W)
 
         # Adds our logo
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
@@ -651,7 +651,7 @@ class DataWindow:
                 # insert it into the queues
                 self.alititudeQ.get()
                 self.alititudeQ.put(alt)
-                
+                    
                 if self.altitude_graph is not None:
                     self.altitude_graph.update_altitude(self.alititudeQ)
 
