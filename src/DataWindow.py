@@ -148,13 +148,13 @@ class DataWindow:
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
         logo_label = Label(self.name, image=logo, bg=self.bg_color)
         logo_label.image = logo
-        logo_label.grid(row=15, column=0, rowspan=3, columnspan=5, sticky=N+S+E+W)
+        logo_label.grid(row=14, column=6, rowspan=3, columnspan=4, sticky=N+S+E+W)
 
-        # Add another logo
-        # logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
-        logo_label = Label(self.name, bg=self.yellow, text="New\nImage\nHere!!")
+        # Add Purdue logo
+        # logo = PhotoImage(file=os.path.join(self.image_folder_path, "purdue_p.png"))
+        # logo_label = Label(self.name, image=logo, bg=self.bg_color)
         # logo_label.image = logo
-        logo_label.grid(row=15, column=6, rowspan=2, columnspan=4, sticky=N+S+E+W)
+        # logo_label.grid(row=15, column=6, rowspan=2, columnspan=4, sticky=N+S+E+W)
 
         self.control = Control(self.name, 5, 2, 1, self.frames_bg)
 
@@ -259,13 +259,12 @@ class DataWindow:
          to fill the window space
         :return: None
         """
-        total_rows = 18
+        total_rows = 17
         total_columns = 11
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
         control_col = range(1, 4)
-        data_section_col = range(7, 9)
 
         for column in my_columns:
             self.name.columnconfigure(column, weight=1)
