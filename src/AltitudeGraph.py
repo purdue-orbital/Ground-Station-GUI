@@ -5,15 +5,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import random
 import queue
 
-class AltitudeGraph:
-    def update_altitude(self, alt_queue):
-        plt.pause(0.001)
-        self.axs.cla()
-        self.axs.set_xlabel("Time (s)")
-        self.axs.set_ylabel("Altitude (m)")
-        self.axs.set_title("Altitude vs Time")
-        self.axs.plot(list(alt_queue.queue), 'xkcd:cyan')
 
+class AltitudeGraph:
     def __init__(self):
         # DARK THEME!!!!!
         plt.style.use('dark_background')
@@ -24,7 +17,8 @@ class AltitudeGraph:
         plt.subplots_adjust(wspace=0, hspace=0)
 
         # Start in interactive mode so that the graph starts in a non blocking thread
-        plt.ion()
+        # TODO Init should not open, rather initialize variables
+        # plt.ion()
 
         self.axs.set_xlabel("Time (s)")
         self.axs.set_ylabel("Altitude (m)")
@@ -39,3 +33,13 @@ class AltitudeGraph:
         #     # Sleep for a second, will probably be replaced with a callback or something
         #     # ! Do not get rid of the pause, it messes it up for some reason
         #     time.sleep(1)
+
+    def update_altitude(self, alt_queue):
+        plt.pause(0.001)
+        self.axs.cla()
+        self.axs.set_xlabel("Time (s)")
+        self.axs.set_ylabel("Altitude (m)")
+        self.axs.set_title("Altitude vs Time")
+
+        # FIXME You pass in an int, not an object with a queue attribute......
+        self.axs.plot(list(alt_queue.queue), 'xkcd:cyan')

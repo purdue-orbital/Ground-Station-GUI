@@ -45,3 +45,5 @@ class Control:
             self.display_mission_status_text.set("NOT VERIFIED")
         elif status == Status.VERIFIED:
             self.display_mission_status_text.set("VERIFIED")
+        elif status == Status.LAUNCHED:
+            self.display_mission_status_text.set("LAUNCHED")

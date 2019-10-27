@@ -13,6 +13,7 @@ from communications.RadioModule import Module
 from CommunicationDriver import Comm
 
 import threading
+import sys
 import random
 import queue
 import json
@@ -53,8 +54,8 @@ class ThreadedClient:
         self.running = 1
 
         # Create thread to spoof data in queue
-        # self.thread1 = threading.Thread(target=self.test_queue)
-        # self.thread1.start()
+        self.thread1 = threading.Thread(target=self.test_queue)
+        self.thread1.start()
 
         # Create testing variables
         self.testing = 0
@@ -67,13 +68,12 @@ class ThreadedClient:
 
     def update(self):
         # Loop function and handle data from interrupts
-        self.gui.process_incoming()
-        if not self.running or not self.gui.running:
-            if self.end_application():
-                import sys
-                sys.exit(1)
-        # Call again
-        self.master.after(200, self.update)
+        try:
+            self.gui.process_incoming()
+            # Call again
+            self.master.after(200, self.update)
+        except Exception as e:
+            print(e)
 
     def set_testing(self, isTesting):
         # Getter for testing bool
@@ -85,62 +85,56 @@ class ThreadedClient:
 
     def test_queue(self):
         i = 0
+        end = 0
         while self.running:
             time.sleep(1)
+            if self.gui.is_test_mode():
+                end = 1
 
-            if i % 2 == 0:
-                origin = "balloon"
-            else:
-                origin = "rocket"
+                if i % 2 == 0:
+                    origin = "balloon"
+                    i = 1
+                else:
+                    origin = "rocket"
+                    i = 2
 
-            i += 1
+                preload = (
+                        '{ "origin" : "' + origin + '",' +
+                        '"alt": ' + str(rand.random())[0:5] + ',' +
+                        '"GPS": {' +
+                        '"long": ' + str(rand.random())[0:5] + ',' +
+                        '"lat": ' + str(rand.random())[0:5] +
+                        '},' +
+                        '"gyro": {' +
+                        '"x": ' + str(rand.random())[0:5] + ',' +
+                        '"y": ' + str(rand.random())[0:5] + ',' +
+                        '"z": ' + str(rand.random())[0:5] +
+                        '},' +
+                        '"mag": ' + str(rand.random())[0:5] + ',' +
+                        '"temp": ' + str(rand.random())[0:5] + ',' +
+                        '"acc": {' +
+                        '"x": ' + str(rand.random())[0:5] + ',' +
+                        '"y": ' + str(rand.random())[0:5] + ',' +
+                        '"z": ' + str(rand.random())[0:5] +
+                        '}' +
+                        '}'
+                )
 
-            # preload = ('{"temperature":' + str(rand.random())[0:5] + ',' +
-            #            '"pressure":' + str(rand.random())[0:5] + ',' +
-            #            '"humidity":' + str(rand.random())[0:5] + ',' +
-            #            '"altitude":' + str(rand.random())[0:5] + ',' +
-            #            '"direction":' + str(rand.random())[0:5] + ',' +
-            #            '"acceleration":' + str(rand.random())[0:5] + ',' +
-            #            '"velocity":' + str(rand.random())[0:5] + ',' +
-            #            '"user_angle":' + str(rand.random())[0:5] + ' }')
+                preload2 = (
+                        '{ "origin" : "status",' +
+                        '"QDM" : 1,' +
+                        '"Drogue" : 1,' +
+                        '"Ignition" : 1,' +
+                        '"Main_Chute" : 1,' +
+                        '"Stabilization" : 1,' +
+                        '"Crash" : 1' +
+                        '}'
+                )
 
-            preload = (
-                '{ "origin" : "' + origin + '",' +
-                '"alt": ' + str(rand.random())[0:5] + ',' +
-                '"GPS": {' +
-                '"long": ' + str(rand.random())[0:5] + ',' +
-                '"lat": ' + str(rand.random())[0:5] +
-                '},' +
-                '"gyro": {' +
-                '"x": ' + str(rand.random())[0:5] + ',' +
-                '"y": ' + str(rand.random())[0:5] + ',' +
-                '"z": ' + str(rand.random())[0:5] +
-                '},' +
-                '"mag": ' + str(rand.random())[0:5] + ',' +
-                '"temp": ' + str(rand.random())[0:5] + ',' +
-                '"acc": {' +
-                '"x": ' + str(rand.random())[0:5] + ',' +
-                '"y": ' + str(rand.random())[0:5] + ',' +
-                '"z": ' + str(rand.random())[0:5] +
-                '}' +
-                '}'
-            )
-
-            preload2 = (
-                '{ "origin" : "status",' +
-                '"QDM" : 1,' +
-                '"Drogue" : 1,' +
-                '"Ignition" : 1,' +
-                '"Main_Chute" : 1,' +
-                '"Stabilization" : 1,' +
-                '"Crash" : 1' +
-                '}'
-            )
-
-            data_json = json.loads(preload)
-            data_json2 = json.loads(preload2)
-            self.queue.put(data_json)
-            self.queue.put(data_json2)
+                data_json = json.loads(preload)
+                data_json2 = json.loads(preload2)
+                self.queue.put(data_json)
+                self.queue.put(data_json2)
 
     def launch(self):
         print(OK + "LAUNCHING" + NORM)
@@ -156,11 +150,12 @@ class ThreadedClient:
             self.running = 0
             self.gui.close()
             GPIO.cleanup()
+            sys.exit
             root.destroy()
+
             return 0
 
         else:
-            self.gui.running = 1
             return 0
 
 

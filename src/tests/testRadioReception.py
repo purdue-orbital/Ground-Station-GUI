@@ -2,6 +2,7 @@ import json
 import time
 import traceback
 import sys
+from .. import ReadLog
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress, RemoteXBeeDevice, XBeeException
 
@@ -10,7 +11,7 @@ from digi.xbee.devices import XBeeDevice, XBee64BitAddress, RemoteXBeeDevice, XB
 # - For windows, it will be 'COM#'
 #
 # where # is the port number.
-LOCAL_PORT = "/dev/ttyS13"
+LOCAL_PORT = "/dev/ttyS10"
 
 # Baud rate of the local device
 BAUD_RATE = 9600
@@ -50,6 +51,7 @@ class RadioTest:
 
             try:
                 self.device.send_data(self.remote_device, data)
+                self.readLog(i)
                 print("Success")
             except Exception as e:
                 traceback.print_exc()
@@ -63,12 +65,63 @@ class RadioTest:
         self.close()
         sys.exit(1)
 
-
     def close(self):
         try:
             self.device.close()
         except Exception as e:
             print(e)
+
+    def tail(self, f, n):
+        assert n >= 0
+        pos, lines = n + 1, []
+        while len(lines) <= n:
+            try:
+                f.seek(-pos, 2)
+
+            except IOError:
+                f.seek(0)
+                break
+            finally:
+                lines = list(f)
+            pos *= 2
+        return lines[-n:]
+
+    def readLog(self, value):
+        with open("./logs/status.log", 'r') as f:
+            lines = self.tail(f, 11)
+        for line in lines:
+            if "temperature" in line:
+                i = self.getIndex(line)
+                print("temperature: " + line[i:-1])
+            elif "pressure" in line:
+                i = self.getIndex(line)
+                print("pressure: " + line[i:-1])
+            elif "humidity" in line:
+                i = self.getIndex(line)
+                print("humidity: " + line[i:-1])
+            elif "altitude" in line:
+                i = self.getIndex(line)
+                if value == line[i:-1]:
+                    print("test")
+                print("altitude: " + line[i:-1])
+            elif "direction" in line:
+                i = self.getIndex(line)
+                print("direction: " + line[i:-1])
+            elif "acceleration" in line:
+                i = self.getIndex(line)
+                print("acceleration: " + line[i:-1])
+            elif "velocity" in line:
+                i = self.getIndex(line)
+                print("velocity: " + line[i:-1])
+
+    def getIndex(self, line):
+        i = 0
+        for c in line:
+            if c == '=':
+                i += 1
+                break
+            i += 1
+        return i + 1
 
 
 mod = RadioTest()

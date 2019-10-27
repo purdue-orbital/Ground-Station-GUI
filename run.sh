@@ -9,6 +9,9 @@ program_path='src/ThreadedWindow.py'
 status_log_path='logs/status.log'
 log_test='src/ReadLog.py'
 
+# Clears traceback.log when intially run
+truncate -s 0 ${traceback_path}
+
 if [[ $1 == "-t" ]]; then
     printf "Testing Program Logs\n"
     python3 ${log_test}
