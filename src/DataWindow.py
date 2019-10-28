@@ -597,9 +597,7 @@ class DataWindow:
 
                 origin = data_json["origin"]
 
-                if origin == "rocket":
-                    data = self.dataRocket
-                elif origin == "balloon":
+                if origin == "balloon":
                     data = self.dataBalloon
                 elif origin == "status":
                     self.quality_checks[0].ready = data_json["QDM"]
