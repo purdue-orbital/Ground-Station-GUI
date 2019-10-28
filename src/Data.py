@@ -33,7 +33,7 @@ class Data:
 
         # Create and Place Section Header
         data_label = Label(place_window, text=data_name, font=('times', 15, 'underline'), bg=bg)
-        data_label.grid(row=0, column=labels_column, columnspan=3, sticky=N + S + E + W)
+        data_label.grid(row=0, column=labels_column, columnspan=(data_column - labels_column + 1), sticky=N + S + E + W)
 
         label_frames = [
             Label(place_window, text="Altitude:", bg=bg),

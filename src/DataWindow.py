@@ -129,8 +129,7 @@ class DataWindow:
         self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
 
         # Make data sections
-        self.dataRocket = Data(self.name, "Rocket Data", 6, 8, self.frames_bg)
-        self.dataBalloon = Data(self.name, "Balloon Data", 9, 11, self.frames_bg)
+        self.dataBalloon = Data(self.name, "Balloon Data", 6, 9, self.frames_bg)
 
         # Config button styles
         ttk.Style().configure("yellow.TButton", background=self.yellow)
@@ -142,35 +141,35 @@ class DataWindow:
         self.sixGraph = ttk.Button(self.name, text="Direction", style="yellow.TButton",
                                    command=self.open_acc_gyro_graphs)
 
-        self.altGraph.grid(column=6, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
-        self.sixGraph.grid(column=9, columnspan=3, row=12, rowspan=1, sticky=N + S + E + W)
+        self.altGraph.grid(column=6, columnspan=4, row=12, rowspan=1, sticky=N + S + E + W)
+        self.sixGraph.grid(column=6, columnspan=4, row=13, rowspan=1, sticky=N + S + E + W)
 
         # Adds our logo
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
-        logo_label = Label(self.name, image=logo)
+        logo_label = Label(self.name, image=logo, bg=self.bg_color)
         logo_label.image = logo
-        logo_label.grid(row=13, column=6, rowspan=5, columnspan=6)
+        logo_label.grid(row=14, column=6, rowspan=3, columnspan=4, sticky=N+S+E+W)
+
+        # Add Purdue logo
+        # logo = PhotoImage(file=os.path.join(self.image_folder_path, "purdue_p.png"))
+        # logo_label = Label(self.name, image=logo, bg=self.bg_color)
+        # logo_label.image = logo
+        # logo_label.grid(row=15, column=6, rowspan=2, columnspan=4, sticky=N+S+E+W)
 
         self.control = Control(self.name, 5, 2, 1, self.frames_bg)
-
-        # Graph Initialization
-        # self.altitude_graph = AltitudeGraph()
 
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(self.name, "QDM", 1, 10, self.frames_bg),
                                QualityCheck(self.name, "Ignition", 2, 10, self.frames_bg),
-                               QualityCheck(self.name, "Drogue Chute", 3, 10, self.frames_bg),
-                               QualityCheck(self.name, "Main Chute", 1, 12, self.frames_bg),
-                               QualityCheck(self.name, "Platform Stability", 2, 14, self.frames_bg),
-                               QualityCheck(self.name, "CRASH System", 3, 12, self.frames_bg),
-                               QualityCheck(self.name, "GS Radio", 2, 12, self.frames_bg),
+                               QualityCheck(self.name, "Platform Stability", 2, 12, self.frames_bg),
+                               QualityCheck(self.name, "GS Radio", 3, 10, self.frames_bg),
                                ]
 
         # Create Button for Stability Control
         self.stability = False
         self.stability_button = ttk.Button(text="Turn On Stabilization", style="yellow.TButton",
                                            command=self.stability_message_callback)
-        self.stability_button.grid(column=1, columnspan=3, row=16, sticky=N + S + E + W)
+        self.stability_button.grid(column=1, columnspan=3, row=14, sticky=N + S + E + W)
 
         # Binds verify and control buttons
         self.control.verify_button.config(command=self.verify_message_callback)
@@ -245,8 +244,8 @@ class DataWindow:
         program_menu.add_command(label="Reset Radio", command=self.reset_radio)
 
         help_menu.add_command(label="Help Index", command=self.help_window)
-        help_menu.add_separator()
-        help_menu.add_command(label="About", command=self.about_menu)
+        # help_menu.add_separator()
+        # help_menu.add_command(label="About", command=self.about_menu) TODO: Put this back
 
         # test_menu.add_command(label="Launch", command=self.test_launch)
         # test_menu.add_command(label="Abort", command=self.test_abort)
@@ -260,8 +259,8 @@ class DataWindow:
          to fill the window space
         :return: None
         """
-        total_rows = 18
-        total_columns = 13
+        total_rows = 17
+        total_columns = 11
 
         my_rows = range(0, total_rows)
         my_columns = range(0, total_columns)
@@ -274,8 +273,8 @@ class DataWindow:
             self.name.rowconfigure(row, weight=1, uniform=1)
 
         for col in control_col:
-            self.name.columnconfigure(col, minsize=50)
-            for row in range(5, 16):
+            self.name.columnconfigure(col, minsize=100)
+            for row in range(5, 14):
                 color_frame = Label(self.name, bg=self.framesBg)
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
 
@@ -372,17 +371,6 @@ class DataWindow:
         fo.write("VERIFY START TIMESTAMP:" + repr(self.timer.current_time) + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
-        fo.write("----------ROCKET DATA--------\n")
-        fo.write("Longitude = " + repr(self.dataRocket.longitude_data) + "\n")
-        fo.write("Latitude = " + repr(self.dataRocket.latitude_data) + "\n")
-        fo.write("Gyro(X) = " + repr(self.dataRocket.gyroX_data) + "\n")
-        fo.write("Gyro(Y) = " + repr(self.dataRocket.gyroY_data) + "\n")
-        fo.write("Gyro(Z) = " + repr(self.dataRocket.gyroZ_data) + "\n")
-        fo.write("Cardinal Direction = " + repr(self.dataRocket.cardinalDirection_data) + "\n")
-        fo.write("Temperature = " + repr(self.dataRocket.temperature_data) + "\n")
-        fo.write("Acceleration(X) = " + repr(self.dataRocket.accelX_data) + "\n")
-        fo.write("Acceleration(Y) = " + repr(self.dataRocket.accelY_data) + "\n")
-        fo.write("Acceleration(Z) = " + repr(self.dataRocket.accelZ_data) + "\n")
         fo.write("----------BALLOON DATA-------\n")
         fo.write("Longitude = " + repr(self.dataBalloon.longitude_data) + "\n")
         fo.write("Latitude = " + repr(self.dataBalloon.latitude_data) + "\n")
@@ -609,17 +597,13 @@ class DataWindow:
 
                 origin = data_json["origin"]
 
-                if origin == "rocket":
-                    data = self.dataRocket
-                elif origin == "balloon":
+                if origin == "balloon":
                     data = self.dataBalloon
                 elif origin == "status":
                     self.quality_checks[0].ready = data_json["QDM"]
-                    self.quality_checks[1].ready = data_json["Drogue"]
-                    self.quality_checks[2].ready = data_json["Ignition"]
-                    self.quality_checks[3].ready = data_json["Main_Chute"]
-                    self.quality_checks[4].ready = data_json["Stabilization"]
-                    self.quality_checks[5].ready = data_json["Crash"]
+                    self.quality_checks[1].ready = data_json["Ignition"]
+                    self.quality_checks[2].ready = data_json["Stabilization"]
+                    self.quality_checks[3].ready = data_json["GSRadio"]
 
                     for check in self.quality_checks:
                         check.display_quality()
@@ -651,7 +635,7 @@ class DataWindow:
                 # insert it into the queues
                 self.alititudeQ.get()
                 self.alititudeQ.put(alt)
-                
+                    
                 if self.altitude_graph is not None:
                     self.altitude_graph.update_altitude(self.alititudeQ)
 
