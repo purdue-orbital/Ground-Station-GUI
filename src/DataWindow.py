@@ -639,25 +639,6 @@ class DataWindow:
                 if self.altitude_graph is not None:
                     self.altitude_graph.update_altitude(self.alititudeQ)
 
-                if origin == "rocket":
-                    self.rocket_acc_xQ.get()
-                    self.rocket_acc_yQ.get()
-                    self.rocket_acc_zQ.get()
-                    self.rocket_gyro_xQ.get()
-                    self.rocket_gyro_yQ.get()
-                    self.rocket_gyro_zQ.get()
-                    self.rocket_acc_xQ.put(data.accelX_data)
-                    self.rocket_acc_yQ.put(data.accelY_data)
-                    self.rocket_acc_zQ.put(data.accelZ_data)
-                    self.rocket_gyro_xQ.put(data.gyroX_data)
-                    self.rocket_gyro_yQ.put(data.gyroY_data)
-                    self.rocket_gyro_zQ.put(data.gyroZ_data)
-                    if self.acc_gyro_graphs is not None:
-                        self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ,
-                                                               self.rocket_acc_zQ)
-                        self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ,
-                                                                self.rocket_gyro_zQ)
-
                 elif origin == "balloon":
                     self.balloon_acc_xQ.get()
                     self.balloon_acc_yQ.get()
@@ -712,8 +693,6 @@ class DataWindow:
         :return: None
         """
         self.acc_gyro_graphs = AccelerometerGyroGraphs()
-        self.acc_gyro_graphs.update_rocket_acc(self.rocket_acc_xQ, self.rocket_acc_yQ, self.rocket_acc_zQ)
-        self.acc_gyro_graphs.update_rocket_gyro(self.rocket_gyro_xQ, self.rocket_gyro_yQ, self.rocket_gyro_zQ)
 
         self.acc_gyro_graphs.update_balloon_acc(self.balloon_acc_xQ, self.balloon_acc_yQ, self.balloon_acc_zQ)
         self.acc_gyro_graphs.update_balloon_gyro(self.balloon_gyro_xQ, self.balloon_gyro_yQ, self.balloon_gyro_zQ)
