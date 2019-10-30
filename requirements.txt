@@ -1,3 +1,4 @@
-matplotlib==3.0.3
 digi-xbee>=1.1.1
+matplotlib==3.0.3
+pyserial==3.4.0
 

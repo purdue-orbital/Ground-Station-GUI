@@ -153,9 +153,17 @@ class ThreadedClient:
             root.destroy()
             return 0
 
+    def force_quit_app(self):
+        self.radio.close()
+        self.running = 0
+        self.gui.close()
+        GPIO.cleanup()
+        root.destroy()
+        sys.exit(130)
+
 
 def signal_handler(*args):
-    client.end_application()
+    client.force_quit_app()
 
 
 signal.signal(signal.SIGINT, signal_handler)

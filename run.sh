@@ -77,6 +77,11 @@ if [[ $? == '1' ]]; then
 	printf "If the underlined error shows ${INFO}ImportError${FAIL}, run ${INFO}./setup.sh ${FAIL}to ensure the proper environment has been set up.\n"
 	printf "See ${INFO}${traceback_path} ${FAIL}for the full error stack.\n"
 	printf "[Process Failed]${NC}\n"
-	exit 99
+	exit 1
+
+elif [[ $? == '130' ]]; then
+    printf "${INFO}${program_path} was terminated by Control-C.\n\n"
 fi
+
+echo $?
 

@@ -1,13 +1,13 @@
-import logging
-import sys
 import traceback
 import json
+import serial
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress, RemoteXBeeDevice, XBeeException
+from util.exception import RadioSerialConnectionException, RadioObjectException
 
 # Local port number:
-# - For linux, it will be '/dev/ttyS#'
-# - For windows, it will be 'COM#'
+# - For linux (including ubuntu for windows), it will be '/dev/ttyS#'
+# - For pure windows (cmd, PowerShell, Pycharm, etc), it will be 'COM#'
 #
 # where # is the port number.
 LOCAL_PORT = "/dev/ttyS16"
@@ -15,7 +15,8 @@ LOCAL_PORT = "/dev/ttyS16"
 # Baud rate of the local device
 BAUD_RATE = 9600
 
-# Remote node MAC address in hexadecimal format
+# Remote node MAC address in hexadecimal format. This can be found on the radio chip itself, listed as the
+# hardware address.
 REMOTE_NODE_ADDRESS = "0013A2004187A0B0"
 
 OK = "\u001b[32m"
@@ -48,25 +49,25 @@ class ModuleSingleton:
             self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
             self.device.set_sync_ops_timeout(10)
             self.device.open()
-        except Exception as e:
-            print(ERR + "Local Device Instantiation Error" + NORM)
-            print(e)
+        except serial.SerialException:
+            # raise RadioSerialConnectionException
+            pass
 
         def data_receive_callback(msg):
             data = msg.data.decode("utf8")
-
             json_data = json.loads(data)
-
+            print(OK + "Received:")
             print(json_data)
-
             self.queue.put(json_data)
 
         try:
             self.device.add_data_received_callback(data_receive_callback)
-        except Exception as e:
-            print(ERR + "Callback Failure" + NORM)
-            print(e)
+        except AttributeError:
+            raise RadioObjectException
+            pass
             # self.reset_radio()
+        except Exception as e:
+            print(e)
 
         self.remote_device = None
         self.queue = None

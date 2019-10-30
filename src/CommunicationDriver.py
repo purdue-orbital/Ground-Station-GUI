@@ -3,7 +3,7 @@ import json
 
 from Mode import Mode
 from communications.RadioModule import Module
-
+from digi.xbee.exception import XBeeException
 
 class Comm:
     __instance = None
@@ -66,5 +66,5 @@ class CommSingleton:
             if not len(command_json) == 0:
                 print(command_json)
                 self.__radio.send(json.dumps(command_json))
-        except Exception as e:
+        except XBeeException as e:
             print(e)
