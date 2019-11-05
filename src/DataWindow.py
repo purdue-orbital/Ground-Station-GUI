@@ -12,6 +12,7 @@ from Timer import Timer
 from Data import Data
 from Mode import Mode
 from Control import Control
+from StatCounter import StatCounter
 from CommunicationDriver import Comm
 from QualityCheck import QualityCheck
 from AltitudeGraph import AltitudeGraph
@@ -48,6 +49,9 @@ class DataWindow:
         self.quality_checks = None
         self.stability = None
         self.stability_button = None
+        self.packets_sent = None
+        self.packets_received = None
+        self.received_percentage = None
 
         # Random Vars for init_graph_stuff()
         self.balloon_acc_xQ = None
@@ -148,28 +152,37 @@ class DataWindow:
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
         logo_label = Label(self.name, image=logo, bg=self.bg_color)
         logo_label.image = logo
-        logo_label.grid(row=14, column=6, rowspan=3, columnspan=4, sticky=N+S+E+W)
-
-        # Add Purdue logo
-        # logo = PhotoImage(file=os.path.join(self.image_folder_path, "purdue_p.png"))
-        # logo_label = Label(self.name, image=logo, bg=self.bg_color)
-        # logo_label.image = logo
-        # logo_label.grid(row=15, column=6, rowspan=2, columnspan=4, sticky=N+S+E+W)
+        logo_label.grid(row=15, column=6, rowspan=3, columnspan=4, sticky=N+S+E+W)
 
         self.control = Control(self.name, 5, 2, 1, self.frames_bg)
 
+        # Adds Radio Counters
+        self.packets_sent = StatCounter(self.name, "Packets Sent", 1, 10, self.frames_bg)
+        self.packets_received = StatCounter(self.name, "Packets Received", 2, 10, self.frames_bg)
+
+        # Create received percentage
+        Label(self.name, text="Percent Received", font=('times', 12, 'underline'), bg=self.frames_bg).\
+            grid(row=10, column=3, sticky=S + E + W)
+
+        self.received_percentage = StringVar()
+        self.received_percentage.set("NaN")
+
+        Label(self.name, textvariable=self.received_percentage, bg=self.frames_bg).\
+            grid(row=11, column=3, sticky=N + E + W)
+
         # Place Quality Indicators and Labels
-        self.quality_checks = [QualityCheck(self.name, "QDM", 1, 10, self.frames_bg),
-                               QualityCheck(self.name, "Ignition", 2, 10, self.frames_bg),
-                               QualityCheck(self.name, "Platform Stability", 2, 12, self.frames_bg),
-                               QualityCheck(self.name, "GS Radio", 3, 10, self.frames_bg),
+        self.quality_checks = [QualityCheck(self.name, "QDM", 1, 12, self.frames_bg),
+                               QualityCheck(self.name, "Ignition", 2, 12, self.frames_bg),
+                               QualityCheck(self.name, "Platform Stability", 1, 14, self.frames_bg),
+                               QualityCheck(self.name, "GS Radio", 3, 12, self.frames_bg),
+                               QualityCheck(self.name, "Platform Radio", 3, 14, self.frames_bg),
                                ]
 
         # Create Button for Stability Control
         self.stability = False
         self.stability_button = ttk.Button(text="Turn On Stabilization", style="yellow.TButton",
                                            command=self.stability_message_callback)
-        self.stability_button.grid(column=1, columnspan=3, row=14, sticky=N + S + E + W)
+        self.stability_button.grid(column=1, columnspan=3, row=16, sticky=N + S + E + W)
 
         # Binds verify and control buttons
         self.control.verify_button.config(command=self.verify_message_callback)
@@ -259,7 +272,7 @@ class DataWindow:
          to fill the window space
         :return: None
         """
-        total_rows = 17
+        total_rows = 19
         total_columns = 11
 
         my_rows = range(0, total_rows)
@@ -274,7 +287,7 @@ class DataWindow:
 
         for col in control_col:
             self.name.columnconfigure(col, minsize=100)
-            for row in range(5, 14):
+            for row in range(5, 16):
                 color_frame = Label(self.name, bg=self.framesBg)
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
 
