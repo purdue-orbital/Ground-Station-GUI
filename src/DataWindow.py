@@ -51,6 +51,7 @@ class DataWindow:
         self.stability_button = None
         self.packets_sent = None
         self.packets_received = None
+        self.received_percentage = None
 
         # Random Vars for init_graph_stuff()
         self.balloon_acc_xQ = None
@@ -158,6 +159,16 @@ class DataWindow:
         # Adds Radio Counters
         self.packets_sent = StatCounter(self.name, "Packets Sent", 1, 10, self.frames_bg)
         self.packets_received = StatCounter(self.name, "Packets Received", 2, 10, self.frames_bg)
+
+        # Create received percentage
+        Label(self.name, text="Percentage Received", font=('times', 12, 'underline'), bg=self.frames_bg).\
+            grid(row=10, column=3, sticky=S + E + W)
+
+        self.received_percentage = StringVar()
+        self.received_percentage.set("NaN")
+
+        Label(self.name, textvariable=self.received_percentage, bg=self.frames_bg).\
+            grid(row=11, column=3, sticky=N + E + W)
 
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(self.name, "QDM", 1, 12, self.frames_bg),
