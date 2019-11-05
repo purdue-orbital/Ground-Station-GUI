@@ -161,7 +161,7 @@ class DataWindow:
         self.packets_received = StatCounter(self.name, "Packets Received", 2, 10, self.frames_bg)
 
         # Create received percentage
-        Label(self.name, text="Percentage Received", font=('times', 12, 'underline'), bg=self.frames_bg).\
+        Label(self.name, text="Percent Received", font=('times', 12, 'underline'), bg=self.frames_bg).\
             grid(row=10, column=3, sticky=S + E + W)
 
         self.received_percentage = StringVar()
@@ -173,8 +173,9 @@ class DataWindow:
         # Place Quality Indicators and Labels
         self.quality_checks = [QualityCheck(self.name, "QDM", 1, 12, self.frames_bg),
                                QualityCheck(self.name, "Ignition", 2, 12, self.frames_bg),
-                               QualityCheck(self.name, "Platform Stability", 2, 14, self.frames_bg),
+                               QualityCheck(self.name, "Platform Stability", 1, 14, self.frames_bg),
                                QualityCheck(self.name, "GS Radio", 3, 12, self.frames_bg),
+                               QualityCheck(self.name, "Platform Radio", 3, 14, self.frames_bg),
                                ]
 
         # Create Button for Stability Control
