@@ -304,10 +304,6 @@ class DataWindow:
 
         :return: None
         """
-        if self.is_test_mode():
-            messagebox.showerror("Error", "Please exit test mode")
-            return
-
         if not self.start_timer.clock_run:
             self.start_timer.start = time.time()
             self.start_timer.clock_run = True
