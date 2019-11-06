@@ -2,6 +2,9 @@ import logging
 import sys
 import traceback
 import json
+import os
+
+from sys import platform
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress, RemoteXBeeDevice, XBeeException
 
@@ -10,7 +13,12 @@ from digi.xbee.devices import XBeeDevice, XBee64BitAddress, RemoteXBeeDevice, XB
 # - For windows, it will be 'COM#'
 #
 # where # is the port number.
-LOCAL_PORT = "/dev/ttyS7"
+
+if platform == "linux" and os.uname()[4] == "arm":  # TODO: Test
+    LOCAL_PORT = "/dev/ttyusb2"
+
+else:
+    LOCAL_PORT = "/dev/ttyS7"
 
 # Baud rate of the local device
 BAUD_RATE = 9600
@@ -102,3 +110,4 @@ class ModuleSingleton:
         except Exception as e:
             print(ERR + "Closing Error" + NORM)
             print(e)
+
