@@ -18,6 +18,7 @@ from QualityCheck import QualityCheck
 from AltitudeGraph import AltitudeGraph
 from AccelerometerGyroGraphs import AccelerometerGyroGraphs
 from communications.RadioModule import Module
+from Timer import ShutdownTimer
 
 
 class DataWindow:
@@ -115,6 +116,8 @@ class DataWindow:
 
         self.init_graph_stuff()
         self.draw()
+
+        self.shutdown_timer = None
 
         # Running variable to see if program was terminated
         self.running = 1
@@ -312,8 +315,9 @@ class DataWindow:
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])
 
-        Comm.get_instance(self).testing()
-        Comm.get_instance(self).send("Starting")
+        # Comm.get_instance(self).testing()
+        # Comm.get_instance(self).send("Starting")
+        self.shutdown_timer = ShutdownTimer(300, self.time_out)
 
     def launch(self):
         """
@@ -582,6 +586,7 @@ class DataWindow:
         :return: None
         """
 
+        print("QDM")
         # TODO Make Comms Global
         c = Comm.get_instance(self)
         c.flight()
@@ -601,6 +606,7 @@ class DataWindow:
         self.control.mission_status = Status.TIMEOUT
         self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
+        print("timeout")
 
     def process_incoming(self):
         """
@@ -610,7 +616,10 @@ class DataWindow:
         # Process data in queue
         while self.queue.qsize():
             try:
+                self.shutdown_timer.stop()
+                self.shutdown_timer = ShutdownTimer(300, self.time_out)
                 data_json = self.queue.get()
+                print(data_json)
 
                 origin = data_json["origin"]
 
