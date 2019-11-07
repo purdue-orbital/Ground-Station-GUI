@@ -374,6 +374,8 @@ class DataWindow:
             fo.write("-----STATUS NOT VERIFIED-----\n")
         elif status == Status.LAUNCHED:
             fo.write("-------LAUNCHED-------\n")
+        elif status == Status.TIMEOUT:
+            fo.write("-------RADIO TIME OUT-------\n")
 
         fo.write("DATE:" + current_date + "\n")
         fo.write("MISSION START TIMESTAMP:" + repr(self.start_timer.current_time) + "\n")
@@ -593,6 +595,12 @@ class DataWindow:
         self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
         GPIO.output(self.gui_switch, GPIO.LOW)
+
+    def time_out(self):
+        # TODO: Needs a lot of testing
+        self.control.mission_status = Status.TIMEOUT
+        self.log(self.control.mission_status)
+        self.control.change_status_display(self.control.mission_status)
 
     def process_incoming(self):
         """

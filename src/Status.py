@@ -9,3 +9,4 @@ class Status(Enum):
     RESET = "VARIABLES RESET"
     RESTART = "PROGRAM RESTART"
     LAUNCHED = "LAUNCHED"
+    TIMEOUT = "TIME OUT"
