@@ -110,4 +110,3 @@ class ModuleSingleton:
         except Exception as e:
             print(ERR + "Closing Error" + NORM)
             print(e)
-

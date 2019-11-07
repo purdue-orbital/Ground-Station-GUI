@@ -1,5 +1,6 @@
 import time
 from tkinter import *
+from threading import Timer as ThreadingTimer
 
 
 class Timer:
@@ -38,4 +39,32 @@ class Timer:
         else:
             self.current_time = "00:00:00:00"
             self.clock_frame.config(text="00:00:00:00")
+
+
+class ShutdownTimer(object):
+    def __init__(self, interval, function):
+        print("init")
+        self.count = 0
+        self._timer = None
+        self.interval = interval
+        self.function = function
+        self.is_running = False
+        self.start()
+
+    def _run(self):
+        print("_run")
+        self.start()
+        self.function()
+
+    def start(self):
+        print("start")
+        if not self.is_running:
+            self._timer = ThreadingTimer(self.interval, self._run)
+            self._timer.start()
+            self.is_running = True
+
+    def stop(self):
+        print("stop")
+        self._timer.cancel()
+        self.is_running = False
 
