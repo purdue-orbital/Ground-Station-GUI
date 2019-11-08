@@ -616,7 +616,8 @@ class DataWindow:
         # Process data in queue
         while self.queue.qsize():
             try:
-                self.shutdown_timer.stop()
+                if self.shutdown_timer is not None:
+                    self.shutdown_timer.stop()
                 self.shutdown_timer = ShutdownTimer(300, self.time_out)
                 data_json = self.queue.get()
                 print(data_json)

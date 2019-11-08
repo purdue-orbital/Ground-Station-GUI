@@ -90,7 +90,6 @@ class ThreadedClient:
             time.sleep(1)
             if self.gui.is_test_mode():
                 end = 1
-
                 origin = "balloon"
 
                 preload = (
