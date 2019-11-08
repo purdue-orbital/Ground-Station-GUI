@@ -49,4 +49,6 @@ class Control:
             self.display_mission_status_text.set("LAUNCHED")
         elif status == Status.TIMEOUT:
             self.display_mission_status_text.set("RADIO TIME OUT")
+        else:
+            self.display_mission_status_text.set("ERROR")
 

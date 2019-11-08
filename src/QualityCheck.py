@@ -17,6 +17,10 @@ class QualityCheck:
         else:
             self.quality_indicator.config(text="Offline", fg="red")
 
+    def reset_quality(self):
+        self.ready = 0
+        self.display_quality()
+
 
 # Example Case
 # if __name__ == "__main__":
