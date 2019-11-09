@@ -19,3 +19,7 @@ class StatCounter:
 
     def get_count(self):
         return self.counter
+
+    def reset(self):
+        self.counter = 0
+        self.counterStrVar.set(self.counter)

@@ -471,6 +471,8 @@ class DataWindow:
         self.control.reset_status()
         self.timer.reset()
         self.start_timer.reset()
+        self.packets_sent.reset()
+        self.packets_received.reset()
 
         for check in self.quality_checks:
             check.reset_quality()
@@ -649,6 +651,7 @@ class DataWindow:
                     self.quality_checks[1].ready = data_json["Ignition"]
                     self.quality_checks[2].ready = data_json["Stabilization"]
                     self.quality_checks[3].ready = data_json["GSRadio"]
+                    self.quality_checks[4].ready = data_json["PlatRadio"]
 
                     for check in self.quality_checks:
                         check.display_quality()

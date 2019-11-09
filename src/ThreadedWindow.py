@@ -119,12 +119,16 @@ class ThreadedClient:
                         '"QDM" : 1,' +
                         '"Ignition" : 1,' +
                         '"Stabilization" : 1,' +
-                        '"GSRadio" : 1' +
+                        '"GSRadio" : 1,' +
+                        '"PlatRadio" : 1' +
                         '}'
                 )
 
+                print("HERE!!")
                 data_json = json.loads(preload)
+                print("HERE 2!!!!")
                 data_json2 = json.loads(preload2)
+                print("HERE 3!!!!!!!!!!")
                 self.queue.put(data_json)
                 self.queue.put(data_json2)
 
