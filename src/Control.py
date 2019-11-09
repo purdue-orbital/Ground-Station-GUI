@@ -57,3 +57,7 @@ class Control:
         self.verify_button.config(text="VERIFY")
         self.change_status_display(self.mission_status)
 
+        self.verify_button.state(["disabled"])
+        self.abort_button.state(["disabled"])
+
+

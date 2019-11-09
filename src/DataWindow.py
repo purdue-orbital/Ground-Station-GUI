@@ -472,9 +472,6 @@ class DataWindow:
         self.timer.reset()
         self.start_timer.reset()
 
-        self.control.verify_button.state(["disabled"])
-        self.control.abort_button.state(["disabled"])
-
         for check in self.quality_checks:
             check.reset_quality()
 
