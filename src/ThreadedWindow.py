@@ -124,11 +124,8 @@ class ThreadedClient:
                         '}'
                 )
 
-                print("HERE!!")
                 data_json = json.loads(preload)
-                print("HERE 2!!!!")
                 data_json2 = json.loads(preload2)
-                print("HERE 3!!!!!!!!!!")
                 self.queue.put(data_json)
                 self.queue.put(data_json2)
 
@@ -144,6 +141,8 @@ class ThreadedClient:
         if messagebox.askyesno("Quit", "Do you want to quit?"):
             self.radio.close()
             self.running = 0
+            if self.gui.shutdown_timer is not None:
+                self.gui.shutdown_timer.stop()
             self.gui.close()
             GPIO.cleanup()
             sys.exit
