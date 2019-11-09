@@ -52,3 +52,8 @@ class Control:
         else:
             self.display_mission_status_text.set("ERROR")
 
+    def reset_status(self):
+        self.mission_status = Status.NOT_VERIFIED
+        self.verify_button.config(text="VERIFY")
+        self.change_status_display(self.mission_status)
+

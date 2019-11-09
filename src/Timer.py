@@ -40,6 +40,9 @@ class Timer:
             self.current_time = "00:00:00:00"
             self.clock_frame.config(text="00:00:00:00")
 
+    def reset(self):
+        self.clock_run = False
+
 
 class ShutdownTimer(object):
     def __init__(self, interval, function):
