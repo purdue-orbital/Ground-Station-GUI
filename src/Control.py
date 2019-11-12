@@ -49,4 +49,15 @@ class Control:
             self.display_mission_status_text.set("LAUNCHED")
         elif status == Status.TIMEOUT:
             self.display_mission_status_text.set("RADIO TIME OUT")
+        else:
+            self.display_mission_status_text.set("ERROR")
+
+    def reset_status(self):
+        self.mission_status = Status.NOT_VERIFIED
+        self.verify_button.config(text="VERIFY")
+        self.change_status_display(self.mission_status)
+
+        self.verify_button.state(["disabled"])
+        self.abort_button.state(["disabled"])
+
 

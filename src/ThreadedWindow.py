@@ -90,7 +90,6 @@ class ThreadedClient:
             time.sleep(1)
             if self.gui.is_test_mode():
                 end = 1
-
                 origin = "balloon"
 
                 preload = (
@@ -120,7 +119,8 @@ class ThreadedClient:
                         '"QDM" : 1,' +
                         '"Ignition" : 1,' +
                         '"Stabilization" : 1,' +
-                        '"GSRadio" : 1' +
+                        '"GSRadio" : 1,' +
+                        '"PlatRadio" : 1' +
                         '}'
                 )
 
@@ -141,6 +141,8 @@ class ThreadedClient:
         if messagebox.askyesno("Quit", "Do you want to quit?"):
             self.radio.close()
             self.running = 0
+            if self.gui.shutdown_timer is not None:
+                self.gui.shutdown_timer.stop()
             self.gui.close()
             GPIO.cleanup()
             sys.exit

@@ -36,6 +36,7 @@ class DataWindow:
         self.frames_bg = frames_bg
         self.time_bg = "#1e1e1e"
         self.yellow = "#f8fc16"
+        self.total_rows = 18
 
         # Random Vars to init for draw()
         self.start_timer = None
@@ -53,6 +54,7 @@ class DataWindow:
         self.packets_sent = None
         self.packets_received = None
         self.received_percentage = None
+        self.warningLabel = None
 
         # Random Vars for init_graph_stuff()
         self.balloon_acc_xQ = None
@@ -181,6 +183,10 @@ class DataWindow:
                                QualityCheck(self.name, "Platform Radio", 3, 14, self.frames_bg),
                                ]
 
+        # Innit the warning label
+        self.warningLabel = Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED,
+                                  font=("Times", 30, "bold"))
+
         # Create Button for Stability Control
         self.stability = False
         self.stability_button = ttk.Button(text="Turn On Stabilization", style="yellow.TButton",
@@ -275,7 +281,7 @@ class DataWindow:
          to fill the window space
         :return: None
         """
-        total_rows = 19
+        total_rows = self.total_rows
         total_columns = 11
 
         my_rows = range(0, total_rows)
@@ -293,11 +299,6 @@ class DataWindow:
             for row in range(5, 16):
                 color_frame = Label(self.name, bg=self.framesBg)
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
-
-        if self.test_mode:
-            self.name.rowconfigure(total_rows, weight=2)
-            Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED, font=("Times", 30, "bold")).\
-                grid(row=total_rows, column=0, columnspan=total_columns, sticky=N + S + E + W)
 
     def start_mission(self):
         """
@@ -465,12 +466,31 @@ class DataWindow:
     def alter_test_mode(self):
         self.test_mode = not self.test_mode
 
-        for widget in self.name.winfo_children():
-            widget.destroy()
-
-        time.sleep(1)
         self.init_graph_stuff()
-        self.draw()
+        self.dataBalloon.reset_variables()
+        self.control.reset_status()
+        self.timer.reset()
+        self.start_timer.reset()
+        self.packets_sent.reset()
+        self.packets_received.reset()
+
+        for check in self.quality_checks:
+            check.reset_quality()
+
+        if self.test_mode:
+            self.name.rowconfigure(19, weight=2)
+            self.warningLabel.grid(row=19, column=0, columnspan=11, sticky=N + S + E + W)
+
+        else:
+            self.name.rowconfigure(19, weight=2)
+            self.warningLabel.grid_forget()
+
+        # for widget in self.name.winfo_children():
+        #     widget.destroy()
+        #
+        # time.sleep(1)
+        # self.init_graph_stuff()
+        # self.draw()
 
     def is_test_mode(self):
         return self.test_mode
@@ -616,7 +636,8 @@ class DataWindow:
         # Process data in queue
         while self.queue.qsize():
             try:
-                self.shutdown_timer.stop()
+                if self.shutdown_timer is not None:
+                    self.shutdown_timer.stop()
                 self.shutdown_timer = ShutdownTimer(300, self.time_out)
                 data_json = self.queue.get()
                 print(data_json)
@@ -630,6 +651,7 @@ class DataWindow:
                     self.quality_checks[1].ready = data_json["Ignition"]
                     self.quality_checks[2].ready = data_json["Stabilization"]
                     self.quality_checks[3].ready = data_json["GSRadio"]
+                    self.quality_checks[4].ready = data_json["PlatRadio"]
 
                     for check in self.quality_checks:
                         check.display_quality()
