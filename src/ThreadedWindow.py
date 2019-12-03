@@ -9,6 +9,7 @@ from DataWindow import DataWindow
 
 # from GraphNotebook import GraphNotebook
 from Mode import Mode
+from util.exception import RadioSerialConnectionException
 from communications.RadioModule import Module
 from CommunicationDriver import Comm
 

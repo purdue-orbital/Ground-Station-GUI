@@ -16,7 +16,6 @@ from CommunicationDriver import Comm
 from QualityCheck import QualityCheck
 from AltitudeGraph import AltitudeGraph
 from AccelerometerGyroGraphs import AccelerometerGyroGraphs
-from communications.RadioModule import Module
 
 
 class DataWindow:
@@ -78,7 +77,9 @@ class DataWindow:
         # Set up
         self.test_mode = False
         self.abort_method = None
-        self.radio = Module.get_instance(self)
+
+        # Communications Driver
+        self.commDriver = Comm.get_instance(self)
 
         name.title("Ground Station Graphical User Interface v0.2")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
@@ -320,8 +321,7 @@ class DataWindow:
             self.timer.clock_run = True
             self.timer.tick()
 
-        c = Comm.get_instance(self)
-        c.send("Launch")
+        self.commDriver.send("Launch")
 
     def reset_variables_window(self):
         """
@@ -535,33 +535,29 @@ class DataWindow:
             c.send("Abort")
 
     def test_launch(self):
-        c = Comm.get_instance(self)
-        m = c.get_mode()
+        m = self.commDriver.get_mode()
 
-        c.testing()
-        c.set_mode(m)
-        c.send("Launch_TEST")
+        self.commDriver.testing()
+        self.commDriver.set_mode(m)
+        self.commDriver.send("Launch_TEST")
 
     def test_abort(self):
-        c = Comm.get_instance(self)
-        m = c.get_mode()
+        m = self.commDriver.get_mode()
 
-        c.testing()
-        c.send("Abort_TEST")
-        c.set_mode(m)
+        self.commDriver.testing()
+        self.commDriver.send("Abort_TEST")
+        self.commDriver.set_mode(m)
 
     def test_stability(self):
-        c = Comm.get_instance(self)
-        m = c.get_mode()
+        m = self.commDriver.get_mode()
 
-        c.testing()
-        c.send("Stability_On_Test")
-        c.set_mode(m)
+        self.commDriver.testing()
+        self.commDriver.send("Stability_On_Test")
+        self.commDriver.set_mode(m)
 
     def select_cdm(self):
-        c = Comm.get_instance(self)
-        c.flight()
-        c.send("cdm")
+        self.commDriver.flight()
+        self.commDriver.send("cdm")
 
         self.abort_method = "CDM"
         self.control.mission_status = Status.ABORT
@@ -577,10 +573,8 @@ class DataWindow:
         :return: None
         """
 
-        # TODO Make Comms Global
-        c = Comm.get_instance(self)
-        c.flight()
-        c.send("qdm")
+        self.commDriver.flight()
+        self.commDriver.send("qdm")
 
         self.abort_method = "QDM"
         self.control.mission_status = Status.ABORT
@@ -733,4 +727,4 @@ class DataWindow:
         Resets Radio
         :return: None
         """
-        self.radio.reset_radio()
+        self.commDriver.reset_radio()

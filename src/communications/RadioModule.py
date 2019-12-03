@@ -1,6 +1,7 @@
 import traceback
 import json
 import serial
+from util.exception import GroundStationException, RadioSerialConnectionException
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress, RemoteXBeeDevice, XBeeException
 from util.exception import RadioSerialConnectionException, RadioObjectException
@@ -50,8 +51,8 @@ class ModuleSingleton:
             self.device.set_sync_ops_timeout(10)
             self.device.open()
         except serial.SerialException:
-            # raise RadioSerialConnectionException
             pass
+            # raise RadioSerialConnectionException
 
         def data_receive_callback(msg):
             data = msg.data.decode("utf8")
@@ -63,7 +64,7 @@ class ModuleSingleton:
         try:
             self.device.add_data_received_callback(data_receive_callback)
         except AttributeError:
-            raise RadioObjectException
+            # raise RadioObjectException
             pass
             # self.reset_radio()
         except Exception as e:
@@ -88,12 +89,12 @@ class ModuleSingleton:
             print(ERR + "Sending Error" + NORM)
             print(repr(e))
             traceback.print_exc()
-            self.reset_radio()
+            self.reset()
 
     def bind_queue(self, queue):
         self.queue = queue
 
-    def reset_radio(self):
+    def reset(self):
         print(WARN + "Resetting Radio Connection" + NORM)
         self.device.reset()
 
