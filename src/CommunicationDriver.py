@@ -59,7 +59,7 @@ class CommSingleton:
             command_json["command"] = command
 
         if self.__mode == Mode.FLIGHT:
-            command_json["mode"] = "testing"
+            command_json["mode"] = "flight"
             command_json["command"] = command
 
         try:

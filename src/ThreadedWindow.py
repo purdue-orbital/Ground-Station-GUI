@@ -58,6 +58,7 @@ class ThreadedClient:
         self.thread1.start()
 
         # Create testing variables
+        #TODO Maybe removable
         self.testing = 0
 
         # Add event to detect GPIO pin 11

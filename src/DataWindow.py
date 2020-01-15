@@ -464,6 +464,10 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def alter_test_mode(self):
+        c = Comm.get_instance(self)
+        c.testing()
+
+        #TODO use above mode defined in CommunicationDriver.py
         self.test_mode = not self.test_mode
 
         self.init_graph_stuff()
