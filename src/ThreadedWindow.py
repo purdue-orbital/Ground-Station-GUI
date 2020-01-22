@@ -57,13 +57,6 @@ class ThreadedClient:
         self.thread1 = threading.Thread(target=self.test_queue)
         self.thread1.start()
 
-        # Create testing variables
-        #TODO Maybe removable
-        self.testing = 0
-
-        # Add event to detect GPIO pin 11
-        GPIO.add_event_detect(11, GPIO.RISING, callback=self.launch)
-
         # Process data in queue
         self.update()
 
@@ -75,11 +68,6 @@ class ThreadedClient:
             self.master.after(200, self.update)
         except Exception as e:
             print(e)
-
-    def set_testing(self, isTesting):
-        # Getter for testing bool
-        self.testing = isTesting
-        self.gui.set_testing(isTesting)
 
     def error(self, message):
         messagebox.showinfo("Error", message)

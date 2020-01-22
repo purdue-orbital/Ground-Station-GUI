@@ -316,8 +316,8 @@ class DataWindow:
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])
 
-        # Comm.get_instance(self).testing()
-        # Comm.get_instance(self).send("Starting")
+        Comm.get_instance(self).flight()
+
         self.shutdown_timer = ShutdownTimer(300, self.time_out)
 
     def launch(self):
@@ -465,39 +465,41 @@ class DataWindow:
 
     def alter_test_mode(self):
         c = Comm.get_instance(self)
-        c.testing()
 
-        #TODO use above mode defined in CommunicationDriver.py
-        self.test_mode = not self.test_mode
+        if c.get_mode() == Mode.STANDBY:
+            c.testing()
 
-        self.init_graph_stuff()
-        self.dataBalloon.reset_variables()
-        self.control.reset_status()
-        self.timer.reset()
-        self.start_timer.reset()
-        self.packets_sent.reset()
-        self.packets_received.reset()
+            self.init_graph_stuff()
+            self.dataBalloon.reset_variables()
+            self.control.reset_status()
+            self.timer.reset()
+            self.start_timer.reset()
+            self.packets_sent.reset()
+            self.packets_received.reset()
 
-        for check in self.quality_checks:
-            check.reset_quality()
+            for check in self.quality_checks:
+                check.reset_quality()
 
-        if self.test_mode:
-            self.name.rowconfigure(19, weight=2)
-            self.warningLabel.grid(row=19, column=0, columnspan=11, sticky=N + S + E + W)
+            if self.test_mode:
+                self.name.rowconfigure(19, weight=2)
+                self.warningLabel.grid(row=19, column=0, columnspan=11, sticky=N + S + E + W)
+
+            else:
+                self.name.rowconfigure(19, weight=2)
+                self.warningLabel.grid_forget()
+
+        elif c.get_mode() == Mode.TESTING:
+            c.standby()
 
         else:
-            self.name.rowconfigure(19, weight=2)
-            self.warningLabel.grid_forget()
-
-        # for widget in self.name.winfo_children():
-        #     widget.destroy()
-        #
-        # time.sleep(1)
-        # self.init_graph_stuff()
-        # self.draw()
+            print("\n*** CANNOT ENTER TEST MODE DURING FLIGHT ***")
 
     def is_test_mode(self):
-        return self.test_mode
+        try:
+            c = Comm.get_instance(self)
+            return c.get_mode() == Mode.TESTING
+        except Exception as e:
+            print(e)
 
     def verify_message_callback(self):
         """
@@ -547,16 +549,14 @@ class DataWindow:
                 self.stability = not self.stability
 
                 c = Comm.get_instance(self)
-                c.flight()
-                c.send("Stabilization")
+                c.send("Stabilization off")
         else:
             if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
                 self.stability_button.config(text="Turn Off Stabilization")
                 self.stability = not self.stability
 
                 c = Comm.get_instance(self)
-                c.flight()
-                c.send("Stabilization")
+                c.send("Stabilization on")
 
     def abort_message_callback(self):
         """
