@@ -11,14 +11,15 @@ from util.exception import RadioSerialConnectionException, RadioObjectException
 # - For pure windows (cmd, PowerShell, Pycharm, etc), it will be 'COM#'
 #
 # where # is the port number.
-LOCAL_PORT = "/dev/ttyS16"
+LOCAL_PORT = "/dev/ttyS10"
 
 # Baud rate of the local device
 BAUD_RATE = 9600
 
 # Remote node MAC address in hexadecimal format. This can be found on the radio chip itself, listed as the
 # hardware address.
-REMOTE_NODE_ADDRESS = "0013A2004187A0B0"
+REMOTE_NODE_ADDRESS = "0013A200148887C" # Remote address
+# REMOTE_NODE_ADDRESS = "0013A2004187A0B0" # Local address
 
 OK = "\u001b[32m"
 WARN = "\u001b[33m"
