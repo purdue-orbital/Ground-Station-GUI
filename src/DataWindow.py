@@ -170,7 +170,7 @@ class DataWindow:
             grid(row=10, column=3, sticky=S + E + W)
 
         self.received_percentage = StringVar()
-        self.received_percentage.set("NaN")
+        self.calc_received_percentage()
 
         Label(self.name, textvariable=self.received_percentage, bg=self.frames_bg).\
             grid(row=11, column=3, sticky=N + E + W)
@@ -777,3 +777,14 @@ class DataWindow:
         :return: None
         """
         self.radio.reset_radio()
+
+    def calc_received_percentage(self):
+        """
+        Calculates the received rate of the packets using the counter numbers
+        :return: None
+        """
+        if self.packets_sent == 0:
+            self.received_percentage.set("NaN")
+            return
+
+        self.received_percentage.set(self.packets_received / self.packets_sent)
