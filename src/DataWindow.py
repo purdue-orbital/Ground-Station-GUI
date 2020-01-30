@@ -464,8 +464,11 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def alter_test_mode(self):
-        c = Comm.get_instance(self)
-        c.testing()
+        try:
+            c = Comm.get_instance(self)
+            c.testing()
+        except Exception as e:
+            print(e)
 
         #TODO use above mode defined in CommunicationDriver.py
         self.test_mode = not self.test_mode
@@ -546,17 +549,23 @@ class DataWindow:
                 self.stability_button.config(text="Turn On Stabilization")
                 self.stability = not self.stability
 
-                c = Comm.get_instance(self)
-                c.flight()
-                c.send("Stabilization")
+                try:
+                    c = Comm.get_instance(self)
+                    c.flight()
+                    c.send("Stabilization")
+                except Exception as e:
+                    print(e)
         else:
             if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
                 self.stability_button.config(text="Turn Off Stabilization")
                 self.stability = not self.stability
 
-                c = Comm.get_instance(self)
-                c.flight()
-                c.send("Stabilization")
+                try:
+                    c = Comm.get_instance(self)
+                    c.flight()
+                    c.send("Stabilization")
+                except Exception as e:
+                    print(e)
 
     def abort_message_callback(self):
         """
@@ -568,30 +577,40 @@ class DataWindow:
             self.select_qdm()
 
     def test_launch(self):
-        c = Comm.get_instance(self)
-        m = c.get_mode()
+        try:
+            c = Comm.get_instance(self)
+            m = c.get_mode()
 
-        c.testing()
-        c.send("launch")
-        c.set_mode(m)
+            c.testing()
+            c.send("launch")
+            c.set_mode(m)
+        except Exception as e:
+            print(e)
 
     def test_abort(self):
-        c = Comm.get_instance(self)
-        m = c.get_mode()
+        try:
+            c = Comm.get_instance(self)
+            m = c.get_mode()
 
-        c.testing()
-        c.send("abort")
-        c.set_mode(m)
+            c.testing()
+            c.send("abort")
+            c.set_mode(m)
+        except Exception as e:
+            print(e)
 
     def test_stability(self):
-        c = Comm.get_instance(self)
-        m = c.get_mode()
+        try:
+            c = Comm.get_instance(self)
+            m = c.get_mode()
 
-        c.testing()
-        c.send("stability")
-        c.set_mode(m)
+            c.testing()
+            c.send("stability")
+            c.set_mode(m)
+        except Exception as e:
+            print(e)
 
     def select_cdm(self):
+        # TODO: Are we using CDM at all??? Get rid of?
         c = Comm.get_instance(self)
         c.flight()
         c.send("cdm")
@@ -612,9 +631,12 @@ class DataWindow:
 
         print("QDM")
         # TODO Make Comms Global
-        c = Comm.get_instance(self)
-        c.flight()
-        c.send("qdm")
+        try:
+            c = Comm.get_instance(self)
+            c.flight()
+            c.send("qdm")
+        except Exception as e:
+            print(e)
 
         self.abort_method = "QDM"
         self.control.mission_status = Status.ABORT
