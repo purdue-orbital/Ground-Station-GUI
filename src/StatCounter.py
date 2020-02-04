@@ -17,6 +17,10 @@ class StatCounter:
         self.counter = self.counter + 1
         self.counterStrVar.set(self.counter)
 
+    def set_count(self, count):
+        self.counter = count
+        self.counterStrVar.set(self.counter)
+
     def get_count(self):
         return self.counter
 
