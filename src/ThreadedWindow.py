@@ -25,7 +25,7 @@ NORM = "\u001b[0m"
 
 """
 ROCKET GUI Version 0.2
-Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch
+Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch, Connor Todd
 Since: 10/31/2018
 Created for Purdue Orbital Ground Stations Sub-Team
 Parses and displays data from the a Raspberry Pi 3 to verbosely

@@ -185,7 +185,6 @@ class DataWindow:
 
         self.quality_checks[3].ready = self.radio.is_local_device_init
         self.quality_checks[3].display_quality()
-        print(self.quality_checks[3].ready)
 
         # Innit the warning label
         self.warningLabel = Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED,

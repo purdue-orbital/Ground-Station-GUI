@@ -20,7 +20,7 @@ if platform == "linux" and os.uname()[4] == "arm":  # TODO: Test
     LOCAL_PORT = "/dev/ttyusb2"
 
 else:
-    LOCAL_PORT = "/dev/ttyS7"
+    LOCAL_PORT = "/dev/ttyS10"
 
 # Baud rate of the local device
 BAUD_RATE = 9600
