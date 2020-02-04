@@ -480,9 +480,6 @@ class DataWindow:
         self.packets_received.reset()
         c = Comm.get_instance(self)
 
-        # TODO use above mode defined in CommunicationDriver.py
-        self.test_mode = not self.test_mode
-
         for check in self.quality_checks:
             check.reset_quality()
 
@@ -569,7 +566,6 @@ class DataWindow:
         else:
             if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
                 self.stability_button.config(text="Turn Off Stabilization")
-                self.stability = not self.stability
 
                 try:
                     c = Comm.get_instance(self)
