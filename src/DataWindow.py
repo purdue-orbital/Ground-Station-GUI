@@ -319,8 +319,8 @@ class DataWindow:
         self.control.verify_button.state(["!disabled"])
         self.control.abort_button.state(["!disabled"])
 
-        # Comm.get_instance(self).testing()
-        # Comm.get_instance(self).send("Starting")
+        Comm.get_instance(self).flight()
+
         self.shutdown_timer = ShutdownTimer(300, self.time_out)
 
     def launch(self):
@@ -467,11 +467,7 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def alter_test_mode(self):
-        try:
-            c = Comm.get_instance(self)
-            c.testing()
-        except Exception as e:
-            print(e)
+        c = Comm.get_instance(self)
 
         # TODO use above mode defined in CommunicationDriver.py
         self.test_mode = not self.test_mode
@@ -483,6 +479,10 @@ class DataWindow:
         self.start_timer.reset()
         self.packets_sent.reset()
         self.packets_received.reset()
+        c = Comm.get_instance(self)
+
+        # TODO use above mode defined in CommunicationDriver.py
+        self.test_mode = not self.test_mode
 
         for check in self.quality_checks:
             check.reset_quality()
@@ -495,15 +495,21 @@ class DataWindow:
             self.name.rowconfigure(19, weight=2)
             self.warningLabel.grid_forget()
 
-        # for widget in self.name.winfo_children():
-        #     widget.destroy()
-        #
-        # time.sleep(1)
-        # self.init_graph_stuff()
-        # self.draw()
+        if c.get_mode() == Mode.STANDBY:
+            c.testing()
+
+        elif c.get_mode() == Mode.TESTING:
+            c.standby()
+
+        else:
+            print("\n*** CANNOT ENTER TEST MODE DURING FLIGHT ***")
 
     def is_test_mode(self):
-        return self.test_mode
+        try:
+            c = Comm.get_instance(self)
+            return c.get_mode() == Mode.TESTING
+        except Exception as e:
+            print(e)
 
     def verify_message_callback(self):
         """
@@ -549,27 +555,17 @@ class DataWindow:
         """
         if self.stability:
             if messagebox.askyesno("Turn off Stabilization", "Do you want to turn off stabilization"):
-                self.stability_button.config(text="Turn On Stabilization")
-                self.stability = not self.stability
-                
-                try:
-                    c = Comm.get_instance(self)
-                    c.flight()
-                    c.send("Stabilization")
-                except Exception as e:
-                    print(e)
-
+                c = Comm.get_instance(self)
+                if c.send("Stabilization off"):
+                    self.stability_button.config(text="Turn On Stabilization")
+                    self.stability = not self.stability
         else:
             if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
-                self.stability_button.config(text="Turn Off Stabilization")
-                self.stability = not self.stability
+                c = Comm.get_instance(self)
+                if c.send("Stabilization on"):
+                    self.stability_button.config(text="Turn Off Stabilization")
+                    self.stability = not self.stability
 
-                try:
-                    c = Comm.get_instance(self)
-                    c.flight()
-                    c.send("Stabilization")
-                except Exception as e:
-                    print(e)
 
     def abort_message_callback(self):
         """
