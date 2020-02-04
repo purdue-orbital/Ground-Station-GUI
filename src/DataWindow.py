@@ -545,18 +545,16 @@ class DataWindow:
         """
         if self.stability:
             if messagebox.askyesno("Turn off Stabilization", "Do you want to turn off stabilization"):
-                self.stability_button.config(text="Turn On Stabilization")
-                self.stability = not self.stability
-
                 c = Comm.get_instance(self)
-                c.send("Stabilization off")
+                if c.send("Stabilization off"):
+                    self.stability_button.config(text="Turn On Stabilization")
+                    self.stability = not self.stability
         else:
             if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
-                self.stability_button.config(text="Turn Off Stabilization")
-                self.stability = not self.stability
-
                 c = Comm.get_instance(self)
-                c.send("Stabilization on")
+                if c.send("Stabilization on"):
+                    self.stability_button.config(text="Turn Off Stabilization")
+                    self.stability = not self.stability
 
     def abort_message_callback(self):
         """

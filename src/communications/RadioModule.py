@@ -18,7 +18,7 @@ if platform == "linux" and os.uname()[4] == "arm":  # TODO: Test
     LOCAL_PORT = "/dev/ttyusb2"
 
 else:
-    LOCAL_PORT = "/dev/ttyS7"
+    LOCAL_PORT = "/dev/ttyS13"
 
 # Baud rate of the local device
 BAUD_RATE = 9600
@@ -91,11 +91,16 @@ class ModuleSingleton:
         try:
             self.device.send_data(self.remote_device, data)
             print(OK + "Sent" + NORM)
+
+            return 1
+
         except XBeeException as e:
             print(ERR + "Sending Error" + NORM)
             print(repr(e))
             traceback.print_exc()
             self.reset_radio()
+
+            return 0
 
     def bind_queue(self, queue):
         self.queue = queue
