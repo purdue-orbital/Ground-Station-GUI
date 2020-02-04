@@ -468,33 +468,32 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def alter_test_mode(self):
-        try:
-            c = Comm.get_instance(self)
-            c.testing()
-        except Exception as e:
-            print(e)
+        c = Comm.get_instance(self)
 
         # TODO use above mode defined in CommunicationDriver.py
         self.test_mode = not self.test_mode
 
-            self.init_graph_stuff()
-            self.dataBalloon.reset_variables()
-            self.control.reset_status()
-            self.timer.reset()
-            self.start_timer.reset()
-            self.packets_sent.reset()
-            self.packets_received.reset()
+        self.init_graph_stuff()
+        self.dataBalloon.reset_variables()
+        self.control.reset_status()
+        self.timer.reset()
+        self.start_timer.reset()
+        self.packets_sent.reset()
+        self.packets_received.reset()
 
-            for check in self.quality_checks:
-                check.reset_quality()
+        for check in self.quality_checks:
+            check.reset_quality()
 
-            if self.test_mode:
-                self.name.rowconfigure(19, weight=2)
-                self.warningLabel.grid(row=19, column=0, columnspan=11, sticky=N + S + E + W)
+        if self.test_mode:
+            self.name.rowconfigure(19, weight=2)
+            self.warningLabel.grid(row=19, column=0, columnspan=11, sticky=N + S + E + W)
 
-            else:
-                self.name.rowconfigure(19, weight=2)
-                self.warningLabel.grid_forget()
+        else:
+            self.name.rowconfigure(19, weight=2)
+            self.warningLabel.grid_forget()
+
+        if c.get_mode() == Mode.STANDBY:
+            c.testing()
 
         elif c.get_mode() == Mode.TESTING:
             c.standby()
