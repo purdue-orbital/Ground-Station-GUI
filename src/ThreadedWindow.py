@@ -45,7 +45,9 @@ class ThreadedClient:
         self.queue = queue.Queue()
 
         # Create Module class and bind queue
+        # TODO Exception handling
         self.radio = Module.get_instance(self)
+
         self.radio.bind_queue(self.queue)
 
         # Window to display all data
@@ -58,7 +60,7 @@ class ThreadedClient:
         self.thread1.start()
 
         # Create testing variables
-        #TODO Maybe removable
+        # TODO Maybe removable
         self.testing = 0
 
         # Add event to detect GPIO pin 11
@@ -146,7 +148,6 @@ class ThreadedClient:
                 self.gui.shutdown_timer.stop()
             self.gui.close()
             GPIO.cleanup()
-            sys.exit
             root.destroy()
 
             return 0

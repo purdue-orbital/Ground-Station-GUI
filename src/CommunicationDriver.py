@@ -23,7 +23,8 @@ class Comm:
 class CommSingleton:
     def __init__(self):
         self.__mode = Mode.STANDBY
-        self.__radio = Module.get_instance()
+        # TODO Catch exception
+        self.__radio = Module.get_instance(self)
 
     def standby(self):
         self.__mode = Mode.STANDBY
@@ -49,6 +50,9 @@ class CommSingleton:
         return self.__mode
 
     def send(self, command):
+
+        print("Sending...")
+
         if self.__mode == Mode.STANDBY:
             # discard command
             print("\nStandby, command discarded.\n")
