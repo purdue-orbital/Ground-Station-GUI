@@ -2,8 +2,11 @@ import datetime
 import time
 import os
 import queue
+import random
+import string
 from tkinter import *
 from tkinter import messagebox
+from tkinter import simpledialog
 from tkinter import ttk
 import RPi.GPIO as GPIO
 
@@ -267,6 +270,7 @@ class DataWindow:
         program_menu.add_command(label="Log", command=self.log_menu)
         program_menu.add_command(label="Reset Data", command=self.reset_variables_window)
         program_menu.add_command(label="Reset Radio", command=self.reset_radio)
+        program_menu.add_command(label="Manual Override", command=self.manual_override_callback)
 
         help_menu.add_command(label="Help Index", command=self.help_window)
         # help_menu.add_separator()
@@ -506,6 +510,18 @@ class DataWindow:
             return c.get_mode() == Mode.TESTING
         except Exception as e:
             print(e)
+
+    def manual_override_callback(self):
+        random_string = ""
+        for i in range(10):
+            random_string = random_string + random.SystemRandom().choice(string.ascii_letters + string.digits)
+
+        s = simpledialog.askstring("Danger", "Please Enter the following string: " + random_string)
+        if s == random_string:
+            messagebox.showinfo("Success", "Manual Override will be preformed")
+            # TODO: Whatever an override actually entails
+        else:
+            messagebox.showerror("Error", "Strings did not match. Stopping Override.")
 
     def verify_message_callback(self):
         """
