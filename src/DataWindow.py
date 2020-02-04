@@ -183,6 +183,10 @@ class DataWindow:
                                QualityCheck(self.name, "Platform Radio", 3, 14, self.frames_bg),
                                ]
 
+        self.quality_checks[3].ready = self.radio.is_local_device_init
+        self.quality_checks[3].display_quality()
+        print(self.quality_checks[3].ready)
+
         # Innit the warning label
         self.warningLabel = Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED,
                                   font=("Times", 30, "bold"))
@@ -467,7 +471,7 @@ class DataWindow:
         c = Comm.get_instance(self)
         c.testing()
 
-        #TODO use above mode defined in CommunicationDriver.py
+        # TODO use above mode defined in CommunicationDriver.py
         self.test_mode = not self.test_mode
 
         self.init_graph_stuff()
@@ -545,7 +549,6 @@ class DataWindow:
             if messagebox.askyesno("Turn off Stabilization", "Do you want to turn off stabilization"):
                 self.stability_button.config(text="Turn On Stabilization")
                 self.stability = not self.stability
-
                 c = Comm.get_instance(self)
                 c.flight()
                 c.send("Stabilization")
@@ -654,7 +657,7 @@ class DataWindow:
                     self.quality_checks[0].ready = data_json["QDM"]
                     self.quality_checks[1].ready = data_json["Ignition"]
                     self.quality_checks[2].ready = data_json["Stabilization"]
-                    self.quality_checks[3].ready = data_json["GSRadio"]
+                    # self.quality_checks[3].ready = data_json["GSRadio"]
                     self.quality_checks[4].ready = data_json["PlatRadio"]
 
                     for check in self.quality_checks:

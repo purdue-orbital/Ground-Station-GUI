@@ -3,10 +3,12 @@ import sys
 import traceback
 import json
 import os
+import serial
 
 from sys import platform
 
 from digi.xbee.devices import XBeeDevice, XBee64BitAddress, RemoteXBeeDevice, XBeeException
+from util.exception import GroundStationException, RadioSerialConnectionException
 
 # Local port number:
 # - For linux, it will be '/dev/ttyS#'
@@ -52,13 +54,17 @@ class Module:
 class ModuleSingleton:
     def __init__(self):
 
+        self.is_local_device_init = 0
+
         try:
             self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
             self.device.set_sync_ops_timeout(10)
             self.device.open()
-        except Exception as e:
-            print(ERR + "Local Device Instantiation Error" + NORM)
-            print(e)
+            self.is_local_device_init = 1
+        except serial.SerialException:
+            # raise RadioSerialConnectionException
+            print("serial exception")
+            self.is_local_device_init = 0
 
         def data_receive_callback(msg):
             data = msg.data.decode("utf8")
@@ -74,6 +80,7 @@ class ModuleSingleton:
         except Exception as e:
             print(ERR + "Callback Failure" + NORM)
             print(e)
+            print("\n")
             # self.reset_radio()
 
         self.remote_device = None
