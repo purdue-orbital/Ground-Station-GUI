@@ -556,16 +556,34 @@ class DataWindow:
         """
         if self.stability:
             if messagebox.askyesno("Turn off Stabilization", "Do you want to turn off stabilization"):
-                c = Comm.get_instance(self)
-                if c.send("Stabilization off"):
-                    self.stability_button.config(text="Turn On Stabilization")
-                    self.stability = not self.stability
+
+                try:
+                    c = Comm.get_instance(self)
+                    if c.send("Stabilization off"):
+                      self.stability_button.config(text="Turn On Stabilization")
+                      self.stability = not self.stability
+                      self.packets_sent.set_count(c.get_packets_sent())
+                      self.packets_received.set_count(c.get_packets_received())
+                      self.calc_received_percentage()
+                except Exception as e:
+                    print(e)
+
         else:
             if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
-                c = Comm.get_instance(self)
-                if c.send("Stabilization on"):
-                    self.stability_button.config(text="Turn Off Stabilization")
-                    self.stability = not self.stability
+                self.stability_button.config(text="Turn Off Stabilization")
+                self.stability = not self.stability
+
+                try:
+                     c = Comm.get_instance(self)
+                     if c.send("Stabilization on"):
+                      self.stability_button.config(text="Turn Off Stabilization")
+                      self.stability = not self.stability
+                      self.packets_sent.set_count(c.get_packets_sent())
+                      self.packets_received.set_count(c.get_packets_received())
+                      self.calc_received_percentage()
+                except Exception as e:
+                    print(e)
+
 
 
     def abort_message_callback(self):
@@ -584,6 +602,9 @@ class DataWindow:
 
             c.testing()
             c.send("launch")
+            self.packets_sent.set_count(c.get_packets_sent())
+            self.packets_received.set_count(c.get_packets_received())
+            self.calc_received_percentage()
             c.set_mode(m)
         except Exception as e:
             print(e)
@@ -595,6 +616,9 @@ class DataWindow:
 
             c.testing()
             c.send("abort")
+            self.packets_sent.set_count(c.get_packets_sent())
+            self.packets_received.set_count(c.get_packets_received())
+            self.calc_received_percentage()
             c.set_mode(m)
         except Exception as e:
             print(e)
@@ -606,6 +630,9 @@ class DataWindow:
 
             c.testing()
             c.send("stability")
+            self.packets_sent.set_count(c.get_packets_sent())
+            self.packets_received.set_count(c.get_packets_received())
+            self.calc_received_percentage()
             c.set_mode(m)
         except Exception as e:
             print(e)
@@ -615,6 +642,9 @@ class DataWindow:
         c = Comm.get_instance(self)
         c.flight()
         c.send("cdm")
+        self.packets_sent.set_count(c.get_packets_sent())
+        self.packets_received.set_count(c.get_packets_received())
+        self.calc_received_percentage()
 
         self.abort_method = "CDM"
         self.control.mission_status = Status.ABORT
@@ -636,6 +666,9 @@ class DataWindow:
             c = Comm.get_instance(self)
             c.flight()
             c.send("qdm")
+            self.packets_sent.set_count(c.get_packets_sent())
+            self.packets_received.set_count(c.get_packets_received())
+            self.calc_received_percentage()
         except Exception as e:
             print(e)
 
