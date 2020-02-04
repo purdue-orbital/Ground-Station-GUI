@@ -16,8 +16,11 @@ from util.exception import GroundStationException, RadioSerialConnectionExceptio
 #
 # where # is the port number.
 
-if platform == "linux" and os.uname()[4] == "arm":  # TODO: Test
-    LOCAL_PORT = "/dev/ttyusb2"
+print(platform, os.uname()[4])
+
+# Check the type of device for radio connection
+if platform == "linux" and "arm" in os.uname()[4]:
+    LOCAL_PORT = "/dev/ttyUSB2"
 
 else:
     LOCAL_PORT = "/dev/ttyS10"

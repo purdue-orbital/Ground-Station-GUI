@@ -32,7 +32,6 @@ class CommSingleton:
         except Exception as e:
             print(e)
 
-
     def standby(self):
         self.__mode = Mode.STANDBY
 

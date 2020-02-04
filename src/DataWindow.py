@@ -69,7 +69,7 @@ class DataWindow:
         self.rocket_gyro_xQ = None
         self.rocket_gyro_yQ = None
         self.rocket_gyro_zQ = None
-        self.alititudeQ = None
+        self.altitudeQ = None
         self.acc_gyro_graphs = None
 
         # Base file writing from program's execution directory
@@ -130,9 +130,9 @@ class DataWindow:
         self.make_grid()
 
         # Make timer sections
-        Label(self.name, text="Mission Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).\
+        Label(self.name, text="Mission Clock:", font=('times', 16, 'bold'), bg=self.frames_bg). \
             grid(row=0, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
-        Label(self.name, text="Flight Clock:", font=('times', 16, 'bold'), bg=self.frames_bg).\
+        Label(self.name, text="Flight Clock:", font=('times', 16, 'bold'), bg=self.frames_bg). \
             grid(row=2, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
         self.start_timer = Timer(self.name, 0, 2, 2, 3, self.time_bg)
         self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
@@ -157,7 +157,7 @@ class DataWindow:
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
         logo_label = Label(self.name, image=logo, bg=self.bg_color)
         logo_label.image = logo
-        logo_label.grid(row=15, column=6, rowspan=3, columnspan=4, sticky=N+S+E+W)
+        logo_label.grid(row=15, column=6, rowspan=3, columnspan=4, sticky=N + S + E + W)
 
         self.control = Control(self.name, 5, 2, 1, self.frames_bg)
 
@@ -166,13 +166,13 @@ class DataWindow:
         self.packets_received = StatCounter(self.name, "Packets Received", 2, 10, self.frames_bg)
 
         # Create received percentage
-        Label(self.name, text="Percent Received", font=('times', 12, 'underline'), bg=self.frames_bg).\
+        Label(self.name, text="Percent Received", font=('times', 12, 'underline'), bg=self.frames_bg). \
             grid(row=10, column=3, sticky=S + E + W)
 
         self.received_percentage = StringVar()
         self.calc_received_percentage()
 
-        Label(self.name, textvariable=self.received_percentage, bg=self.frames_bg).\
+        Label(self.name, textvariable=self.received_percentage, bg=self.frames_bg). \
             grid(row=11, column=3, sticky=N + E + W)
 
         # Place Quality Indicators and Labels
@@ -218,7 +218,7 @@ class DataWindow:
         self.rocket_gyro_xQ = queue.Queue()
         self.rocket_gyro_yQ = queue.Queue()
         self.rocket_gyro_zQ = queue.Queue()
-        self.alititudeQ = queue.Queue()
+        self.altitudeQ = queue.Queue()
 
         amount_of_point_to_graph = 20
         for i in range(0, amount_of_point_to_graph):
@@ -234,7 +234,7 @@ class DataWindow:
             self.rocket_gyro_xQ.put(0)
             self.rocket_gyro_yQ.put(0)
             self.rocket_gyro_zQ.put(0)
-            self.alititudeQ.put(0)
+            self.altitudeQ.put(0)
 
         self.altitude_graph = None
         self.acc_gyro_graphs = None
@@ -425,7 +425,7 @@ class DataWindow:
         """
 
         about_text = "Ground Station Graphical User Interface Version 0.2\n\n" \
-                     "Author: Ken Sodetz, Matt Drozt, Jay Rixie, Emanuel Pituch\n" \
+                     "Author: Ken Sodetz, Matt Drozt, Jay Rixie, Emanuel Pituch, Connor Todd\n" \
                      "Since: 11/27/2018\n\n" \
                      "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
                      "Parses and displays data from the a Raspberry Pi 3 to verbosely display all\n" \
@@ -467,7 +467,6 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def alter_test_mode(self):
-        c = Comm.get_instance(self)
 
         # TODO use above mode defined in CommunicationDriver.py
         self.test_mode = not self.test_mode
@@ -559,11 +558,11 @@ class DataWindow:
                 try:
                     c = Comm.get_instance(self)
                     if c.send("Stabilization off"):
-                      self.stability_button.config(text="Turn On Stabilization")
-                      self.stability = not self.stability
-                      self.packets_sent.set_count(c.get_packets_sent())
-                      self.packets_received.set_count(c.get_packets_received())
-                      self.calc_received_percentage()
+                        self.stability_button.config(text="Turn On Stabilization")
+                        self.stability = not self.stability
+                        self.packets_sent.set_count(c.get_packets_sent())
+                        self.packets_received.set_count(c.get_packets_received())
+                        self.calc_received_percentage()
                 except Exception as e:
                     print(e)
 
@@ -573,17 +572,15 @@ class DataWindow:
                 self.stability = not self.stability
 
                 try:
-                     c = Comm.get_instance(self)
-                     if c.send("Stabilization on"):
-                      self.stability_button.config(text="Turn Off Stabilization")
-                      self.stability = not self.stability
-                      self.packets_sent.set_count(c.get_packets_sent())
-                      self.packets_received.set_count(c.get_packets_received())
-                      self.calc_received_percentage()
+                    c = Comm.get_instance(self)
+                    if c.send("Stabilization on"):
+                        self.stability_button.config(text="Turn Off Stabilization")
+                        self.stability = not self.stability
+                        self.packets_sent.set_count(c.get_packets_sent())
+                        self.packets_received.set_count(c.get_packets_received())
+                        self.calc_received_percentage()
                 except Exception as e:
                     print(e)
-
-
 
     def abort_message_callback(self):
         """
@@ -740,11 +737,11 @@ class DataWindow:
                 data.display_variables()
 
                 # insert it into the queues
-                self.alititudeQ.get()
-                self.alititudeQ.put(alt)
-                    
+                self.altitudeQ.get()
+                self.altitudeQ.put(alt)
+
                 if self.altitude_graph is not None:
-                    self.altitude_graph.update_altitude(self.alititudeQ)
+                    self.altitude_graph.update_altitude(self.altitudeQ)
 
                 elif origin == "balloon":
                     self.balloon_acc_xQ.get()
@@ -792,7 +789,7 @@ class DataWindow:
         :return:None
         """
         self.altitude_graph = AltitudeGraph()
-        self.altitude_graph.update_altitude(self.alititudeQ)
+        self.altitude_graph.update_altitude(self.altitudeQ)
 
     def open_acc_gyro_graphs(self):
         """

@@ -20,24 +20,3 @@ class QualityCheck:
     def reset_quality(self):
         self.ready = 0
         self.display_quality()
-
-
-# Example Case
-# if __name__ == "__main__":
-#     example = Tk()
-#     example.title("Example of Quality Check")
-#     example.geometry("600x600")
-#
-#     for column in range(10):
-#         example.columnconfigure(column, weight=1)
-#
-#     for row in range(10):
-#         example.rowconfigure(row, weight=1)
-#
-#     example_QDM_check = QualityCheck(example, "QDM", 0, 0, "blue")
-#     example_CDM_check = QualityCheck(example, "CDM", 1, 0, "blue")
-#     example_other_check = QualityCheck(example, "Other", 2, 0, "blue")
-#
-#     example.mainloop()
-
-
