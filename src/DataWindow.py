@@ -468,6 +468,7 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def alter_test_mode(self):
+<<<<<<< HEAD
         c = Comm.get_instance(self)
 
         # TODO use above mode defined in CommunicationDriver.py
@@ -480,6 +481,23 @@ class DataWindow:
         self.start_timer.reset()
         self.packets_sent.reset()
         self.packets_received.reset()
+=======
+<<<<<<< HEAD
+        c = Comm.get_instance(self)
+
+        if c.get_mode() == Mode.STANDBY:
+            c.testing()
+=======
+        try:
+            c = Comm.get_instance(self)
+            c.testing()
+        except Exception as e:
+            print(e)
+
+        # TODO use above mode defined in CommunicationDriver.py
+        self.test_mode = not self.test_mode
+>>>>>>> 965161ae5f18cae923962a875161ec23f2a60263
+>>>>>>> c9603711dc020f433d7133ac51543294921006d2
 
         for check in self.quality_checks:
             check.reset_quality()
@@ -562,6 +580,7 @@ class DataWindow:
                 if c.send("Stabilization on"):
                     self.stability_button.config(text="Turn Off Stabilization")
                     self.stability = not self.stability
+
 
     def abort_message_callback(self):
         """
