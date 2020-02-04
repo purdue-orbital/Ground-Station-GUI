@@ -10,3 +10,4 @@ src/RPi
 src/tk
 .vscode/
 venv/
+*.code-workspace
