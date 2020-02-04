@@ -52,6 +52,9 @@ class CommSingleton:
         return self.__mode
 
     def send(self, command):
+
+        print("Sending...")
+
         if self.__mode == Mode.STANDBY:
             # discard command
             print("\nStandby, command discarded.\n")

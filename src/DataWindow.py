@@ -170,7 +170,7 @@ class DataWindow:
             grid(row=10, column=3, sticky=S + E + W)
 
         self.received_percentage = StringVar()
-        self.received_percentage.set("NaN")
+        self.calc_received_percentage()
 
         Label(self.name, textvariable=self.received_percentage, bg=self.frames_bg).\
             grid(row=11, column=3, sticky=N + E + W)
@@ -182,6 +182,10 @@ class DataWindow:
                                QualityCheck(self.name, "GS Radio", 3, 12, self.frames_bg),
                                QualityCheck(self.name, "Platform Radio", 3, 14, self.frames_bg),
                                ]
+
+        self.quality_checks[3].ready = self.radio.is_local_device_init
+        self.quality_checks[3].display_quality()
+        print(self.quality_checks[3].ready)
 
         # Innit the warning label
         self.warningLabel = Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED,
@@ -464,10 +468,14 @@ class DataWindow:
         os.execl(python, python, *sys.argv)
 
     def alter_test_mode(self):
-        c = Comm.get_instance(self)
-
-        if c.get_mode() == Mode.STANDBY:
+        try:
+            c = Comm.get_instance(self)
             c.testing()
+        except Exception as e:
+            print(e)
+
+        # TODO use above mode defined in CommunicationDriver.py
+        self.test_mode = not self.test_mode
 
             self.init_graph_stuff()
             self.dataBalloon.reset_variables()
@@ -566,30 +574,40 @@ class DataWindow:
             self.select_qdm()
 
     def test_launch(self):
-        c = Comm.get_instance(self)
-        m = c.get_mode()
+        try:
+            c = Comm.get_instance(self)
+            m = c.get_mode()
 
-        c.testing()
-        c.send("launch")
-        c.set_mode(m)
+            c.testing()
+            c.send("launch")
+            c.set_mode(m)
+        except Exception as e:
+            print(e)
 
     def test_abort(self):
-        c = Comm.get_instance(self)
-        m = c.get_mode()
+        try:
+            c = Comm.get_instance(self)
+            m = c.get_mode()
 
-        c.testing()
-        c.send("abort")
-        c.set_mode(m)
+            c.testing()
+            c.send("abort")
+            c.set_mode(m)
+        except Exception as e:
+            print(e)
 
     def test_stability(self):
-        c = Comm.get_instance(self)
-        m = c.get_mode()
+        try:
+            c = Comm.get_instance(self)
+            m = c.get_mode()
 
-        c.testing()
-        c.send("stability")
-        c.set_mode(m)
+            c.testing()
+            c.send("stability")
+            c.set_mode(m)
+        except Exception as e:
+            print(e)
 
     def select_cdm(self):
+        # TODO: Are we using CDM at all??? Get rid of?
         c = Comm.get_instance(self)
         c.flight()
         c.send("cdm")
@@ -610,9 +628,12 @@ class DataWindow:
 
         print("QDM")
         # TODO Make Comms Global
-        c = Comm.get_instance(self)
-        c.flight()
-        c.send("qdm")
+        try:
+            c = Comm.get_instance(self)
+            c.flight()
+            c.send("qdm")
+        except Exception as e:
+            print(e)
 
         self.abort_method = "QDM"
         self.control.mission_status = Status.ABORT
@@ -652,7 +673,7 @@ class DataWindow:
                     self.quality_checks[0].ready = data_json["QDM"]
                     self.quality_checks[1].ready = data_json["Ignition"]
                     self.quality_checks[2].ready = data_json["Stabilization"]
-                    self.quality_checks[3].ready = data_json["GSRadio"]
+                    # self.quality_checks[3].ready = data_json["GSRadio"]
                     self.quality_checks[4].ready = data_json["PlatRadio"]
 
                     for check in self.quality_checks:
@@ -753,3 +774,14 @@ class DataWindow:
         :return: None
         """
         self.radio.reset_radio()
+
+    def calc_received_percentage(self):
+        """
+        Calculates the received rate of the packets using the counter numbers
+        :return: None
+        """
+        if self.packets_sent.get_count() == 0:
+            self.received_percentage.set("NaN")
+            return
+
+        self.received_percentage.set(self.packets_received.get_count() / self.packets_sent.get_count())
