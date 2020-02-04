@@ -22,11 +22,16 @@ class Comm:
 
 class CommSingleton:
     def __init__(self):
-        self.__mode = Mode.STANDBY
-        # TODO Catch exception
-        self.__radio = Module.get_instance(self)
+
         self.packets_sent = 0
         self.packets_received = 0
+
+        try:
+            self.__mode = Mode.STANDBY
+            self.__radio = Module.get_instance(self)
+        except Exception as e:
+            print(e)
+
 
     def standby(self):
         self.__mode = Mode.STANDBY
@@ -77,7 +82,9 @@ class CommSingleton:
         try:
             if not len(command_json) == 0:
                 print(command_json)
-                self.__radio.send(json.dumps(command_json))
+
                 self.packets_received += 1
+                return self.__radio.send(json.dumps(command_json))
         except Exception as e:
             print(e)
+            return 0
