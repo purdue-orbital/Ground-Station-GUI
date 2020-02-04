@@ -783,8 +783,8 @@ class DataWindow:
         Calculates the received rate of the packets using the counter numbers
         :return: None
         """
-        if self.packets_sent == 0:
+        if self.packets_sent.get_count() == 0:
             self.received_percentage.set("NaN")
             return
 
-        self.received_percentage.set(self.packets_received / self.packets_sent)
+        self.received_percentage.set(self.packets_received.get_count() / self.packets_sent.get_count())
