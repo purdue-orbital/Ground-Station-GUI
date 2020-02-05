@@ -583,12 +583,14 @@ class DataWindow:
                         self.packets_sent.set_count(c.get_packets_sent())
                         self.packets_received.set_count(c.get_packets_received())
                         self.calc_received_percentage()
+                    else:
+                        messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
+
                 except Exception as e:
                     print(e)
 
         else:
             if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
-                self.stability_button.config(text="Turn Off Stabilization")
 
                 try:
                     c = Comm.get_instance(self)
@@ -598,6 +600,9 @@ class DataWindow:
                         self.packets_sent.set_count(c.get_packets_sent())
                         self.packets_received.set_count(c.get_packets_received())
                         self.calc_received_percentage()
+                    else:
+                        messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
+
                 except Exception as e:
                     print(e)
 
