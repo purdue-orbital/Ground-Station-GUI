@@ -514,9 +514,8 @@ class DataWindow:
             print(e)
 
     def manual_override_callback(self):
-        # TODO: Make this look half decent when there is more time
         random_string = ""
-        for i in range(10):
+        for i in range(11):
             random_string = random_string + random.SystemRandom().choice(string.ascii_letters + string.digits)
 
         s = simpledialog.askstring("DANGER: Manual Override",
@@ -527,8 +526,12 @@ class DataWindow:
                                    + random_string)
         print(s)
         if s == random_string:
-            messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override will be preformed")
-            # TODO: Whatever an override actually entails
+            messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
+
+            # FIXME: Make sure this is all that is needed to send a launch command
+            c = Comm.get_instance(self)
+            c.send("launch")
+
         elif s is not None:
             messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
 
