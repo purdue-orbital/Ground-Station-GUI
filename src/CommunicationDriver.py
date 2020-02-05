@@ -61,6 +61,10 @@ class CommSingleton:
     def get_packets_received(self):
         return self.packets_received
 
+    def reset_counters(self):
+        self.packets_sent = 0
+        self.packets_received = 0
+
     def send(self, command):
         self.packets_sent += 1
         print("Sending...")

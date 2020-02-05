@@ -482,7 +482,9 @@ class DataWindow:
         self.start_timer.reset()
         self.packets_sent.reset()
         self.packets_received.reset()
+        self.calc_received_percentage()
         c = Comm.get_instance(self)
+        c.reset_counters()
 
         for check in self.quality_checks:
             check.reset_quality()
@@ -585,6 +587,7 @@ class DataWindow:
                         self.calc_received_percentage()
                     else:
                         messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
+                        c.get_packets_sent -= 1
 
                 except Exception as e:
                     print(e)
@@ -602,6 +605,7 @@ class DataWindow:
                         self.calc_received_percentage()
                     else:
                         messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
+                        c.get_packets_sent -= 1
 
                 except Exception as e:
                     print(e)
@@ -838,4 +842,4 @@ class DataWindow:
             self.received_percentage.set("NaN")
             return
 
-        self.received_percentage.set(self.packets_received.get_count() / self.packets_sent.get_count())
+        self.received_percentage.set(round(self.packets_received.get_count() * 100 / self.packets_sent.get_count(), 2))
