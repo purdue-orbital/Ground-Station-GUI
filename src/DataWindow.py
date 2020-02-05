@@ -186,8 +186,8 @@ class DataWindow:
                                QualityCheck(self.name, "Platform Radio", 3, 14, self.frames_bg),
                                ]
 
-        self.quality_checks[3].ready = self.radio.is_local_device_init
-        self.quality_checks[3].display_quality()
+        self.quality_checks[3].set_quality(self.radio.is_local_device_init)
+        # self.quality_checks[3].display_quality()
 
         # Innit the warning label
         self.warningLabel = Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED,
@@ -722,14 +722,11 @@ class DataWindow:
                 if origin == "balloon":
                     data = self.dataBalloon
                 elif origin == "status":
-                    self.quality_checks[0].ready = data_json["QDM"]
-                    self.quality_checks[1].ready = data_json["Ignition"]
-                    self.quality_checks[2].ready = data_json["Stabilization"]
+                    self.quality_checks[0].set_quality(data_json["QDM"])
+                    self.quality_checks[1].set_quality(data_json["Ignition"])
+                    self.quality_checks[2].set_quality(data_json["Stabilization"])
                     # self.quality_checks[3].ready = data_json["GSRadio"]
-                    self.quality_checks[4].ready = data_json["PlatRadio"]
-
-                    for check in self.quality_checks:
-                        check.display_quality()
+                    self.quality_checks[4].set_quality(data_json["PlatRadio"])
 
                     return
                 else:

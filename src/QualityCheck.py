@@ -20,3 +20,7 @@ class QualityCheck:
     def reset_quality(self):
         self.ready = 0
         self.display_quality()
+
+    def set_quality(self, ready):
+        self.ready = ready
+        self.display_quality()
