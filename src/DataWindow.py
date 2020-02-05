@@ -531,6 +531,7 @@ class DataWindow:
             # FIXME: Make sure this is all that is needed to send a launch command
             c = Comm.get_instance(self)
             c.send("launch")
+            self.launch()
 
         elif s is not None:
             messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
