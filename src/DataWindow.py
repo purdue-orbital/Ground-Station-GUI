@@ -587,7 +587,7 @@ class DataWindow:
                         self.calc_received_percentage()
                     else:
                         messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
-                        c.get_packets_sent -= 1
+                        c.packets_sent -= 1
 
                 except Exception as e:
                     print(e)
@@ -605,7 +605,7 @@ class DataWindow:
                         self.calc_received_percentage()
                     else:
                         messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
-                        c.get_packets_sent -= 1
+                        c.packets_sent -= 1
 
                 except Exception as e:
                     print(e)
