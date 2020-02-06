@@ -340,7 +340,7 @@ class DataWindow:
         if not self.timer.clock_run and self.control.mission_status == Status.VERIFIED:
             c = Comm.get_instance(self)
             c.send("launch")
-            
+
             self.timer.start = time.time()
             self.timer.clock_run = True
             self.timer.tick()
@@ -522,17 +522,15 @@ class DataWindow:
             random_string = random_string + random.SystemRandom().choice(string.digits)
 
         s = simpledialog.askstring("DANGER: Manual Override",
-                                   "Please note that manual overrides are dangerous and should only be used as in "
+                                   "Please note that manual overrides are dangerous and should only be used in "
                                    + "a worst case scenario.\nPlease check with the launch director before preceding."
                                    + "\n\n"
-                                   + "To override please enter the following string: \n\n"
+                                   + "To override please enter the following number: \n\n"
                                    + random_string)
         print(s)
         if s == random_string:
             messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
-
             self.launch()
-
         elif s is not None:
             messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
 
