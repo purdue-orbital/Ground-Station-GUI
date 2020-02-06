@@ -338,6 +338,9 @@ class DataWindow:
         # Using self.timer.clock_run as a launched bool
         # Not sure if there is something more proper to use
         if not self.timer.clock_run and self.control.mission_status == Status.VERIFIED:
+            c = Comm.get_instance(self)
+            c.send("launch")
+            
             self.timer.start = time.time()
             self.timer.clock_run = True
             self.timer.tick()
@@ -515,8 +518,8 @@ class DataWindow:
 
     def manual_override_callback(self):
         random_string = ""
-        for i in range(11):
-            random_string = random_string + random.SystemRandom().choice(string.ascii_letters + string.digits)
+        for i in range(6):
+            random_string = random_string + random.SystemRandom().choice(string.digits)
 
         s = simpledialog.askstring("DANGER: Manual Override",
                                    "Please note that manual overrides are dangerous and should only be used as in "
@@ -528,9 +531,6 @@ class DataWindow:
         if s == random_string:
             messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
 
-            # FIXME: Make sure this is all that is needed to send a launch command
-            c = Comm.get_instance(self)
-            c.send("launch")
             self.launch()
 
         elif s is not None:
