@@ -86,7 +86,7 @@ class CommSingleton:
             if not len(command_json) == 0:
                 print(command_json)
 
-                self.packets_received += 1
+                self.packets_received += 1  # TODO: Move this to the right spot
                 return self.__radio.send(json.dumps(command_json))
         except Exception as e:
             print(e)
