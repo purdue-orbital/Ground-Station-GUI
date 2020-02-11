@@ -61,6 +61,10 @@ class CommSingleton:
     def get_packets_received(self):
         return self.packets_received
 
+    def reset_counters(self):
+        self.packets_sent = 0
+        self.packets_received = 0
+
     def send(self, command):
         self.packets_sent += 1
         print("Sending...")
@@ -82,7 +86,7 @@ class CommSingleton:
             if not len(command_json) == 0:
                 print(command_json)
 
-                self.packets_received += 1
+                self.packets_received += 1  # TODO: Move this to the right spot
                 return self.__radio.send(json.dumps(command_json))
         except Exception as e:
             print(e)

@@ -2,8 +2,11 @@ import datetime
 import time
 import os
 import queue
+import random
+import string
 from tkinter import *
 from tkinter import messagebox
+from tkinter import simpledialog
 from tkinter import ttk
 import RPi.GPIO as GPIO
 
@@ -183,8 +186,8 @@ class DataWindow:
                                QualityCheck(self.name, "Platform Radio", 3, 14, self.frames_bg),
                                ]
 
-        self.quality_checks[3].ready = self.radio.is_local_device_init
-        self.quality_checks[3].display_quality()
+        self.quality_checks[3].set_quality(self.radio.is_local_device_init)
+        # self.quality_checks[3].display_quality()
 
         # Innit the warning label
         self.warningLabel = Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED,
@@ -267,6 +270,7 @@ class DataWindow:
         program_menu.add_command(label="Log", command=self.log_menu)
         program_menu.add_command(label="Reset Data", command=self.reset_variables_window)
         program_menu.add_command(label="Reset Radio", command=self.reset_radio)
+        program_menu.add_command(label="Manual Override", command=self.manual_override_callback)
 
         help_menu.add_command(label="Help Index", command=self.help_window)
         # help_menu.add_separator()
@@ -334,6 +338,9 @@ class DataWindow:
         # Using self.timer.clock_run as a launched bool
         # Not sure if there is something more proper to use
         if not self.timer.clock_run and self.control.mission_status == Status.VERIFIED:
+            c = Comm.get_instance(self)
+            c.send("launch")
+
             self.timer.start = time.time()
             self.timer.clock_run = True
             self.timer.tick()
@@ -478,10 +485,9 @@ class DataWindow:
         self.start_timer.reset()
         self.packets_sent.reset()
         self.packets_received.reset()
+        self.calc_received_percentage()
         c = Comm.get_instance(self)
-
-        # TODO use above mode defined in CommunicationDriver.py
-        self.test_mode = not self.test_mode
+        c.reset_counters()
 
         for check in self.quality_checks:
             check.reset_quality()
@@ -509,6 +515,24 @@ class DataWindow:
             return c.get_mode() == Mode.TESTING
         except Exception as e:
             print(e)
+
+    def manual_override_callback(self):
+        random_string = ""
+        for i in range(6):
+            random_string = random_string + random.SystemRandom().choice(string.digits)
+
+        s = simpledialog.askstring("DANGER: Manual Override",
+                                   "Please note that manual overrides are dangerous and should only be used in "
+                                   + "a worst case scenario.\nPlease check with the launch director before preceding."
+                                   + "\n\n"
+                                   + "To override please enter the following number: \n\n"
+                                   + random_string)
+        print(s)
+        if s == random_string:
+            messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
+            self.launch()
+        elif s is not None:
+            messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
 
     def verify_message_callback(self):
         """
@@ -563,13 +587,15 @@ class DataWindow:
                         self.packets_sent.set_count(c.get_packets_sent())
                         self.packets_received.set_count(c.get_packets_received())
                         self.calc_received_percentage()
+                    else:
+                        messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
+                        c.packets_sent -= 1
+
                 except Exception as e:
                     print(e)
 
         else:
             if messagebox.askyesno("Turn on Stabilization", "Do you want to turn on stabilization"):
-                self.stability_button.config(text="Turn Off Stabilization")
-                self.stability = not self.stability
 
                 try:
                     c = Comm.get_instance(self)
@@ -579,6 +605,10 @@ class DataWindow:
                         self.packets_sent.set_count(c.get_packets_sent())
                         self.packets_received.set_count(c.get_packets_received())
                         self.calc_received_percentage()
+                    else:
+                        messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
+                        c.packets_sent -= 1
+
                 except Exception as e:
                     print(e)
 
@@ -703,14 +733,11 @@ class DataWindow:
                 if origin == "balloon":
                     data = self.dataBalloon
                 elif origin == "status":
-                    self.quality_checks[0].ready = data_json["QDM"]
-                    self.quality_checks[1].ready = data_json["Ignition"]
-                    self.quality_checks[2].ready = data_json["Stabilization"]
+                    self.quality_checks[0].set_quality(data_json["QDM"])
+                    self.quality_checks[1].set_quality(data_json["Ignition"])
+                    self.quality_checks[2].set_quality(data_json["Stabilization"])
                     # self.quality_checks[3].ready = data_json["GSRadio"]
-                    self.quality_checks[4].ready = data_json["PlatRadio"]
-
-                    for check in self.quality_checks:
-                        check.display_quality()
+                    self.quality_checks[4].set_quality(data_json["PlatRadio"])
 
                     return
                 else:
@@ -817,4 +844,4 @@ class DataWindow:
             self.received_percentage.set("NaN")
             return
 
-        self.received_percentage.set(self.packets_received.get_count() / self.packets_sent.get_count())
+        self.received_percentage.set(round(self.packets_received.get_count() * 100 / self.packets_sent.get_count(), 2))
