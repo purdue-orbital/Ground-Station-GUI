@@ -67,16 +67,14 @@ class ModuleSingleton:
             self.is_local_device_init = 1
         except serial.SerialException:
             # raise RadioSerialConnectionException
-            print("serial exception")
+            print(ERR + "Serial Exception" + NORM)
+            print("Local radio not connected\n")
             self.is_local_device_init = 0
 
         def data_receive_callback(msg):
             data = msg.data.decode("utf8")
-
             json_data = json.loads(data)
-
             print(json_data)
-
             self.queue.put(json_data)
 
         try:

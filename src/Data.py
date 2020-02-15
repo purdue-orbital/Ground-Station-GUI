@@ -9,7 +9,6 @@ class Data:
         self.gyroX_data = 0
         self.gyroY_data = 0
         self.gyroZ_data = 0
-        self.cardinalDirection_data = 0  # NOT IN JSON
         self.temperature_data = 0
         self.accelX_data = 0
         self.accelY_data = 0
@@ -21,7 +20,6 @@ class Data:
         self.gyroX = StringVar()
         self.gyroY = StringVar()
         self.gyroZ = StringVar()
-        self.cardinalDirection = StringVar()
         self.temperature = StringVar()
         self.accelX = StringVar()
         self.accelY = StringVar()
@@ -42,7 +40,6 @@ class Data:
             Label(place_window, text="Gyro X:", bg=bg),
             Label(place_window, text="Gyro Y:", bg=bg),
             Label(place_window, text="Gyro Z:", bg=bg),
-            Label(place_window, text="Direction:", bg=bg),
             Label(place_window, text="Temperature (Celsius):", bg=bg),
             Label(place_window, text="Acceleration X:", bg=bg),
             Label(place_window, text="Acceleration Y:", bg=bg),
@@ -56,7 +53,6 @@ class Data:
             Label(place_window, textvariable=self.gyroX, bg=bg),
             Label(place_window, textvariable=self.gyroY, bg=bg),
             Label(place_window, textvariable=self.gyroZ, bg=bg),
-            Label(place_window, textvariable=self.cardinalDirection, bg=bg),
             Label(place_window, textvariable=self.temperature, bg=bg),
             Label(place_window, textvariable=self.accelX, bg=bg),
             Label(place_window, textvariable=self.accelY, bg=bg),
@@ -84,7 +80,6 @@ class Data:
         self.gyroX.set(self.gyroX_data)
         self.gyroY.set(self.gyroY_data)
         self.gyroZ.set(self.gyroZ_data)
-        self.cardinalDirection.set(self.cardinalDirection_data)
         self.temperature.set(self.temperature_data)
         self.accelX.set(self.accelX_data)
         self.accelY.set(self.accelY_data)
@@ -100,7 +95,6 @@ class Data:
         self.gyroX_data = 0
         self.gyroY_data = 0
         self.gyroZ_data = 0
-        self.cardinalDirection_data = 0
         self.temperature_data = 0
         self.accelX_data = 0
         self.accelY_data = 0

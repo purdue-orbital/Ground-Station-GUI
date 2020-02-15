@@ -24,19 +24,21 @@ ERR = "\u001b[31m"
 NORM = "\u001b[0m"
 
 """
-ROCKET GUI Version 0.2
+ROCKET GUI Version 0.3
 Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch, Connor Todd
 Since: 10/31/2018
 Created for Purdue Orbital Ground Stations Sub-Team
 Parses and displays data from the a Raspberry Pi 3 to verbosely
-display all pertinent system data (data that can be changed) and environmental
-data (data that cannot be changed).
+display and graph all pertinent data from the launch structure.
 """
 
 
 class ThreadedClient:
     def __init__(self, master):
-
+        """
+        Init method
+        :param master: Master window
+        """
         self.master = master
         # self.master.iconify for the memes
         root.protocol("WM_DELETE_WINDOW", self.end_application)
@@ -69,6 +71,7 @@ class ThreadedClient:
             # Call again
             self.master.after(200, self.update)
         except Exception as e:
+            print("Process Incoming Error")
             print(e)
 
     def error(self, message):
@@ -85,9 +88,9 @@ class ThreadedClient:
 
                 preload = (
                         '{ "origin" : "' + origin + '",' +
-                        '"alt": ' + str(rand.random())[0:5] + ',' +
                         '"GPS": {' +
                         '"long": ' + str(rand.random())[0:5] + ',' +
+                        '"alt": ' + str(rand.random())[0:5] + ',' +
                         '"lat": ' + str(rand.random())[0:5] +
                         '},' +
                         '"gyro": {' +
@@ -95,7 +98,6 @@ class ThreadedClient:
                         '"y": ' + str(rand.random())[0:5] + ',' +
                         '"z": ' + str(rand.random())[0:5] +
                         '},' +
-                        '"mag": ' + str(rand.random())[0:5] + ',' +
                         '"temp": ' + str(rand.random())[0:5] + ',' +
                         '"acc": {' +
                         '"x": ' + str(rand.random())[0:5] + ',' +
@@ -119,14 +121,6 @@ class ThreadedClient:
                 self.queue.put(data_json)
                 self.queue.put(data_json2)
 
-    def launch(self):
-        print(OK + "LAUNCHING" + NORM)
-        # TODO
-        c = Comm.get_instance(self)
-        c.flight()
-        c.send("launch")
-        # TODO send launch
-
     def end_application(self):
         if messagebox.askyesno("Quit", "Do you want to quit?"):
             self.radio.close()
@@ -140,7 +134,7 @@ class ThreadedClient:
             return 0
 
         else:
-            return 0
+            return 1
 
 
 rand = random.Random()

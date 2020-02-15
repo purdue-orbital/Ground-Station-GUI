@@ -90,7 +90,7 @@ class DataWindow:
         self.abort_method = None
         self.radio = Module.get_instance(self)
 
-        name.title("Ground Station Graphical User Interface v0.2")
+        name.title("Ground Station Graphical User Interface v0.3")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
         # self.name.geometry('1000x600')
@@ -187,7 +187,6 @@ class DataWindow:
                                ]
 
         self.quality_checks[3].set_quality(self.radio.is_local_device_init)
-        # self.quality_checks[3].display_quality()
 
         # Innit the warning label
         self.warningLabel = Label(self.name, text="WARNING: TEST MODE", bg="#ff0000", relief=RAISED,
@@ -274,7 +273,7 @@ class DataWindow:
 
         help_menu.add_command(label="Help Index", command=self.help_window)
         # help_menu.add_separator()
-        # help_menu.add_command(label="About", command=self.about_menu) TODO: Put this back
+        help_menu.add_command(label="About", command=self.about_menu) # TODO: Put this back
 
         # test_menu.add_command(label="Launch", command=self.test_launch)
         # test_menu.add_command(label="Abort", command=self.test_abort)
@@ -284,8 +283,8 @@ class DataWindow:
 
     def make_grid(self):
         """
-        Sets the grid for the window, sets the background color for cells and determins which cells will resize
-         to fill the window space
+        Sets the grid for the window, sets the background color for cells and determines which cells will resize
+        to fill the window space
         :return: None
         """
         total_rows = self.total_rows
@@ -394,7 +393,7 @@ class DataWindow:
 
         fo.write("DATE:" + current_date + "\n")
         fo.write("MISSION START TIMESTAMP:" + repr(self.start_timer.current_time) + "\n")
-        fo.write("VERIFY START TIMESTAMP:" + repr(self.timer.current_time) + "\n")
+        fo.write("LAUNCH START TIMESTAMP:" + repr(self.timer.current_time) + "\n")
         fo.write("*****************************\n")
         fo.write("----------LOGS START---------\n")
         fo.write("----------BALLOON DATA-------\n")
@@ -403,7 +402,6 @@ class DataWindow:
         fo.write("Gyro(X) = " + repr(self.dataBalloon.gyroX_data) + "\n")
         fo.write("Gyro(Y) = " + repr(self.dataBalloon.gyroY_data) + "\n")
         fo.write("Gyro(Z) = " + repr(self.dataBalloon.gyroZ_data) + "\n")
-        fo.write("Cardinal Direction = " + repr(self.dataBalloon.cardinalDirection_data) + "\n")
         fo.write("Temperature = " + repr(self.dataBalloon.temperature_data) + "\n")
         fo.write("Acceleration(X) = " + repr(self.dataBalloon.accelX_data) + "\n")
         fo.write("Acceleration(Y) = " + repr(self.dataBalloon.accelY_data) + "\n")
@@ -436,8 +434,7 @@ class DataWindow:
                      "Since: 11/27/2018\n\n" \
                      "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
                      "Parses and displays data from the a Raspberry Pi 3 to verbosely display all\n" \
-                     "pertinent system data " \
-                     "(data that can be changed) and environmental data\n(data that cannot be changed)"
+                     "pertinent system data"
 
         about_window = Toplevel(self.name)
         about_window.title("About")
@@ -588,10 +585,12 @@ class DataWindow:
                         self.packets_received.set_count(c.get_packets_received())
                         self.calc_received_percentage()
                     else:
+                        self.quality_checks[4].set_quality(0)
                         messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
                         c.packets_sent -= 1
 
                 except Exception as e:
+                    print("Stabilization Error")
                     print(e)
 
         else:
@@ -606,10 +605,12 @@ class DataWindow:
                         self.packets_received.set_count(c.get_packets_received())
                         self.calc_received_percentage()
                     else:
+                        self.quality_checks[4].set_quality(0)
                         messagebox.showerror("ERROR: Command Not Sent", "Command Not Sent")
                         c.packets_sent -= 1
 
                 except Exception as e:
+                    print("Stabilization Error")
                     print(e)
 
     def abort_message_callback(self):
@@ -712,7 +713,7 @@ class DataWindow:
         self.control.mission_status = Status.TIMEOUT
         self.log(self.control.mission_status)
         self.control.change_status_display(self.control.mission_status)
-        print("timeout")
+        print("Mission Timeout")
 
     def process_incoming(self):
         """
@@ -721,6 +722,7 @@ class DataWindow:
         """
         # Process data in queue
         while self.queue.qsize():
+            self.quality_checks[4].set_quality(1)
             try:
                 if self.shutdown_timer is not None:
                     self.shutdown_timer.stop()
@@ -736,26 +738,25 @@ class DataWindow:
                     self.quality_checks[0].set_quality(data_json["QDM"])
                     self.quality_checks[1].set_quality(data_json["Ignition"])
                     self.quality_checks[2].set_quality(data_json["Stabilization"])
-                    # self.quality_checks[3].ready = data_json["GSRadio"]
                     self.quality_checks[4].set_quality(data_json["PlatRadio"])
 
                     return
                 else:
                     print("JSON ORIGIN INCORRECT")
-
-                alt = data_json["alt"]
-
-                data.altitude_data = data_json["alt"]
+                    return
 
                 gps_json = data_json["GPS"]
                 data.longitude_data = gps_json["long"]
                 data.latitude_data = gps_json["lat"]
+                data.altitude_data = gps_json["alt"]
+
                 gyro_json = data_json["gyro"]
                 data.gyroX_data = gyro_json["x"]
                 data.gyroY_data = gyro_json["y"]
                 data.gyroZ_data = gyro_json["z"]
-                data.cardinalDirection_data = data_json["mag"]
+
                 data.temperature_data = data_json["temp"]
+
                 acc_json = data_json["acc"]
                 data.accelX_data = acc_json["x"]
                 data.accelY_data = acc_json["y"]
@@ -765,7 +766,7 @@ class DataWindow:
 
                 # insert it into the queues
                 self.altitudeQ.get()
-                self.altitudeQ.put(alt)
+                self.altitudeQ.put(data.altitude_data)
 
                 if self.altitude_graph is not None:
                     self.altitude_graph.update_altitude(self.altitudeQ)
