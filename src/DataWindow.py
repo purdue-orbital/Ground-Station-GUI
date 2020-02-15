@@ -339,7 +339,7 @@ class DataWindow:
         # Not sure if there is something more proper to use
         if not self.timer.clock_run and self.control.mission_status == Status.VERIFIED:
             c = Comm.get_instance(self)
-            c.send("launch")
+            c.send("Ignition")
 
             self.timer.start = time.time()
             self.timer.clock_run = True

@@ -110,7 +110,6 @@ class ThreadedClient:
                         '"QDM" : 1,' +
                         '"Ignition" : 1,' +
                         '"Stabilization" : 1,' +
-                        '"GSRadio" : 1,' +
                         '"PlatRadio" : 1' +
                         '}'
                 )
