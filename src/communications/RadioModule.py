@@ -74,7 +74,7 @@ class ModuleSingleton:
         def data_receive_callback(msg):
             data = msg.data.decode("utf8")
             json_data = json.loads(data)
-            print(json_data)
+            # print(json_data)
             self.queue.put(json_data)
 
         try:
