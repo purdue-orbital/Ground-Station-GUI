@@ -13,7 +13,6 @@ from communications.RadioModule import Module
 from CommunicationDriver import Comm
 
 import threading
-import sys
 import random
 import queue
 import json
@@ -24,7 +23,7 @@ ERR = "\u001b[31m"
 NORM = "\u001b[0m"
 
 """
-ROCKET GUI Version 0.3
+ROCKET GUI Version 0.3-alpha
 Author: Matt Drozt, Ken Sodetz, Jay Rixie, Emanuel Pituch, Connor Todd
 Since: 10/31/2018
 Created for Purdue Orbital Ground Stations Sub-Team
