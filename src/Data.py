@@ -70,7 +70,7 @@ class Data:
             row += 1
 
         for i in range(1, data_column - labels_column):
-            for j in range(1, 12):
+            for j in range(1, 11):
                 color_frame = Label(place_window, bg=bg)
                 color_frame.grid(row=j, column=labels_column + i, sticky=N + S + E + W)
 
