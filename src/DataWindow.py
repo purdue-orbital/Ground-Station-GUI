@@ -530,8 +530,8 @@ class DataWindow:
                                    + random_string)
         print(s)
         if s == random_string:
-            messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
             self.launch()
+            messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
         elif s is not None:
             messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
 
