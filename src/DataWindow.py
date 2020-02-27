@@ -541,9 +541,22 @@ class DataWindow:
             a = simpledialog.askstring("Change Radio Address",
                                        "TODO: Make this message\n\n" + str(c.get_remote_node_address()))
 
-            c.set_remote_node_address(int(a))
+            if a is None:
+                return
+
+            # TODO: Probably a better way to check if it is hex
+            is_hex = True
+            hex_char_set = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+            for char in a:
+                if char not in hex_char_set:
+                    is_hex = False
+
+            if len(a) != 16 or not is_hex:
+                messagebox.showerror("ERROR: Something went wrong", "Something went wrong\nNot Changing the Address.")
+            else:
+                c.set_remote_node_address(a)
         except Exception as e:
-            # TODO: This
+            messagebox.showerror("ERROR: Something went wrong", "Something went wrong\nNot Changing the Address.")
             print(e)
 
     def verify_message_callback(self):
