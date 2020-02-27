@@ -269,11 +269,12 @@ class DataWindow:
         program_menu.add_command(label="Log", command=self.log_menu)
         program_menu.add_command(label="Reset Data", command=self.reset_variables_window)
         program_menu.add_command(label="Reset Radio", command=self.reset_radio)
+        program_menu.add_command(label="Change Address", command=self.change_radio_address_callback)
         program_menu.add_command(label="Manual Override", command=self.manual_override_callback)
 
         help_menu.add_command(label="Help Index", command=self.help_window)
         # help_menu.add_separator()
-        help_menu.add_command(label="About", command=self.about_menu) # TODO: Put this back
+        help_menu.add_command(label="About", command=self.about_menu)  # TODO: Put this back
 
         # test_menu.add_command(label="Launch", command=self.test_launch)
         # test_menu.add_command(label="Abort", command=self.test_abort)
@@ -533,6 +534,17 @@ class DataWindow:
             self.launch()
         elif s is not None:
             messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
+
+    def change_radio_address_callback(self):
+        try:
+            c = Comm.get_instance(self)
+            a = simpledialog.askstring("Change Radio Address",
+                                       "TODO: Make this message\n\n" + str(c.get_remote_node_address()))
+
+            c.set_remote_node_address(int(a))
+        except Exception as e:
+            # TODO: This
+            print(e)
 
     def verify_message_callback(self):
         """
