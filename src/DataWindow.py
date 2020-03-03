@@ -346,11 +346,11 @@ class DataWindow:
 
             # Kind of puts the whole thread to sleep for 5 secs
             # But I think this is what the issue is asking for
-            time.sleep(5)
+            # time.sleep(5)
 
             self.timer.start = time.time()
             self.timer.clock_run = True
-            self.timer.tick()
+            self.timer.delay_tick()
 
             self.control.mission_status = Status.LAUNCHED
             self.control.verify_button.config(text="VERIFY")
