@@ -344,6 +344,10 @@ class DataWindow:
             c = Comm.get_instance(self)
             c.send("Ignition")
 
+            # Kind of puts the whole thread to sleep for 5 secs
+            # But I think this is what the issue is asking for
+            time.sleep(5)
+
             self.timer.start = time.time()
             self.timer.clock_run = True
             self.timer.tick()
@@ -528,7 +532,6 @@ class DataWindow:
                                    + "\n\n"
                                    + "To override please enter the following number: \n\n"
                                    + random_string)
-        print(s)
         if s == random_string:
             self.launch()
             messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
