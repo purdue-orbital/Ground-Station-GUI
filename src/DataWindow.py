@@ -539,7 +539,8 @@ class DataWindow:
         try:
             c = Comm.get_instance(self)
             a = simpledialog.askstring("Change Radio Address",
-                                       "TODO: Make this message\n\n" + str(c.get_remote_node_address()))
+                                       "Type a hex number (1 - 9, A - F) for the radio address of the recieving radio" +
+                                       "\n\n" + "The current address is: " + str(c.get_remote_node_address()))
 
             if a is None:
                 return
@@ -552,11 +553,12 @@ class DataWindow:
                     is_hex = False
 
             if len(a) != 16 or not is_hex:
-                messagebox.showerror("ERROR: Something went wrong", "Something went wrong\nNot Changing the Address.")
+                messagebox.showerror("ERROR: Invalid Address", "The provided hex number was invalid\n\n" +
+                                     "Reverting to initial address")
             else:
                 c.set_remote_node_address(a)
         except Exception as e:
-            messagebox.showerror("ERROR: Something went wrong", "Something went wrong\nNot Changing the Address.")
+            messagebox.showerror("ERROR: Something went wrong", "Something went wrong\n\nNot Changing the Address.")
             print(e)
 
     def verify_message_callback(self):
