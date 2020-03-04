@@ -41,7 +41,7 @@ class Timer:
             self.current_time = "00:00:00:00"
             self.clock_frame.config(text="00:00:00:00")
 
-    def delay_tick(self, secs = 5):
+    def delay_tick(self, secs=5):
         current_time = str(time.time() - self.start)
 
         if 'e' not in current_time:
