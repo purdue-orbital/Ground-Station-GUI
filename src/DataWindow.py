@@ -134,11 +134,11 @@ class DataWindow:
 
         # Make timer sections
         Label(self.name, text="Mission Clock:", font=('times', 16, 'bold'), bg=self.frames_bg). \
-            grid(row=0, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
+            grid(row=0, column=1, rowspan=2, columnspan=1, sticky=N + S + E + W)
         Label(self.name, text="Flight Clock:", font=('times', 16, 'bold'), bg=self.frames_bg). \
-            grid(row=2, column=0, rowspan=2, columnspan=2, sticky=N + S + E + W)
-        self.start_timer = Timer(self.name, 0, 2, 2, 3, self.time_bg)
-        self.timer = Timer(self.name, 2, 2, 2, 3, self.time_bg)
+            grid(row=3, column=1, rowspan=2, columnspan=1, sticky=N + S + E + W)
+        self.start_timer = Timer(self.name, 0, 2, 2, 2, self.time_bg)
+        self.timer = Timer(self.name, 3, 2, 2, 2, self.time_bg)
 
         # Make data sections
         self.dataBalloon = Data(self.name, "Balloon Data", 6, 9, self.frames_bg)
@@ -153,16 +153,16 @@ class DataWindow:
         self.sixGraph = ttk.Button(self.name, text="Direction", style="yellow.TButton",
                                    command=self.open_acc_gyro_graphs)
 
-        self.altGraph.grid(column=6, columnspan=4, row=12, rowspan=1, sticky=N + S + E + W)
-        self.sixGraph.grid(column=6, columnspan=4, row=13, rowspan=1, sticky=N + S + E + W)
+        self.altGraph.grid(column=6, columnspan=4, row=11, rowspan=1, sticky=N + S + E + W)
+        self.sixGraph.grid(column=6, columnspan=4, row=12, rowspan=1, sticky=N + S + E + W)
 
         # Adds our logo
         logo = PhotoImage(file=os.path.join(self.image_folder_path, "orbital-logo-reduced.gif"))
         logo_label = Label(self.name, image=logo, bg=self.bg_color)
         logo_label.image = logo
-        logo_label.grid(row=15, column=6, rowspan=3, columnspan=4, sticky=N + S + E + W)
+        logo_label.grid(row=14, column=6, rowspan=3, columnspan=4, sticky=N + S + E + W)
 
-        self.control = Control(self.name, 5, 2, 1, self.frames_bg)
+        self.control = Control(self.name, 6, 2, 1, self.frames_bg)
 
         # Adds Radio Counters
         self.packets_sent = StatCounter(self.name, "Packets Sent", 1, 10, self.frames_bg)
@@ -269,6 +269,7 @@ class DataWindow:
         program_menu.add_command(label="Log", command=self.log_menu)
         program_menu.add_command(label="Reset Data", command=self.reset_variables_window)
         program_menu.add_command(label="Reset Radio", command=self.reset_radio)
+        program_menu.add_command(label="Change Address", command=self.change_radio_address_callback)
         program_menu.add_command(label="Manual Override", command=self.manual_override_callback)
 
         help_menu.add_command(label="Help Index", command=self.help_window)
@@ -298,11 +299,14 @@ class DataWindow:
             self.name.columnconfigure(column, weight=1)
 
         for row in my_rows:
-            self.name.rowconfigure(row, weight=1, uniform=1)
+            self.name.rowconfigure(row, weight=4, uniform=1)
+
+        self.name.rowconfigure(2, weight=1, uniform=0)
+        self.name.rowconfigure(5, weight=1, uniform=0)
 
         for col in control_col:
             self.name.columnconfigure(col, minsize=100)
-            for row in range(5, 16):
+            for row in range(6, 16):
                 color_frame = Label(self.name, bg=self.framesBg)
                 color_frame.grid(row=row, column=col, sticky=N + S + E + W)
 
@@ -526,13 +530,39 @@ class DataWindow:
                                    + "To override please enter the following number: \n\n"
                                    + random_int)
         print(s)
-        if s == random_int and self.control.mission_status == Status.VERIFIED:
-            messagebox.showinfo("Preforming Override", "Manual Override Initiated")
+        if s == random_string:
             self.launch()
-        elif s != random_int:
+            messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
+        elif s is not None:
             messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
         else:
             messagebox.showerror("ERROR: Conditions Not Met", "Conditions not met for launch. Cancelling...")
+
+    def change_radio_address_callback(self):
+        try:
+            c = Comm.get_instance(self)
+            a = simpledialog.askstring("Change Radio Address",
+                                       "Type a hex number (1 - 9, A - F) for the radio address of the recieving radio" +
+                                       "\n\n" + "The current address is: " + str(c.get_remote_node_address()))
+
+            if a is None:
+                return
+
+            # TODO: Probably a better way to check if it is hex
+            is_hex = True
+            hex_char_set = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+            for char in a:
+                if char not in hex_char_set:
+                    is_hex = False
+
+            if len(a) != 16 or not is_hex:
+                messagebox.showerror("ERROR: Invalid Address", "The provided hex number was invalid\n\n" +
+                                     "Reverting to initial address")
+            else:
+                c.set_remote_node_address(a)
+        except Exception as e:
+            messagebox.showerror("ERROR: Something went wrong", "Something went wrong\n\nNot Changing the Address.")
+            print(e)
 
     def verify_message_callback(self):
         """

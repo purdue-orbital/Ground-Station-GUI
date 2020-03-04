@@ -29,9 +29,6 @@ else:
 # Baud rate of the local device
 BAUD_RATE = 9600
 
-# Remote node MAC address in hexadecimal format
-REMOTE_NODE_ADDRESS = "0013A2004148887C"
-
 OK = "\u001b[32m"
 WARN = "\u001b[33m"
 ERR = "\u001b[31m"
@@ -59,6 +56,9 @@ class ModuleSingleton:
     def __init__(self):
 
         self.is_local_device_init = 0
+
+        # Remote node MAC address in hexadecimal format
+        self.REMOTE_NODE_ADDRESS = "0013A2004148887C"
 
         try:
             self.device = XBeeDevice(LOCAL_PORT, BAUD_RATE)
@@ -89,7 +89,8 @@ class ModuleSingleton:
         self.queue = None
 
         try:
-            self.remote_device = RemoteXBeeDevice(self.device, XBee64BitAddress.from_hex_string(REMOTE_NODE_ADDRESS))
+            self.remote_device = RemoteXBeeDevice(self.device,
+                                                  XBee64BitAddress.from_hex_string(self.REMOTE_NODE_ADDRESS))
             print("Remote Device Address: " + str(self.remote_device))
             if self.remote_device is None:
                 print(ERR + "Could not find the remote device" + NORM)
@@ -124,3 +125,11 @@ class ModuleSingleton:
         except Exception as e:
             print(ERR + "Closing Error" + NORM)
             print(e)
+
+    def get_remote_node_address(self):
+        return self.REMOTE_NODE_ADDRESS
+
+    def set_remote_node_address(self, new_address):
+        self.REMOTE_NODE_ADDRESS = new_address
+        print(self.REMOTE_NODE_ADDRESS)
+
