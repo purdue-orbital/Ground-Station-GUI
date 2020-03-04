@@ -42,7 +42,6 @@ class Timer:
             self.clock_frame.config(text="00:00:00:00")
 
     def delay_tick(self, secs = 5):
-        # print("HERE!! Prt 2!!")
         current_time = str(time.time() - self.start)
 
         if 'e' not in current_time:
@@ -62,10 +61,10 @@ class Timer:
 
         if self.clock_run and int(self.seconds) >= secs:
             self.start = time.time()
+            self.clock_frame.config(foreground="white")
             self.clock_frame.after(10, self.tick)
         else:
-            self.current_time = "00:00:00:00"
-            self.clock_frame.config(text="00:00:00:00")
+            self.clock_frame.config(foreground="red")
             self.clock_frame.after(10, lambda: self.delay_tick(secs))
 
     def reset(self):
