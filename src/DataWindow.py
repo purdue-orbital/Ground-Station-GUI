@@ -539,7 +539,7 @@ class DataWindow:
         elif s is not None:
             messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
         else:
-            messagebox.showerror("ERROR: Conditions Not Met", "Conditions not met for launch. Cancelling...")
+            messagebox.showerror("ERROR: Conditions Not Met", "Conditions not met for launch. Cancelling Override")
 
     def change_radio_address_callback(self):
         try:
