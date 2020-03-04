@@ -40,13 +40,13 @@ class Module:
 
     def get_instance(self):
         if Module.__instance is None:
-            print(Module.__instance)
+            # print(Module.__instance)
             Module()
         return Module.__instance
 
     def __init__(self):
         if Module.__instance is not None:
-            print(Module.__instance)
+            # print(Module.__instance)
             raise Exception("Constructor should not be called")
         else:
             Module.__instance = ModuleSingleton()

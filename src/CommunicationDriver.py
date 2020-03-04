@@ -30,6 +30,7 @@ class CommSingleton:
             self.__mode = Mode.STANDBY
             self.__radio = Module.get_instance(self)
         except Exception as e:
+            print("Module Err")
             print(e)
 
     def standby(self):
@@ -90,6 +91,7 @@ class CommSingleton:
                 self.packets_received += 1 
                 return sent
         except Exception as e:
+            print("Sending Err")
             print(e)
             return 0
 

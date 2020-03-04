@@ -90,7 +90,7 @@ class DataWindow:
         self.abort_method = None
         self.radio = Module.get_instance(self)
 
-        name.title("Ground Station Graphical User Interface v0.3")
+        name.title("Ground Station Graphical User Interface v0.3-alpha")
         # name.iconbitmap(os.path.join(self.image_folder_path, "MyOrbital.ico"))
 
         # self.name.geometry('1000x600')
@@ -437,7 +437,7 @@ class DataWindow:
         :return: None
         """
 
-        about_text = "Ground Station Graphical User Interface Version 0.2\n\n" \
+        about_text = "Ground Station Graphical User Interface Version 0.3-alpha\n\n" \
                      "Author: Ken Sodetz, Matt Drozt, Jay Rixie, Emanuel Pituch, Connor Todd\n" \
                      "Since: 11/27/2018\n\n" \
                      "Created for Purdue Orbital Electrical and Software Sub team\n\n" \
@@ -519,24 +519,27 @@ class DataWindow:
             c = Comm.get_instance(self)
             return c.get_mode() == Mode.TESTING
         except Exception as e:
+            print("Test Mode Error")
             print(e)
 
     def manual_override_callback(self):
-        random_string = ""
+        random_int = ""
         for i in range(6):
-            random_string = random_string + random.SystemRandom().choice(string.digits)
+            random_int = random_int + random.SystemRandom().choice(string.digits)
 
         s = simpledialog.askstring("DANGER: Manual Override",
                                    "Please note that manual overrides are dangerous and should only be used in "
-                                   + "a worst case scenario.\nPlease check with the launch director before preceding."
+                                   + "a worst case scenario.\nPlease check with the launch director before proceeding."
                                    + "\n\n"
                                    + "To override please enter the following number: \n\n"
-                                   + random_string)
-        if s == random_string:
+                                   + random_int)
+        if s == random_int:
             self.launch()
             messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
         elif s is not None:
             messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
+        else:
+            messagebox.showerror("ERROR: Conditions Not Met", "Conditions not met for launch. Cancelling...")
 
     def change_radio_address_callback(self):
         try:
@@ -667,6 +670,7 @@ class DataWindow:
             self.calc_received_percentage()
             c.set_mode(m)
         except Exception as e:
+            print("Test Launch Error")
             print(e)
 
     def test_abort(self):
@@ -681,6 +685,7 @@ class DataWindow:
             self.calc_received_percentage()
             c.set_mode(m)
         except Exception as e:
+            print("Test Abort Error")
             print(e)
 
     def test_stability(self):
@@ -695,6 +700,7 @@ class DataWindow:
             self.calc_received_percentage()
             c.set_mode(m)
         except Exception as e:
+            print("Test Stability Error")
             print(e)
 
     def select_cdm(self):

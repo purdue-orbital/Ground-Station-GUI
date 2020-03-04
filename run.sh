@@ -19,34 +19,34 @@ fi
 
 ascii="
                               
-   :;;\`                       
-   ;  ,;                      
-   .    ;\`                    
-    \`    ;.                   
-    :     :,                  
-     \`     ,:                 
-     ,      ,:                
-      ,      ,;;;;;\`          
-             ;;\`  :;,         
-       ,    ;;     :;         
-        ,   ;\`  :.  ;,        
-         \` \`;    ;\` ;;        
-         \` \`;    \`; ;:        
-          , ;,    .;;.        
-           ::;     ;;         
-            ,;;:.,;;;.        
-             ..;;;: \`;        
-              \`      :;       
-               \`      ;,      
-               \`\`     .;      
-                \`\`     ;;     
-                  .    .;\`    
-                   :    ;;    
-                    ;   ;;\`   
-                     ::\`;;:   
-                      \`;;;;   
-                        .;,   
-                              
+     :;;\`
+     ;  ,;
+     .    ;\`
+      \`    ;.
+      :     :,
+       \`     ,:
+       ,      ,:
+        ,      ,;;;;;\`
+               ;;\`  :;,
+         ,    ;;     :;
+          ,   ;\`  :.  ;,
+           \` \`;    ;\` ;;
+           \` \`;    \`; ;:
+            , ;,    .;;.
+             ::;     ;;
+              ,;;:.,;;;.
+               ..;;;: \`;
+                \`      :;
+                 \`      ;,
+                 \`\`     .;
+                  \`\`     ;;
+                    .    .;\`
+                     :    ;;
+                      ;   ;;\`
+                       ::\`;;:
+                        \`;;;;
+                          .;,
+
 "
 
 text="    .______    __    __  .______       _______   __    __   _______
@@ -66,7 +66,7 @@ text="    .______    __    __  .______       _______   __    __   _______
 
 printf "${INFO}${text}\n\n\n${ascii}\n\n\n"
 printf "${NC}PURDUE ORBITAL, ${INFO}PURDUE UNIVERSITY\n"
-printf "${NC}Ground Station Sub Team\n"
+printf "${NC}Ground Station Sub Team\n\n"
 printf "Checking Python version...\n"
 
 
@@ -79,7 +79,7 @@ if [[ ${version} -lt '5' ]]; then
 	exit 99
 fi
 
-printf "Python Check: ${OK}[PASS]${NC}\n"
+printf "Python Check: ${OK}[PASS]${NC}\n\n"
 
 printf "Attempting to run ${program_path}\n\n"
 
