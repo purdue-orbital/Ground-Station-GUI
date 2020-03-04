@@ -89,7 +89,7 @@ os_name=$(uname -a )
 if [[ $os_name = *"Microsoft"*  ]]; then
 	tasklist.exe | grep  -q Xming
 	if [[ $? = 1 ]]; then
-		printf "${FAIL}Xming must be running in order to run the program. Please run Xming.exe to continue.${NC}\n"
+		printf "${FAIL}Xming must be running in order to run on Windows based operating systems. Please run Xming.exe to continue.${NC}\n"
 		exit 99
 	fi	
 fi
