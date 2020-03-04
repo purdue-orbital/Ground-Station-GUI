@@ -92,3 +92,11 @@ class CommSingleton:
         except Exception as e:
             print(e)
             return 0
+
+    def get_remote_node_address(self):
+        self.__radio = Module.get_instance(self)
+        return self.__radio.get_remote_node_address()
+
+    def set_remote_node_address(self, new_address):
+        self.__radio = Module.get_instance(self)
+        self.__radio.set_remote_node_address(new_address)
