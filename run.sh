@@ -81,6 +81,21 @@ fi
 
 printf "Python Check: ${OK}[PASS]${NC}\n\n"
 
+
+printf "Checking Operating System...\n"
+
+os_name=$(uname -a )
+
+if [[ $os_name = *"Microsoft"*  ]]; then
+	tasklist.exe | grep  -q Xming
+	if [[ $? = 1 ]]; then
+		printf "${FAIL}Xming must be running in order to run on Windows based operating systems. Please run Xming.exe to continue.${NC}\n"
+		exit 99
+	fi	
+fi
+
+printf "OS Check: ${OK}[PASS]${NC}\n\n"
+
 printf "Attempting to run ${program_path}\n\n"
 
 sudo python3 ${program_path} 2> ${traceback_path}
