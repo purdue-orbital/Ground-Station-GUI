@@ -14,7 +14,8 @@ class Timer:
 
         self.current_time = "00:00:00:00"
 
-        self.clock_frame = Label(place_window, font=('times', 50, 'bold'), bg=bg, fg='white', text="00:00:00:00")
+        self.clock_frame = Label(place_window, font=(
+            'times', 50, 'bold'), bg=bg, fg='white', text="00:00:00:00")
         self.clock_frame.grid(row=row_start, rowspan=row_span, column=column_start, columnspan=column_span,
                               sticky=N + S + E + W)
 
@@ -32,13 +33,39 @@ class Timer:
             2) + ":" + str(self.milliseconds).zfill(2)
 
         self.clock_frame.config(text=str(self.hours).zfill(2) + ":" + str(self.minutes).zfill(2)
-                                     + ":" + str(self.seconds).zfill(2) + ":" + str(self.milliseconds).zfill(2))
+                                + ":" + str(self.seconds).zfill(2) + ":" + str(self.milliseconds).zfill(2))
 
         if self.clock_run:
             self.clock_frame.after(10, self.tick)
         else:
             self.current_time = "00:00:00:00"
             self.clock_frame.config(text="00:00:00:00")
+
+    def delay_tick(self, secs=5):
+        current_time = str(time.time() - self.start)
+
+        if 'e' not in current_time:
+            dot = current_time.find('.')
+            self.milliseconds = current_time[dot + 1:dot + 3]
+            self.seconds = int(current_time[:dot])
+            self.minutes = int(self.seconds) // 60
+            self.seconds = int(self.seconds) % 60
+            self.hours = int(self.minutes) // 60
+            self.minutes = int(self.minutes) % 60
+
+        self.current_time = str(self.hours).zfill(2) + ":" + str(self.minutes).zfill(2) + ":" + str(self.seconds).zfill(
+            2) + ":" + str(self.milliseconds).zfill(2)
+
+        self.clock_frame.config(text=str(self.hours).zfill(2) + ":" + str(self.minutes).zfill(2)
+                                + ":" + str(self.seconds).zfill(2) + ":" + str(self.milliseconds).zfill(2))
+
+        if self.clock_run and int(self.seconds) >= secs:
+            self.start = time.time()
+            self.clock_frame.config(foreground="white")
+            self.clock_frame.after(10, self.tick)
+        else:
+            self.clock_frame.config(foreground="red")
+            self.clock_frame.after(10, lambda: self.delay_tick(secs))
 
     def reset(self):
         self.clock_run = False
@@ -70,4 +97,3 @@ class ShutdownTimer(object):
         print("stop")
         self._timer.cancel()
         self.is_running = False
-

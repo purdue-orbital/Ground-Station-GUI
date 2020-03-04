@@ -344,9 +344,13 @@ class DataWindow:
             c = Comm.get_instance(self)
             c.send("Ignition")
 
+            # Kind of puts the whole thread to sleep for 5 secs
+            # But I think this is what the issue is asking for
+            # time.sleep(5)
+
             self.timer.start = time.time()
             self.timer.clock_run = True
-            self.timer.tick()
+            self.timer.delay_tick()
 
             self.control.mission_status = Status.LAUNCHED
             self.control.verify_button.config(text="VERIFY")
@@ -529,14 +533,13 @@ class DataWindow:
                                    + "\n\n"
                                    + "To override please enter the following number: \n\n"
                                    + random_int)
-        print(s)
-        if s == random_string:
+        if s == random_int:
             self.launch()
             messagebox.showinfo("SUCCESS: Preforming Override", "Manual Override was Successful")
         elif s is not None:
             messagebox.showerror("ERROR: Bad Input", "Strings did not match.\nStopping Override.")
         else:
-            messagebox.showerror("ERROR: Conditions Not Met", "Conditions not met for launch. Cancelling...")
+            messagebox.showerror("ERROR: Conditions Not Met", "Conditions not met for launch. Cancelling Override")
 
     def change_radio_address_callback(self):
         try:
