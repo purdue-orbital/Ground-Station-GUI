@@ -24,7 +24,7 @@ DIR="src/RPi"
 if [[ "$1" = "-d"  ]]; then
 	printf "Are you sure you want to setup in Development mode? (Y/n): "
 	read ans
-	if [[ "$ans" = "y" ]] || [[ "$ans" = "Y" ]] || [[ "$ans" = "Yes" ]] || [[ "$ans" = "yes" ]]; then
+	if [[ ${ans,,} = "y" ]] || [[ ${ans,,} = "yes" ]]; then
 		printf "${INFO}Setting up in Development Mode\n"
 		if [[ -d ${DIR} ]]; then
 			printf "${WARN}Already in Development mode ($DIR already exists). Cancelling...${NC}\n"
@@ -40,7 +40,7 @@ if [[ "$1" = "-d"  ]]; then
 		printf "${OK}Successfully Setup Development Environment${NC}\n"
 
 	# Cancel setup
-	elif [[ "$ans" = "n"  ]] || [[ "$ans" = "N" ]] || [[ "$ans" = "No" ]] || [[ "$ans" = "no" ]]; then
+	elif [[ ${ans,,} = "n" ]] || [[ ${ans,,} = "no" ]]; then
 		printf "${WARN}Cancelling Development Setup${NC}\n"
 		exit 0	
 
@@ -67,7 +67,7 @@ elif [[ "$1" = "--help" ]] || [[ "$1" = "-h" ]]; then
 elif [[ "$1" = "-f" ]]; then
 	printf "Are you sure you want to setup in Deployment/Field mode? (Y/n): "
 	read ans
-	if [[ "$ans" = "y" ]] || [[ "$ans" = "Y" ]] || [[ "$ans" = "Yes" ]] || [[ "$ans" = "yes" ]]; then
+	if [[ ${ans,,} = "y" ]] || [[ ${ans,,} = "yes" ]]; then
 		printf "${INFO}Setting up in Field/Deployment mode${NC}\n"
 		if [[ ! -d ${DIR} ]]; then
 			printf "${WARN}Already ready for Deployment. Cancelling...${NC}\n"
@@ -85,7 +85,7 @@ elif [[ "$1" = "-f" ]]; then
 		fi
 
 	# Cancel setup
-	elif [[ "$ans" = "n"  ]] || [[ "$ans" = "N" ]] || [[ "$ans" = "No" ]] || [[ "$ans" = "no" ]]; then
+	elif [[ ${ans,,} = "n" ]] || [[ ${ans,,} = "no" ]]; then
 		printf "${WARN}Cancelling Field/Deployment Setup${NC}\n"
 		exit 0	
 
