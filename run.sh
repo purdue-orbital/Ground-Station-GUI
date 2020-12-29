@@ -98,7 +98,7 @@ printf "OS Check: ${OK}[PASS]${NC}\n\n"
 
 printf "Attempting to run ${program_path}\n\n"
 
-sudo python3 ${program_path} 2> ${traceback_path}
+python3 ${program_path} 2> ${traceback_path}
 if [[ $? == '1' ]]; then
 	traceback=$( tail -1 ${traceback_path} )
 	printf "${traceback}\n"
