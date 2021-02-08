@@ -8,6 +8,9 @@ traceback_path='logs/traceback.log'
 program_path='src/ThreadedWindow.py'
 log_test='src/ReadLog.py'
 
+# Source directory for RPI file
+RPIDIR="src/RPi"
+
 # Clears traceback.log when initially run
 truncate -s 0 ${traceback_path}
 
@@ -98,7 +101,12 @@ printf "OS Check: ${OK}[PASS]${NC}\n\n"
 
 printf "Attempting to run ${program_path}\n\n"
 
-python3 ${program_path} 2> ${traceback_path}
+if [[ -d ${RPIDIR} ]]; then
+  python3 ${program_path} 2> ${traceback_path}
+else
+  sudo python3 ${program_path} 2> ${traceback_path}
+fi
+
 if [[ $? == '1' ]]; then
 	traceback=$( tail -1 ${traceback_path} )
 	printf "${traceback}\n"
